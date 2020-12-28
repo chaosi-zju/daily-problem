@@ -1,22 +1,61 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/app"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/conf"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysql"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
-const defaultPort string = "3001"
+func init() {
+	log.Info("init start...")
+	defer log.Info("init finish...")
+
+	runInit(context.Background(), conf.Init, mysql.Init)
+}
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
 
 	r := app.SetupRoutes()
+	businessCh := make(chan error, 1)
+	go func() {
+		port := viper.GetString("gin.port")
+		if err := r.Run(":" + port); err != nil {
+			businessCh <- err
+		}
+	}()
 
-	err := r.Run(":" + port)
-	if err != nil {
-		panic("failed to start engine: " + err.Error())
+	signalCh := make(chan os.Signal, 1)
+	signal.Notify(signalCh, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+
+	log.Info("listening for signals ...")
+	select {
+	case <-signalCh:
+		log.Info("signal received, gracefully shutdown...")
+	case err := <-businessCh:
+		log.WithField("Error", err).Fatal("failed to start gin service")
+	}
+
+}
+
+type funcType func(ctx context.Context) error
+
+func runInit(ctx context.Context, fs ...funcType) {
+	for _, f := range fs {
+		funcName := util.FuncName(f)
+		log.Infof("init [%s] start...", funcName)
+
+		if err := f(ctx); err != nil {
+			panic(fmt.Sprintf("init [%s] failed: %+v", funcName, err))
+		}
+
+		log.Infof("init [%s] finish...", funcName)
 	}
 }
