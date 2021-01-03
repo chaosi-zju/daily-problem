@@ -4,6 +4,6 @@ gin:
 mysql:
   host: 127.0.0.1:3306
   username: root
-  password: 123456
+  password: PCS123456
   database: daily_problem
 

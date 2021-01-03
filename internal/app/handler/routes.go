@@ -1,4 +1,4 @@
-package app
+package handler
 
 import (
 	"github.com/gin-contrib/static"
