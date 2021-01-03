@@ -17,5 +17,4 @@
 # vendor/
 
 # web
-./web/node_modules/
-
+/web/node_modules/
