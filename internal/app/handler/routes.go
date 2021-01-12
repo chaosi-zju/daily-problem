@@ -28,5 +28,7 @@ func SetupRoutes() *gin.Engine {
 		})
 	})
 
+	r.POST("/api/test", Test)
+
 	return r
 }
