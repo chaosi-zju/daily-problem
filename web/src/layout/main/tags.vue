@@ -31,9 +31,9 @@
   </div>
 </template>
 <script>
-import { messages } from "@assets/js/common.js";
+import { messages } from "@/assets/js/common.js";
 // import { mapState } from "vuex";
-import ScrollPane from "./ScrollPane";
+import ScrollPane from "./scrollPane";
 export default {
   created() {
     //判断标签里面是否有值 有的话直接加载

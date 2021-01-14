@@ -38,7 +38,7 @@ import { messages } from "@assets/js/common.js";
 export default {
   name: "login",
   data() {
-    var validatePass = (rule, value, callback) => {
+    let validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
@@ -48,7 +48,7 @@ export default {
         callback();
       }
     };
-    var validateName = (rule, value, callback) => {
+    let validateName = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入用户名"));
       } else {

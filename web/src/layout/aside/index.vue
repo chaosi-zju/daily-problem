@@ -61,7 +61,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { menu } from "@/menu";
+import { menu } from "@/router/menu";
 export default {
   data() {
     return {};

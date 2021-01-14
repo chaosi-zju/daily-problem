@@ -1,7 +1,8 @@
 const en = {
     route: {
         home: 'Home',
-        error: 'Error',
+        getProblem: 'DailyProblem',
+        insertProblem: 'InsertProblem',
         '404': '404',
         '403': '403'
     },

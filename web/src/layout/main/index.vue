@@ -10,14 +10,16 @@
        </el-scrollbar>
     </div>
 </template>
+
 <script>
-import Tags from './Tags.vue'
+import Tags from './tags.vue'
 export default {
     components:{
       Tags
     }
 }
 </script>
+
 <style lang="scss" scoped>
 .container {
   height: calc(100vh - 50px);

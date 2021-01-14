@@ -1,9 +1,7 @@
 import axios from "axios";
 import router from "../router/router";
-import {
-    Loading
-} from "element-ui";
-import {messages} from '../assets/js/common.js'
+import {Loading} from "element-ui";
+import {messages} from '@/assets/js/common'
 import store from '../store/store'
 axios.defaults.timeout = 60000;
 axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;

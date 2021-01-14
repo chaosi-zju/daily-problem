@@ -5,6 +5,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "showAside",
@@ -16,6 +17,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .clearfix{
   float: left;

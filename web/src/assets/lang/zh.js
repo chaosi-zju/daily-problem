@@ -1,7 +1,8 @@
 const zh = {
     route: {
         home: '首页',
-        error: '错误页面',
+        getProblem: '每日做题',
+        insertProblem: '插入题目',
         '404': '404',
         '403': '403'
     },

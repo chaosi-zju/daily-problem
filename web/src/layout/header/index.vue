@@ -47,10 +47,11 @@
     </div>
   </div>
 </template>
+
 <script>
 import showAside from "./showAside";
 import selectLang from './selectLang'
-import breadcrumb from './Breadcrumb'
+import breadcrumb from './breadCrumb'
 export default {
   // name:'header',
   components: {
@@ -61,9 +62,9 @@ export default {
   data() {
     return {
       fullscreen: false,
-      name: "linxin",
+      name: "chaosi",
       message: 2,
-      username: "zyh"
+      username: "pcs"
     };
   },
   computed: {
@@ -116,6 +117,7 @@ export default {
   }
 }; 
 </script>
+
 <style lang="scss" scoped>
 .head-container {
   height: 50px;

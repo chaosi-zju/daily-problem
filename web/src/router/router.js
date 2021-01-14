@@ -3,24 +3,31 @@ import Router from 'vue-router'
 import store from '../store/store'
 import NProgress from 'nprogress' //进度条
 import 'nprogress/nprogress.css'
+import home from '@/layout/index'
+
 Vue.use(Router)
-    // 路由懒加载
-const getComponent = (name, component) => () =>
-    import (`@/views/${name}/${component}.vue`);
+// 路由懒加载
+const getComponent = (name, component) => () => import (`@/views/${name}/${component}.vue`);
+
 const myRouter = new Router({
-    routes: [{
-            path: '/login',
-            name: 'login',
-            component: getComponent('login', 'index')
-        },
+    routes: [
         {
             path: '/',
-            redirect: '/login',
+            redirect: '/home',
+            meta: {
+                title: 'home'
+            }
+        },
+        {
+            path: '/login',
             component: getComponent('login', 'index')
         },
         {
             path: '/home',
-            component: getComponent('layout', 'Layout'),
+            component: home,
+            meta: {
+                title: 'home2'
+            },
             children: [
                 {
                     path: '/home',
@@ -42,9 +49,24 @@ const myRouter = new Router({
                     meta: {
                         title: '403'
                     }
+                },
+                {
+                    path: '/insertProblem',
+                    component: getComponent('problem', 'insert'),
+                    meta: {
+                        title: 'insertProblem'
+                    }
+                },
+                {
+                    path: '/getProblem',
+                    component: getComponent('problem', 'get'),
+                    meta: {
+                        title: 'getProblem'
+                    }
                 }
             ]
-        }, {
+        },
+        {
             path: '*',
             redirect: '/404',
         }
@@ -54,6 +76,7 @@ const myRouter = new Router({
 //判断是否存在token
 myRouter.beforeEach((to, from, next) => {
     NProgress.start()
+    document.title = 'Daily Problem'
     if (to.path !== '/login' && !store.state.token) {
         next('/login')
         NProgress.done() // 结束Progress

@@ -13,6 +13,7 @@
     </el-dropdown>
   </div>
 </template>
+
 <script>
 export default {
     computed:{
@@ -29,6 +30,7 @@ export default {
     }
 };
 </script>
+
 <style lang="scss" scoped>
 .icon-font{
     width: 28px;
