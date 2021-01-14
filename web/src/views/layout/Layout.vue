@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <Aside class="aside-container"/>
-    <div class="main-container" :class="isCollapse==true?'container_collapse':''">
+    <div class="main-container" :class="isCollapse===true?'container_collapse':''">
       <Header/>
       <Main/>
     </div>

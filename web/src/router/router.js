@@ -21,103 +21,12 @@ const myRouter = new Router({
         {
             path: '/home',
             component: getComponent('layout', 'Layout'),
-            children: [{
+            children: [
+                {
                     path: '/home',
                     component: getComponent('home', 'index'),
                     meta: {
                         title: 'home'
-                    }
-                },
-                {
-                    path: '/element',
-                    component: getComponent('icons', 'elementIcom'),
-                    meta: {
-                        title: 'element'
-                    }
-                },
-                {
-                    path: '/iconfont',
-                    component: getComponent('icons', 'iconfont'),
-                    meta: {
-                        title: 'iconfont'
-                    }
-                },
-                {
-                    path: '/editor',
-                    component: getComponent('component', 'editor'),
-                    meta: {
-                        title: 'editor'
-                    }
-                },
-                {
-                    path: '/countTo',
-                    component: getComponent('component', 'countTo'),
-                    meta: {
-                        title: 'countTo'
-                    }
-                },
-                {
-                    path: '/customTree',
-                    component: getComponent('component', 'tree'),
-                    meta: {
-                        title: 'customTree'
-                    }
-                },
-                {
-                    path: '/treeTable',
-                    component: getComponent('component', 'treeTable'),
-                    meta: {
-                        title: 'treeTable'
-                    }
-                },
-                {
-                    path: '/treeSelect',
-                    component: getComponent('component', 'treeSelect'),
-                    meta: {
-                        title: 'treeSelect'
-                    }
-                },
-                {
-                    path: '/draglist',
-                    component: getComponent('draggable', 'draglist'),
-                    meta: {
-                        title: 'draglist'
-                    }
-                },
-                {
-                    path: '/dragtable',
-                    component: getComponent('draggable', 'dragtable'),
-                    meta: {
-                        title: 'dragtable'
-                    }
-                },
-                {
-                    path: '/cricle',
-                    component: getComponent('charts', 'cricle'),
-                    meta: {
-                        title: 'cricle'
-                    }
-                },
-                {
-                    path: '/formDesign',
-                    component: getComponent('formDesign', 'index'),
-                    meta: {
-                        title: 'formDesign'
-                    }
-                },
-                {
-                    path: '/permissionMenu',
-                    component: getComponent('permission', 'permission'),
-                    meta: {
-                        title: 'permissionMenu',
-                        roles: ['admin']
-                    }
-                },
-                {
-                    path: '/permissionBtn',
-                    component: getComponent('permission', 'permissionBtn'),
-                    meta: {
-                        title: 'permissionBtn',
                     }
                 },
                 {
