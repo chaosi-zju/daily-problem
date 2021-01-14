@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  height: calc(100vh - 50px);
+  height: calc(200vh - 50px);
   position: relative;
   overflow: hidden;
   // background: #f0f0f0;
