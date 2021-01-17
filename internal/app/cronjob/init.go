@@ -1,4 +1,4 @@
-package crontask
+package cronjob
 
 import (
 	"context"
