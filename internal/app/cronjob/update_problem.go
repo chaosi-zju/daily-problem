@@ -23,7 +23,7 @@ func UpdateProblem(ctx context.Context) {
 		panic("get all users failed: " + err.Error())
 	}
 
-	dailyNum := viper.GetInt("daily_num")
+	dailyNum := viper.GetInt("problem.daily_num")
 	rand.Seed(time.Now().UnixNano())
 
 	// 遍历每一个用户
