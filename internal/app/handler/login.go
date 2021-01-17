@@ -32,16 +32,10 @@ func Register(c *gin.Context) {
 	if err := c.BindJSON(&param); err != nil {
 		util.ResponseError(c, 500, "param invalid")
 	} else {
-		if user, err := model.Register(param); err != nil {
+		if _, err := model.Register(param); err != nil {
 			util.ResponseError(c, 500, "register failed: "+err.Error())
 		} else {
-			if token, err := generateToken(user); err != nil {
-				util.ResponseError(c, 500, err.Error())
-			} else {
-				util.ResponseSuccess(c, 200, "success", map[string]string{
-					"token": token,
-				})
-			}
+			util.ResponseSuccess(c, 200, "success", nil)
 		}
 	}
 }

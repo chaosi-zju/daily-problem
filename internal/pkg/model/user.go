@@ -31,17 +31,22 @@ func LoginCheck(param LoginParam) (User, error) {
 
 func Register(param RegisterParam) (User, error) {
 	user := User{}
-	if param.Name == "" {
-		return user, fmt.Errorf("username should't empty")
+
+	if param.Name == "" || param.Password == "" {
+		return user, fmt.Errorf("params should't empty")
 	}
-	if err := mysqld.Db.Where("name", param.Name).First(&user); err == nil {
+	if err := mysqld.Db.Where("name = ?", param.Name).First(&user).Error; err == nil {
 		return user, fmt.Errorf("username exist")
 	}
-	if err := mysqld.Db.Where("email", param.Email).First(&user); err == nil {
-		return user, fmt.Errorf("email exist")
+	if param.Email != "" {
+		if err := mysqld.Db.Where("email = ?", param.Email).First(&user).Error; err != nil {
+			return user, fmt.Errorf("email exist")
+		}
 	}
-	if err := mysqld.Db.Where("phone", param.Phone).First(&user); err == nil {
-		return user, fmt.Errorf("phone exist")
+	if param.Phone != "" {
+		if err := mysqld.Db.Where("phone = ?", param.Phone).First(&user).Error; err != nil {
+			return user, fmt.Errorf("phone exist")
+		}
 	}
 
 	user = User{
