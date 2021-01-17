@@ -25,8 +25,8 @@ func Init(_ context.Context) error {
 
 type jobFunc func(ctx context.Context)
 
-func AddFunc(spec string, cmd jobFunc, name string) (cron.EntryID, error) {
-	job := jobWithRecovery(cmd, name)
+func AddFunc(spec string, f jobFunc, name string) (cron.EntryID, error) {
+	job := jobWithRecovery(f, name)
 	return c.AddFunc(spec, job)
 }
 

@@ -60,3 +60,12 @@ func Register(param RegisterParam) (User, error) {
 
 	return user, err
 }
+
+func GetAllUsers() ([]User, error) {
+	var users []User
+	if err := mysqld.Db.Find(&users).Error; err != nil {
+		return nil, err
+	} else {
+		return users, nil
+	}
+}

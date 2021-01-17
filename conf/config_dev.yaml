@@ -6,7 +6,7 @@ mysql:
   username: root
   password: PCS123456
   database: daily_problem
-corn:
-  update_problem: 0 0 0 * * *
+cron:
+  update_problem: 0 00 4 * * *
 problem:
   daily_num: 3

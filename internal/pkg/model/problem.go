@@ -17,8 +17,8 @@ type Problem struct {
 
 type UserProblem struct {
 	gorm.Model
-	UserId     int       `gorm:"column:user_id;primaryKey"`    //用户ID
-	ProblemId  int       `gorm:"column:problem_id;primaryKey"` //题目ID
+	UserId     uint      `gorm:"column:user_id;primaryKey"`    //用户ID
+	ProblemId  uint      `gorm:"column:problem_id;primaryKey"` //题目ID
 	PickTime   time.Time `gorm:"column:pick_time"`             //选题时间
 	Finished   bool      `gorm:"column:finished"`              //是否完成
 	ShouldRedo bool      `gorm:"column:should_redo"`           //是否需要重做
