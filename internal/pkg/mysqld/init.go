@@ -1,4 +1,4 @@
-package mysql
+package mysqld
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var Db *gorm.DB
 
 func Init(ctx context.Context) (err error) {
 
@@ -27,8 +27,8 @@ func Init(ctx context.Context) (err error) {
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	})
 
-	if db, err = gorm.Open(dialector, &gorm.Config{}); err != nil {
-		return fmt.Errorf("fail to init mysql client, err: %+v", err)
+	if Db, err = gorm.Open(dialector, &gorm.Config{}); err != nil {
+		return fmt.Errorf("fail to init mysqld client, err: %+v", err)
 	}
 
 	return nil

@@ -1,22 +1,18 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
-	"strconv"
 )
 
-type Param struct {
-	Number string
-}
+const (
+	SQL = `select * from problems where finished = true and should_redo = true order by pick_time, times limit 3 group by type
+           union 
+           `
 
-func Test(c *gin.Context) {
-	data, _ := ioutil.ReadAll(c.Request.Body)
-	var p Param
-	_ = json.Unmarshal(data, &p)
-	number, _ := strconv.Atoi(p.Number)
-	fmt.Println(number)
-	c.JSON(200, number*2)
+//`select * from problems where type = %s and finished = false`
+)
+
+func GetDailyProblem(c *gin.Context) {
+
+	c.JSON(200, 2)
 }

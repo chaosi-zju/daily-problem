@@ -7,7 +7,7 @@ import (
 )
 
 func FuncName(f interface{}) string {
-	path := FuncPath(f)
+	path := funcPath(f)
 	if path == "" {
 		return ""
 	}
@@ -18,7 +18,7 @@ func FuncName(f interface{}) string {
 	return pathList[len(pathList)-1]
 }
 
-func FuncPath(f interface{}) string {
+func funcPath(f interface{}) string {
 	t := reflect.ValueOf(f)
 	if t.Kind() != reflect.Func {
 		return ""

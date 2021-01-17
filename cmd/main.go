@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/app/handler"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/conf"
-	"github.com/chaosi-zju/daily-problem/internal/pkg/mysql"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -18,7 +18,7 @@ func init() {
 	log.Info("init start...")
 	defer log.Info("init finish...")
 
-	runInit(context.Background(), conf.Init, mysql.Init)
+	runInit(context.Background(), conf.Init, mysqld.Init)
 }
 
 func main() {
