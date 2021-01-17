@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/app"
+	"github.com/chaosi-zju/daily-problem/internal/app/crontask"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/conf"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/cron"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	log "github.com/sirupsen/logrus"
@@ -18,7 +21,7 @@ func init() {
 	log.Info("init start...")
 	defer log.Info("init finish...")
 
-	runInit(context.Background(), conf.Init, mysqld.Init)
+	runInit(context.Background(), conf.Init, mysqld.Init, model.Init, cron.Init, crontask.Init)
 }
 
 func main() {
