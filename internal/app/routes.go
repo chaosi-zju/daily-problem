@@ -1,6 +1,8 @@
-package handler
+package app
 
 import (
+	"github.com/chaosi-zju/daily-problem/internal/app/handler"
+	"github.com/chaosi-zju/daily-problem/internal/app/middleware"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/pbnjay/memory"
@@ -28,7 +30,12 @@ func SetupRoutes() *gin.Engine {
 		})
 	})
 
-	//r.POST("/api/test", Test)
+	r.POST("/api/login", handler.Login)
+	r.POST("/api/register", handler.Register)
+
+	userRouter := r.Group("/api/user")
+	userRouter.Use(middleware.JWTAuth())
+	userRouter.GET("/getDailyProblem", handler.GetDailyProblem)
 
 	return r
 }

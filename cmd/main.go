@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/chaosi-zju/daily-problem/internal/app/handler"
+	"github.com/chaosi-zju/daily-problem/internal/app"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/conf"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
@@ -23,7 +23,7 @@ func init() {
 
 func main() {
 
-	r := handler.SetupRoutes()
+	r := app.SetupRoutes()
 	businessCh := make(chan error, 1)
 	go func() {
 		port := viper.GetString("gin.port")
