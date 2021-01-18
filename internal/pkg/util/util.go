@@ -1,14 +1,16 @@
 package util
 
 import (
+	"fmt"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func ResponseSuccess(c *gin.Context, code int, message string, data interface{}) {
+func ResponseSuccess(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, gin.H{
-		"code":    code,
-		"message": message,
+		"code":    200,
+		"message": "success",
 		"data":    data,
 	})
 }
@@ -19,4 +21,13 @@ func ResponseError(c *gin.Context, code int, message string) {
 		"message": message,
 		"data":    nil,
 	})
+}
+
+func GetUserIdFromContext(c *gin.Context) (uint, error) {
+	if v, ok := c.Get("claims"); ok {
+		if claims, ok := v.(*model.CustomClaims); ok {
+			return claims.UserID, nil
+		}
+	}
+	return 0, fmt.Errorf("user info invalid")
 }

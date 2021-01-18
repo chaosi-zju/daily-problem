@@ -19,7 +19,7 @@ func Login(c *gin.Context) {
 			if token, err := generateToken(user); err != nil {
 				util.ResponseError(c, 500, err.Error())
 			} else {
-				util.ResponseSuccess(c, 200, "success", map[string]string{
+				util.ResponseSuccess(c, map[string]string{
 					"token": token,
 				})
 			}
@@ -35,7 +35,7 @@ func Register(c *gin.Context) {
 		if _, err := model.Register(param); err != nil {
 			util.ResponseError(c, 500, "register failed: "+err.Error())
 		} else {
-			util.ResponseSuccess(c, 200, "success", nil)
+			util.ResponseSuccess(c, nil)
 		}
 	}
 }

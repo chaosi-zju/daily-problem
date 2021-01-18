@@ -8,6 +8,9 @@ import (
 )
 
 func Init(ctx context.Context) error {
+	mysqld.Db.AutoMigrate(User{})
+	mysqld.Db.AutoMigrate(Problem{})
+	mysqld.Db.AutoMigrate(UserProblem{})
 	return initMultiFunc(ctx, initJWTSignKey)
 }
 

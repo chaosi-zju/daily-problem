@@ -35,7 +35,8 @@ func SetupRoutes() *gin.Engine {
 
 	userRouter := r.Group("/api/user")
 	userRouter.Use(middleware.JWTAuth())
-	userRouter.GET("/getDailyProblem", handler.GetDailyProblem)
+	userRouter.GET("/problem/daily", handler.GetDailyProblem)
+	userRouter.GET("/problem/finifsh", handler.FinishProblem)
 
 	return r
 }
