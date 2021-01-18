@@ -5,6 +5,9 @@ import (
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+	"strconv"
 )
 
 const (
@@ -28,5 +31,58 @@ func GetDailyProblem(c *gin.Context) {
 }
 
 func FinishProblem(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
 
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	var up model.UserProblem
+	err = mysqld.Db.Where("user_id = ? and problem_id = ? and finished = ?", userId, problemId, false).First(&up).Error
+	if err == nil {
+		up.Finished = true
+		up.Times++
+		if err = mysqld.Db.Save(&up).Error; err == nil {
+			util.ResponseSuccess(c, nil)
+			return
+		}
+	} else if err == gorm.ErrRecordNotFound {
+		util.ResponseError(c, 500, "problem_id invalid or has been finished")
+		return
+	}
+
+	log.Errorf("finish problem error: %+v", err)
+	util.ResponseError(c, 500, "db error")
+}
+
+func ShouldNotRedo(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	up := model.UserProblem{UserId: userId, ProblemId: uint(problemId)}
+	if err = mysqld.Db.Where(&up).First(&up).Error; err == nil {
+		up.ShouldRedo = false
+		if err = mysqld.Db.Save(&up).Error; err == nil {
+			util.ResponseSuccess(c, nil)
+			return
+		}
+	}
+
+	log.Errorf("set problem not redo error: %+v", err)
+	util.ResponseError(c, 500, "db error")
 }

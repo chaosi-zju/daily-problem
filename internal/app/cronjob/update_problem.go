@@ -30,13 +30,18 @@ func UpdateProblem(ctx context.Context) {
 		panic("get all problem types failed: " + err.Error())
 	}
 
-	dailyNum := viper.GetInt("problem.daily_num")
+	defaultDailyNum := viper.GetInt("problem.default_daily_num")
 	rand.Seed(time.Now().UnixNano())
 
 	// 遍历每一个用户
 	for _, user := range users {
 		// 遍历每一种题类型
 		for _, ttype := range types {
+			// 如果用户自定义了各类型的题目数量
+			dailyNum := defaultDailyNum
+			if num, ok := user.Config.ProblemNum[ttype]; ok {
+				dailyNum = num
+			}
 			// 遍历出题次数
 			for i := 0; i < dailyNum; i++ {
 				// 查询有多少道没选过的题

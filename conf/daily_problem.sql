@@ -11,11 +11,33 @@
  Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 17/01/2021 21:01:52
+ Date: 18/01/2021 21:49:58
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for confs
+-- ----------------------------
+DROP TABLE IF EXISTS `confs`;
+CREATE TABLE `confs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `value` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_confs_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- ----------------------------
+-- Records of confs
+-- ----------------------------
+BEGIN;
+INSERT INTO `confs` VALUES (1, '2021-01-17 22:33:04', '2021-01-17 22:33:04', NULL, 'JWT-SignKey', 'chaosi_zju_20200101');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for problems
@@ -312,6 +334,14 @@ CREATE TABLE `users` (
   `role` longtext COLLATE utf8mb4_bin,
   PRIMARY KEY (`id`),
   KEY `idx_users_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+BEGIN;
+INSERT INTO `users` VALUES (1, '2021-01-17 21:02:55.000', '2021-01-17 21:02:56.000', NULL, 'chaosi', NULL, NULL, 'xxxxx', 'admin');
+INSERT INTO `users` VALUES (4, '2021-01-17 21:39:48.917', '2021-01-17 21:39:48.917', NULL, 'chaosi1', '', '', 'xxxxx', 'user');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

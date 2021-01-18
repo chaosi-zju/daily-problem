@@ -1,6 +1,8 @@
 package model
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"gorm.io/gorm"
@@ -8,11 +10,36 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string `gorm:"column:name"`
-	Email    string `gorm:"column:email"`
-	Phone    string `gorm:"column:phone"`
-	Password string `gorm:"column:password"`
-	Role     string `gorm:"role"`
+	Name     string     `gorm:"column:name"`
+	Email    string     `gorm:"column:email"`
+	Phone    string     `gorm:"column:phone"`
+	Password string     `gorm:"column:password"`
+	Role     string     `gorm:"column:role"`
+	Config   UserConfig `gorm:"column:config;type:string"`
+}
+
+type UserConfig struct {
+	ProblemNum map[string]int `json:"problem_num"`
+}
+
+// 怎么从数据库取
+func (uc *UserConfig) Scan(value interface{}) error {
+	buf, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to unmarshal user config, value: %+v", value)
+	}
+
+	return json.Unmarshal(buf, uc)
+}
+
+// 怎么存在数据库中
+func (uc UserConfig) Value() (driver.Value, error) {
+	buf, err := json.Marshal(uc)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal user config: %+v", uc)
+	}
+
+	return string(buf), nil
 }
 
 func LoginCheck(param LoginParam) (User, error) {
@@ -55,6 +82,7 @@ func Register(param RegisterParam) (User, error) {
 		Phone:    param.Phone,
 		Password: param.Password,
 		Role:     "user",
+		Config:   UserConfig{ProblemNum: map[string]int{"algorithm": 3}},
 	}
 	err := mysqld.Db.Create(&user).Error
 

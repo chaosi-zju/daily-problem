@@ -4,9 +4,9 @@ gin:
 mysql:
   host: 127.0.0.1:3306
   username: root
-  password: ssbb
+  password: PCS123456
   database: daily_problem
 cron:
-  update_problem: '0 0 0 * * *'
+  update_problem: '0/10 * * * * *'
 problem:
-  daily_num: 3
+  default_daily_num: 4
