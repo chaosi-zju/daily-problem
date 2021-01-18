@@ -52,6 +52,26 @@ func AddProblem(c *gin.Context) {
 
 }
 
+func UpdateProblem(c *gin.Context) {
+	var problem model.Problem
+
+	if err := c.BindJSON(&problem); err != nil {
+		util.ResponseError(c, 500, "param invalid")
+		return
+	}
+
+	if err := validator.New().Struct(problem); err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	if err := mysqld.Db.Save(&problem).Error; err != nil {
+		util.ResponseError(c, 500, "update problem failed: "+err.Error())
+	} else {
+		util.ResponseSuccess(c, problem)
+	}
+}
+
 func FinishProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
