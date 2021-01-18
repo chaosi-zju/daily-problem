@@ -7,6 +7,6 @@ mysql:
   password: PCS123456
   database: daily_problem
 cron:
-  update_problem: '0/10 * * * * *'
+  update_problem: '0 0 0 * * *'
 problem:
-  default_daily_num: 4
+  default_daily_num: 3

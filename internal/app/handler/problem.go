@@ -30,6 +30,19 @@ func GetDailyProblem(c *gin.Context) {
 	util.ResponseSuccess(c, problems)
 }
 
+func AddProblem(c *gin.Context) {
+	var problem model.Problem
+	if err := c.BindJSON(&problem); err != nil {
+		util.ResponseError(c, 500, "param invalid")
+	} else {
+		if err = mysqld.Db.Create(&problem).Error; err != nil {
+			util.ResponseError(c, 500, "add problem failed: "+err.Error())
+		} else {
+			util.ResponseSuccess(c, problem)
+		}
+	}
+}
+
 func FinishProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {

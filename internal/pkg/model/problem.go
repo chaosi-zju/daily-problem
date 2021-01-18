@@ -7,13 +7,13 @@ import (
 )
 
 type Problem struct {
-	gorm.Model
-	Name    string `gorm:"column:name"`              //题目标题
-	Content string `gorm:"column:content;type:text"` //题解内容
-	Result  string `gorm:"column:result;type:text"`  //题目答案
-	Link    string `gorm:"column:link"`              //题目链接
-	Type    string `gorm:"column:type"`              //题目类别 algorithm、sql...
-	SubType string `gorm:"column:sub_type"`          //题目子类别 图、树、数组...
+	gorm.Model `json:"-"`
+	Name       string `gorm:"column:name" json:"name"`                 //题目标题
+	Content    string `gorm:"column:content;type:text" json:"content"` //题解内容
+	Result     string `gorm:"column:result;type:text" json:"result"`   //题目答案
+	Link       string `gorm:"column:link" json:"link"`                 //题目链接
+	Type       string `gorm:"column:type" json:"type"`                 //题目类别 algorithm、sql...
+	SubType    string `gorm:"column:sub_type" json:"sub_type"`         //题目子类别 图、树、数组...
 }
 
 type UserProblem struct {
@@ -38,7 +38,9 @@ func GetAllProblemType() ([]string, error) {
 	var types []string
 	for rows.Next() {
 		tmp := ""
-		rows.Scan(&tmp)
+		if err = rows.Scan(&tmp); err != nil {
+			return types, err
+		}
 		types = append(types, tmp)
 	}
 
