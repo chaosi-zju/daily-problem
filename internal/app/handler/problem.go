@@ -5,6 +5,7 @@ import (
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"strconv"
@@ -32,15 +33,23 @@ func GetDailyProblem(c *gin.Context) {
 
 func AddProblem(c *gin.Context) {
 	var problem model.Problem
+
 	if err := c.BindJSON(&problem); err != nil {
 		util.ResponseError(c, 500, "param invalid")
-	} else {
-		if err = mysqld.Db.Create(&problem).Error; err != nil {
-			util.ResponseError(c, 500, "add problem failed: "+err.Error())
-		} else {
-			util.ResponseSuccess(c, problem)
-		}
+		return
 	}
+
+	if err := validator.New().Struct(problem); err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	if err := mysqld.Db.Create(&problem).Error; err != nil {
+		util.ResponseError(c, 500, "add problem failed: "+err.Error())
+	} else {
+		util.ResponseSuccess(c, problem)
+	}
+
 }
 
 func FinishProblem(c *gin.Context) {
