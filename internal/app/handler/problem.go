@@ -65,6 +65,11 @@ func UpdateProblem(c *gin.Context) {
 		return
 	}
 
+	if problem.ID == 0 {
+		util.ResponseError(c, 500, "problem_id should't null")
+		return
+	}
+
 	if err := mysqld.Db.Save(&problem).Error; err != nil {
 		util.ResponseError(c, 500, "update problem failed: "+err.Error())
 	} else {
