@@ -3,11 +3,12 @@ import router from "../router/router";
 import {Loading} from "element-ui";
 import {messages} from '@/assets/js/common'
 import store from '../store/store'
-axios.defaults.timeout = 60000;
-axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;
-axios.defaults.headers.post["Content-Type"] =
-    "application/x-www-form-urlencoded;charset=UTF-8";
+
+axios.defaults.timeout = 10000;
+axios.defaults.baseURL = 'http://localhost:5001';   //process.env.VUE_APP_LOGOUT_URL
+axios.defaults.headers.post["Content-Type"] = "application/json";
 let loading = null;
+
 /*
  *请求前拦截
  *用于处理需要请求前的操作
@@ -20,6 +21,7 @@ axios.interceptors.request.use(
         });
         if (store.state.token) {
             config.headers["Authorization"] = "Bearer " + store.state.token;
+            config.headers["x-jwt-token"] = store.state.token
         }
         return config;
     },
@@ -27,6 +29,7 @@ axios.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+
 /*
  *请求响应拦截
  *用于处理数据返回后的操作
@@ -97,6 +100,7 @@ axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
 /*
  *get方法，对应get请求
  *@param {String} url [请求的url地址]
@@ -116,6 +120,7 @@ export function get(url, params) {
             });
     });
 }
+
 /*
  *post方法，对应post请求
  *@param {String} url [请求的url地址]

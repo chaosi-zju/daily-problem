@@ -127,15 +127,6 @@ module.exports = {
     overlay: {
       warnings: true,
       errors: true
-    },
-    proxy: {
-      '/api': {
-        target: `http://localhost:5001/api`,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
     }
   },
   //定义scss全局变量

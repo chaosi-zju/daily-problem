@@ -16,7 +16,7 @@ const zh = {
         closeOthers: '关闭其他'
     },
     login: {
-        system: '后台管理系统',
+        system: 'Daily Problem',
         password: '密码',
         username: '用户名'
     }

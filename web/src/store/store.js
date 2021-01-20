@@ -1,26 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import state from "./state";
+import getters from "./getters";
 import mutations from "./mutations";
 import actions from "./actions";
-import getters from "./getters";
 //引入vuex 数据持久化插件
 import createPersistedState from "vuex-persistedstate"
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state,
+  getters,
   mutations,
   actions,
-  getters,
   plugins: [createPersistedState({
     reducer(val) {
       return {
         // 只储存state中的token
         token: val.token,
+        user: val.user,
         roles: val.roles,
-        tagsList: val.tagsList,
         lang:val.lang,
+        tagsList: val.tagsList,
         breadList:val.breadList
       }
     }
