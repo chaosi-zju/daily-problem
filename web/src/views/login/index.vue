@@ -64,12 +64,7 @@ export default {
                 this.$store.commit("COMMIT_USER", data.user);
                 this.$messages('success', 'success')
                 this.$router.push({path: "/home"});
-              }).catch(err => {
-                this.$messages("error", err.message);
               });
-            } else {
-              console.log("err")
-              return false;
             }
           }
       );

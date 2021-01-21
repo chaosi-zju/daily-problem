@@ -45,6 +45,7 @@ axios.interceptors.response.use(
             if (res.code === 200) {
                 resolve(res.data)
             } else {
+                messages("error", res.message)
                 reject(res)
             }
         })
@@ -65,7 +66,7 @@ axios.interceptors.response.use(
                 //断网，可以展示断网组件
                 messages("error", "请检查网络是否已连接");
             }
-            return;
+            return Promise.reject(error);
         }
         const status = error.response.status;
         switch (status) {
@@ -73,7 +74,7 @@ axios.interceptors.response.use(
                 messages("error", "服务器内部错误");
                 break;
             case 404:
-                messages("error", "未找到远程服务器");
+                messages("error", "404 page not found");
                 break;
             case 401:
                 messages("warning", "用户登陆过期，请重新登陆");
