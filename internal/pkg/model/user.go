@@ -63,16 +63,16 @@ func Register(param RegisterParam) (User, error) {
 		return user, fmt.Errorf("params should't empty")
 	}
 	if err := mysqld.Db.Where("name = ?", param.Name).First(&user).Error; err == nil {
-		return user, fmt.Errorf("username exist")
+		return user, fmt.Errorf("username already exist")
 	}
 	if param.Email != "" {
 		if err := mysqld.Db.Where("email = ?", param.Email).First(&user).Error; err != nil {
-			return user, fmt.Errorf("email exist")
+			return user, fmt.Errorf("email already exist")
 		}
 	}
 	if param.Phone != "" {
 		if err := mysqld.Db.Where("phone = ?", param.Phone).First(&user).Error; err != nil {
-			return user, fmt.Errorf("phone exist")
+			return user, fmt.Errorf("phone already exist")
 		}
 	}
 

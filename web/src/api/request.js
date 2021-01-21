@@ -5,7 +5,7 @@ import {messages} from '@/assets/js/common'
 import store from '../store/store'
 
 axios.defaults.timeout = process.env.VUE_APP_HTTP_TIMEOUT;
-axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;
+axios.defaults.baseURL = process.env.VUE_APP_HTTP_URL;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 let loading = null;
 
