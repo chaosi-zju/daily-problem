@@ -15,9 +15,7 @@
             <el-button type="info" @click="jumpToLink(scope.row.link)" class="el-icon-paperclip">原题</el-button>
             <el-button type="info" @click="jumpToLocal(scope.row.ID)" class="el-icon-edit-outline">做题</el-button>
             <el-button type="info" @click="jumpToResult(scope.row.ID)" class="el-icon-document">答案</el-button>
-            <el-button type="info" :disabled="scope.row.finished" @click="finish(scope.row.ID)"
-                       class="el-icon-circle-check">完成
-            </el-button>
+            <el-button type="info" @click="finish(scope.$index)" class="el-icon-circle-check">完成</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,9 +64,10 @@ export default {
     jumpToResult: function () {
 
     },
-    finish: function (pid) {
-      finishProblem({problem_id: pid}).then(() => {
-
+    finish: function (idx) {
+      finishProblem({problem_id: this.rawList[idx].ID}).then(() => {
+        this.$messages('success', 'success')
+        this.rawList.splice(idx, 1)
       })
     },
     handleSizeChange: function (pageSize) {

@@ -24,4 +24,6 @@ const (
 		(select * from user_problems 
 		where user_id = ? and problem_type = ? and picked = true and finished = true) as finished 
 		limit ?,1`
+
+	//`select problems.*, t.picked, t.pick_time, t.finished, t.times. from (select * from user_problems where user_id = ? and picked = true and finished = false) as t left join problems on t.problem_id = problems.id order by problem_type`
 )
