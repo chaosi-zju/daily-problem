@@ -17,7 +17,7 @@ import '@/assets/scss/element-variables.scss'
 Vue.use(VueParticles)
 Vue.use(VueClipboard)
 Vue.use(Element)
-Vue.prototype.$message = messages
+Vue.prototype.$messages = messages
 Vue.config.productionTip = false
 
 new Vue({

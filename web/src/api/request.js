@@ -42,28 +42,27 @@ axios.interceptors.response.use(
                 loading.close();
             }
             const res = response.data;
-            if (res.err_code === 0) {
-                resolve(res)
-            } else{
+            if (res.code === 200) {
+                resolve(res.data)
+            } else {
                 reject(res)
             }
         })
     },
     error => {
         console.log(error)
-        //请求成功后关闭加载框
+        // 请求成功后关闭加载框
         if (loading) {
             loading.close();
         }
-        //断网处理或者请求超时
+        console.log(error.response)
+        // 断网处理或者请求超时
         if (!error.response) {
             //请求超时
             if (error.message.includes("timeout")) {
-                console.log("超时了");
                 messages("error", "请求超时，请检查互联网连接");
             } else {
                 //断网，可以展示断网组件
-                console.log("断网了");
                 messages("error", "请检查网络是否已连接");
             }
             return;
@@ -74,14 +73,11 @@ axios.interceptors.response.use(
                 messages("error", "服务器内部错误");
                 break;
             case 404:
-                messages(
-                    "error",
-                    "未找到远程服务器"
-                );
+                messages("error", "未找到远程服务器");
                 break;
             case 401:
                 messages("warning", "用户登陆过期，请重新登陆");
-                store.state.commit('COMMIT_TOKEN','')
+                store.state.commit('COMMIT_TOKEN', '')
                 setTimeout(() => {
                     router.replace({
                         path: "/login",
@@ -92,7 +88,7 @@ axios.interceptors.response.use(
                 }, 1000);
                 break;
             case 400:
-                messages("error", "数据异常，详情请咨询聚保服务热线");
+                messages("error", "数据异常");
                 break;
             default:
                 messages("error", error.response.data.message);

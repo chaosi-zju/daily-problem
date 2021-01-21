@@ -73,7 +73,7 @@ export default {
         return this.$store.state.isCollapse;
       },
       set: function(newValue) {
-        this.$store.commit("IS_COLLAPSE", newValue);
+        this.$store.commit("SET_COLLAPSE", newValue);
       }
     }
   },
@@ -83,7 +83,7 @@ export default {
     },
     // 用户名下拉菜单选择事件
     logout(command) {
-      this.$store.commit('TAGES_LIST',[])
+      this.$store.commit('TAGS_LIST',[])
       this.$store.commit('SET_BREAD',['home'])
       this.$router.push("/login");
     },

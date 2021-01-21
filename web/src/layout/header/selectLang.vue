@@ -25,7 +25,7 @@ export default {
         handleSetLanguage(command){
             console.log(command)
             this.$i18n.locale = command
-            this.$store.commit('GET_LANGUAGE',command)
+            this.$store.commit('SET_LANGUAGE',command)
         }
     }
 };

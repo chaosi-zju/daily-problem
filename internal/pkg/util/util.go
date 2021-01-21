@@ -23,6 +23,14 @@ func ResponseError(c *gin.Context, code int, message string) {
 	})
 }
 
+func ResponseHTTPError(c *gin.Context, httpcode int, message string) {
+	c.JSON(httpcode, gin.H{
+		"code":    httpcode,
+		"message": message,
+		"data":    nil,
+	})
+}
+
 func GetUserIdFromContext(c *gin.Context) (uint, error) {
 	if v, ok := c.Get("claims"); ok {
 		if claims, ok := v.(*model.CustomClaims); ok {

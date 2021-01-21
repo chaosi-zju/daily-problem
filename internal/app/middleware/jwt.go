@@ -10,7 +10,7 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("x-jwt-token")
 		if token == "" {
-			util.ResponseError(c, 500, "no token for authentication")
+			util.ResponseHTTPError(c, 401, "no token for authentication")
 			c.Abort()
 			return
 		}
@@ -18,7 +18,7 @@ func JWTAuth() gin.HandlerFunc {
 		j := model.NewJWT()
 		claims, err := j.ParseToken(token)
 		if err != nil {
-			util.ResponseError(c, 500, err.Error())
+			util.ResponseHTTPError(c, 401, err.Error())
 			c.Abort()
 			return
 		}

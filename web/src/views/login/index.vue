@@ -7,8 +7,8 @@
           <h3>{{ $t('login.system') }}</h3>
           <el-form :model="loginForm" status-icon :rules="loginRules" ref="ruleForm" label-width="100px"
                    class="login-ruleForm">
-            <el-form-item :label="$t('login.username')" prop="username">
-              <el-input v-model="loginForm.username"></el-input>
+            <el-form-item :label="$t('login.username')" prop="name">
+              <el-input v-model="loginForm.name"></el-input>
             </el-form-item>
             <el-form-item :label="$t('login.password')" prop="password">
               <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password></el-input>
@@ -26,18 +26,10 @@
 
 <script>
 import {login} from "@api";
-import axios from "axios";
 
 export default {
   name: "login",
   data() {
-    let validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        callback();
-      }
-    };
     let validateName = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入用户名"));
@@ -45,14 +37,21 @@ export default {
         callback();
       }
     };
+    let validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        callback();
+      }
+    };
     return {
       loginForm: {
+        name: "",
         password: "",
-        username: ""
       },
       loginRules: {
+        name: [{validator: validateName, trigger: "blur"}],
         password: [{validator: validatePass, trigger: "blur"}],
-        username: [{validator: validateName, trigger: "blur"}]
       }
     };
   },
@@ -60,48 +59,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
             if (valid) {
-              // login(this.loginForm).then(res => {
-              //   console.log(res)
-              //   //提交数据到vuex
-              //   this.$store.commit("COMMIT_TOKEN", res);
-              //   this.$message('success', res.message)
-              //   this.$router.push({
-              //     path: "/home"
-              //   });
-              // }).catch(err => {
-              //   this.$message("error", err.message);
-              // });
-              axios.post('/api/login', this.loginForm)
-                  .then(function (response) {
-                    console.log(response);
-                  })
-                  .catch(function (error) {
-                    console.log(error);
-                  });
+              login(this.loginForm).then(data => {
+                this.$store.commit("COMMIT_TOKEN", data.token);
+                this.$store.commit("COMMIT_USER", data.user);
+                this.$messages('success', 'success')
+                this.$router.push({path: "/home"});
+              }).catch(err => {
+                this.$messages("error", err.message);
+              });
+            } else {
+              console.log("err")
+              return false;
             }
-            //这里模拟管理员以及用户两种权限,一般的都是登陆后接口传过来
-            // let roles=[]
-            // roles.push(this.ruleForm2.username)
-            // this.$store.commit("COMMIT_ROLE", roles);
-            // this.$router.push({
-            //       path: "/home"
-            //     });
-            //   login(this.ruleForm2)
-            //       .then(res => {
-            //         console.log(res)
-            //         //提交数据到vuex
-            //         this.$store.commit("COMMIT_TOKEN", res);
-            //         this.$message('success', res.message)
-            //         this.$router.push({
-            //           path: "/"
-            //         });
-            //       })
-            //       .catch(err => {
-            //         this.$message("error", err.message);
-            //       });
-            // } else {
-            //   return false;
-            // }
           }
       );
     },

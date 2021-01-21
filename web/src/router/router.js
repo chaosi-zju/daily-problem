@@ -75,19 +75,14 @@ const myRouter = new Router({
 
 //判断是否存在token
 myRouter.beforeEach((to, from, next) => {
-    NProgress.start()
     document.title = 'Daily Problem'
+    NProgress.start()
     if (to.path !== '/login' && !store.state.token) {
         next('/login')
-        NProgress.done() // 结束Progress
     } else {
         next();
     }
-    if (to.meta.roles) {
-        to.meta.roles.includes(...store.getters.roles) ? next() : next('/404')
-    } else {
-        next();
-    }
+    NProgress.done() // 结束Progress
 })
 
 myRouter.afterEach(() => {

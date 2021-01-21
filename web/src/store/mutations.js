@@ -1,24 +1,27 @@
 const mutations = {
-    //保存token
-    COMMIT_TOKEN(state, object) {
-        state.token = object.token;
+    // 保存token
+    COMMIT_TOKEN(state, token) {
+        state.token = token;
     },
-    //保存标签
-    TAGES_LIST(state, arr) {
+    // 保存用户
+    COMMIT_USER(state, user) {
+        state.user = user
+    },
+    // 保存标签
+    TAGS_LIST(state, arr) {
         state.tagsList = arr;
     },
-    IS_COLLAPSE(state, bool) {
+    // 设置折叠
+    SET_COLLAPSE(state, bool) {
         state.isCollapse = bool;
     },
-    //保存用户
-    COMMIT_ROLE(state, roles) {
-        state.roles = roles
+    // 设置语言
+    SET_LANGUAGE(state, lang) {
+        state.lang = lang
     },
-    GET_LANGUAGE(state,lang){
-        state.lang=lang
-    },
-    SET_BREAD(state,breadList){
-        state.breadList=breadList
+    // 设置面包屑
+    SET_BREAD(state, breadList) {
+        state.breadList = breadList
     }
 }
 export default mutations

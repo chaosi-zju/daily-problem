@@ -51,7 +51,7 @@ export default {
         return this.$store.state.tagsList;
       },
       set: function(newValue) {
-        this.$store.commit("TAGES_LIST", newValue);
+        this.$store.commit("TAGS_LIST", newValue);
         // this.$store.state.tagsList = newValue;
       }
     }
@@ -90,7 +90,7 @@ export default {
           name: route.name
         });
         //存到vuex
-        this.$store.commit("TAGES_LIST", this.tagsList);
+        this.$store.commit("TAGS_LIST", this.tagsList);
       }
     },
     closeTags(index, path) {
@@ -99,7 +99,7 @@ export default {
       } else {
         //删除当前
         let tags = this.tagsList.splice(index, 1);
-        this.$store.commit("TAGES_LIST", this.tagsList);
+        this.$store.commit("TAGS_LIST", this.tagsList);
       }
       if (path === this.$route.fullPath) {
         //如果关闭当前直接跳到下一个

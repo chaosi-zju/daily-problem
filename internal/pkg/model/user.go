@@ -10,12 +10,12 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string     `gorm:"column:name"`
-	Email    string     `gorm:"column:email"`
-	Phone    string     `gorm:"column:phone"`
-	Password string     `gorm:"column:password"`
-	Role     string     `gorm:"column:role"`
-	Config   UserConfig `gorm:"column:config;type:string"`
+	Name     string     `gorm:"column:name" json:"name"`
+	Email    string     `gorm:"column:email" json:"email"`
+	Phone    string     `gorm:"column:phone" json:"phone"`
+	Password string     `gorm:"column:password" json:"password"`
+	Role     string     `gorm:"column:role" json:"role"`
+	Config   UserConfig `gorm:"column:config;type:string" json:"config"`
 }
 
 type UserConfig struct {
@@ -48,9 +48,9 @@ func LoginCheck(param LoginParam) (User, error) {
 		Password: param.Password,
 	}
 
-	err := mysqld.Db.First(&user).Error
+	err := mysqld.Db.Where(&user).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
-		return user, fmt.Errorf("password not match")
+		return user, fmt.Errorf("user not exist or password wrong")
 	}
 
 	return user, err
