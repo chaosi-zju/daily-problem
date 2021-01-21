@@ -41,7 +41,7 @@ module.exports = {
     });
 
     //只在生产环境生效
-    if (process.env.VUE_APP_CURRENTMODE === "production") {
+    if (process.env.VUE_APP_CURRENT_MODE === "production") {
       config.externals(externals);
       config.optimization.minimize(true);
       config.optimization.splitChunks({
@@ -115,7 +115,7 @@ module.exports = {
           publicPath: "/node_modules"
         })
       ];
-    if (process.env.VUE_APP_CURRENTMODE !== "development") {
+    if (process.env.VUE_APP_CURRENT_MODE !== "development") {
       config.plugins = [...config.plugins, ...pluginsPro];
     }
     config.plugins = [...config.plugins, ...plugins];

@@ -4,8 +4,8 @@ import {Loading} from "element-ui";
 import {messages} from '@/assets/js/common'
 import store from '../store/store'
 
-axios.defaults.timeout = 10000;
-axios.defaults.baseURL = 'http://localhost:5001';   //process.env.VUE_APP_LOGOUT_URL
+axios.defaults.timeout = process.env.VUE_APP_HTTP_TIMEOUT;
+axios.defaults.baseURL = process.env.VUE_APP_LOGOUT_URL;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 let loading = null;
 
