@@ -32,6 +32,8 @@ func GetDailyProblem(c *gin.Context) {
 }
 
 func AddProblem(c *gin.Context) {
+	var err error
+	var user model.User
 	var problem model.Problem
 
 	if err := c.BindJSON(&problem); err != nil {
@@ -44,6 +46,12 @@ func AddProblem(c *gin.Context) {
 		return
 	}
 
+	if user, err = util.GetUserFromContext(c); err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	problem.Creator = user
 	if err := mysqld.Db.Create(&problem).Error; err != nil {
 		util.ResponseError(c, 500, "add problem failed: "+err.Error())
 	} else {
@@ -53,24 +61,35 @@ func AddProblem(c *gin.Context) {
 }
 
 func UpdateProblem(c *gin.Context) {
-	var problem model.Problem
+	var param model.UpdateProblemParam
 
-	if err := c.BindJSON(&problem); err != nil {
+	// 1. 参数解析
+	if err := c.BindJSON(&param); err != nil {
 		util.ResponseError(c, 500, "param invalid")
 		return
 	}
 
-	if err := validator.New().Struct(problem); err != nil {
+	// 2. 参数校验
+	if err := validator.New().Struct(param); err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
 
-	if problem.ID == 0 {
-		util.ResponseError(c, 500, "problem_id should't null")
+	// 3. 判断该题是否存在
+	problem, err := model.GetProblemByID(param.ID)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
 		return
 	}
 
-	if err := mysqld.Db.Save(&problem).Error; err != nil {
+	// 4. 判断当前用户是否有修改的权限 (创建者才有权限)
+	if userId, err := util.GetUserIdFromContext(c); err != nil || userId != problem.CreatorID {
+		util.ResponseError(c, 500, "您不是该题创建者，没有权限修改")
+		return
+	}
+
+	// 5. 执行修改
+	if err = mysqld.Db.Model(&problem).Updates(param.ToMap()).Error; err != nil {
 		util.ResponseError(c, 500, "update problem failed: "+err.Error())
 	} else {
 		util.ResponseSuccess(c, problem)

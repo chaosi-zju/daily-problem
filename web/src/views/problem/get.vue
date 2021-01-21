@@ -3,10 +3,23 @@
     <!-- 表格数据 -->
     <div class="table-content">
       <el-table :data="pageList" stripe style="width: 100%;">
-        <el-table-column prop="name" label="1"></el-table-column>
-        <el-table-column prop="content" label="2"></el-table-column>
-        <el-table-column prop="link" label="3"></el-table-column>
-        <el-table-column prop="result" label="4"></el-table-column>
+        <el-table-column label="题目类别" min-width="19%">
+          <template slot-scope="scope">
+            <div class="type-big">{{ scope.row.type }}</div>
+            <div class="type-small">{{ scope.row.sub_type }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="题目标题" min-width="56%"></el-table-column>
+        <el-table-column label="操作" min-width="25%">
+          <template slot-scope="scope">
+            <el-button type="info" @click="jumpToLink(scope.row.link)" class="el-icon-paperclip">原题</el-button>
+            <el-button type="info" @click="jumpToLocal(scope.row.ID)" class="el-icon-edit-outline">做题</el-button>
+            <el-button type="info" @click="jumpToResult(scope.row.ID)" class="el-icon-document">答案</el-button>
+            <el-button type="info" :disabled="scope.row.finished" @click="finish(scope.row.ID)"
+                       class="el-icon-circle-check">完成
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="block">
         <el-pagination
@@ -24,7 +37,7 @@
 </template>
 
 <script>
-import {dailyProblem} from "@api";
+import {dailyProblem, finishProblem} from "@api";
 
 export default {
   data() {
@@ -44,6 +57,20 @@ export default {
   },
 
   methods: {
+    jumpToLink: function (link) {
+      window.open(link)
+    },
+    jumpToLocal: function () {
+
+    },
+    jumpToResult: function () {
+
+    },
+    finish: function (pid) {
+      finishProblem({problem_id: pid}).then(() => {
+
+      })
+    },
     handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;
       this.handleCurrentChange(this.currentPage);
@@ -65,3 +92,24 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.el-button--info {
+  width: 60px;
+  height: 25px;
+  font-size: 10px;
+  padding: 2px;
+  margin: 2px;
+}
+
+.type-big {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.type-small {
+  font-size: xx-small;
+  font-weight: 300;
+}
+</style>
+

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"gorm.io/gorm"
 	"time"
@@ -8,12 +9,15 @@ import (
 
 type Problem struct {
 	gorm.Model
-	Name    string `gorm:"column:name" json:"name" validate:"required"` //题目标题
-	Content string `gorm:"column:content;type:text" json:"content"`     //题解内容
-	Result  string `gorm:"column:result;type:text" json:"result"`       //题目答案
-	Link    string `gorm:"column:link" json:"link"`                     //题目链接
-	Type    string `gorm:"column:type" json:"type"`                     //题目类别 algorithm、sql...
-	SubType string `gorm:"column:sub_type" json:"sub_type"`             //题目子类别 图、树、数组...
+	Name      string `gorm:"column:name" json:"name" validate:"required"` //题目标题
+	Content   string `gorm:"column:content;type:text" json:"content"`     //题解内容
+	Result    string `gorm:"column:result;type:text" json:"result"`       //题目答案
+	Link      string `gorm:"column:link" json:"link"`                     //题目链接
+	Type      string `gorm:"column:type" json:"type"`                     //题目类别 algorithm、sql...
+	SubType   string `gorm:"column:sub_type" json:"sub_type"`             //题目子类别 图、树、数组...
+	IsPublic  bool   `gorm:"column:is_public" json:"is_public"`           //题目是否公开
+	CreatorID uint   `gorm:"column:creator_id" json:"creator_id"`         //题目创建者ID
+	Creator   User   `gorm:"foreignKey:CreatorID" json:"-"`               //题目创建者
 }
 
 type UserProblem struct {
@@ -45,4 +49,12 @@ func GetAllProblemType() ([]string, error) {
 	}
 
 	return types, nil
+}
+
+func GetProblemByID(id uint) (Problem, error) {
+	var problem Problem
+	if err := mysqld.Db.First(&problem, id).Error; err == nil {
+		return problem, nil
+	}
+	return problem, fmt.Errorf("problem not exist")
 }

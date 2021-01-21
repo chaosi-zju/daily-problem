@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -38,4 +39,16 @@ func GetUserIdFromContext(c *gin.Context) (uint, error) {
 		}
 	}
 	return 0, fmt.Errorf("user info invalid")
+}
+
+func GetUserFromContext(c *gin.Context) (model.User, error) {
+	var user model.User
+	if v, ok := c.Get("claims"); ok {
+		if claims, ok := v.(*model.CustomClaims); ok {
+			if err := mysqld.Db.First(&user, claims.UserID).Error; err == nil {
+				return user, nil
+			}
+		}
+	}
+	return user, fmt.Errorf("user info invalid")
 }

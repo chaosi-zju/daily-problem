@@ -13,7 +13,7 @@ type User struct {
 	Name     string     `gorm:"column:name" json:"name"`
 	Email    string     `gorm:"column:email" json:"email"`
 	Phone    string     `gorm:"column:phone" json:"phone"`
-	Password string     `gorm:"column:password" json:"password"`
+	Password string     `gorm:"column:password" json:"-"`
 	Role     string     `gorm:"column:role" json:"role"`
 	Config   UserConfig `gorm:"column:config;type:string" json:"config"`
 }

@@ -22,12 +22,12 @@ func SetupRoutes() *gin.Engine {
 
 	r.POST("/api/login", handler.Login)
 	r.POST("/api/register", handler.Register)
-	r.GET("/api/problem/add", handler.AddProblem)
-	r.GET("/api/problem/update", handler.UpdateProblem)
 
 	userRouter := r.Group("/api/user")
 	userRouter.Use(middleware.JWTAuth())
 	userRouter.GET("/problem/daily", handler.GetDailyProblem)
+	userRouter.GET("/problem/add", handler.AddProblem)
+	userRouter.GET("/problem/update", handler.UpdateProblem)
 	userRouter.GET("/problem/finish", handler.FinishProblem)
 	userRouter.GET("/problem/notredo", handler.ShouldNotRedo)
 

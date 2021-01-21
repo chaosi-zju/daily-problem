@@ -2,7 +2,7 @@ import axios from "axios";
 import router from "../router/router";
 import {Loading} from "element-ui";
 import {messages} from '@/assets/js/common'
-import store from '../store/store'
+import store from '@/store/store'
 
 axios.defaults.timeout = process.env.VUE_APP_HTTP_TIMEOUT;
 axios.defaults.baseURL = process.env.VUE_APP_HTTP_URL;
@@ -77,7 +77,7 @@ axios.interceptors.response.use(
                 break;
             case 401:
                 messages("warning", "用户登陆过期，请重新登陆");
-                store.state.commit('COMMIT_TOKEN', '')
+                store.commit('COMMIT_TOKEN', '')
                 setTimeout(() => {
                     router.replace({
                         path: "/login",
@@ -85,7 +85,7 @@ axios.interceptors.response.use(
                             redirect: router.currentRoute.fullPath
                         }
                     });
-                }, 1000);
+                }, 500);
                 break;
             case 400:
                 messages("error", "数据异常");
