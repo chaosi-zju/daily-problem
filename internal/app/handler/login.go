@@ -28,8 +28,9 @@ func Login(c *gin.Context) {
 		if token, err := generateToken(user); err != nil {
 			util.ResponseError(c, 500, err.Error())
 		} else {
-			util.ResponseSuccess(c, map[string]string{
+			util.ResponseSuccess(c, map[string]interface{}{
 				"token": token,
+				"user":  user,
 			})
 		}
 	}
