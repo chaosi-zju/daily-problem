@@ -29,7 +29,7 @@ func SetupRoutes() *gin.Engine {
 	userRouter.GET("/problem/add", handler.AddProblem)
 	userRouter.GET("/problem/update", handler.UpdateProblem)
 	userRouter.GET("/problem/finish", handler.FinishProblem)
-	userRouter.GET("/problem/notredo", handler.ShouldNotRedo)
+	userRouter.GET("/problem/plan/remove", handler.RemoveFromPlan)
 
 	return r
 }

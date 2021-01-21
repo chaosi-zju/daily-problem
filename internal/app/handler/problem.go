@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
@@ -11,10 +12,6 @@ import (
 	"strconv"
 )
 
-const (
-	GetDailyProblemSQL = `select * from problems where id in (select problem_id from user_problems where user_id = ? and (pick_time > CURDATE() or finished = false))`
-)
-
 func GetDailyProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
@@ -22,7 +19,7 @@ func GetDailyProblem(c *gin.Context) {
 	}
 
 	var problems []model.Problem
-	err = mysqld.Db.Raw(GetDailyProblemSQL, userId).Scan(&problems).Error
+	err = mysqld.Db.Raw(consts.GetDailyProblemSQL, userId).Scan(&problems).Error
 	if err != nil {
 		util.ResponseError(c, 500, "db error")
 		return
@@ -55,9 +52,12 @@ func AddProblem(c *gin.Context) {
 	if err := mysqld.Db.Create(&problem).Error; err != nil {
 		util.ResponseError(c, 500, "add problem failed: "+err.Error())
 	} else {
+		if err = problem.AddToUserStudyPlan(user.ID); err != nil {
+			// 只做log记录
+			log.Errorf("add problem %d to user %d study plan falied: %+v", problem.ID, user.ID, err)
+		}
 		util.ResponseSuccess(c, problem)
 	}
-
 }
 
 func UpdateProblem(c *gin.Context) {
@@ -115,7 +115,7 @@ func FinishProblem(c *gin.Context) {
 		up.Finished = true
 		up.Times++
 		if err = mysqld.Db.Save(&up).Error; err == nil {
-			util.ResponseSuccess(c, nil)
+			util.ResponseSuccess(c, up)
 			return
 		}
 	} else if err == gorm.ErrRecordNotFound {
@@ -127,7 +127,7 @@ func FinishProblem(c *gin.Context) {
 	util.ResponseError(c, 500, "db error")
 }
 
-func ShouldNotRedo(c *gin.Context) {
+func RemoveFromPlan(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
@@ -142,13 +142,12 @@ func ShouldNotRedo(c *gin.Context) {
 
 	up := model.UserProblem{UserId: userId, ProblemId: uint(problemId)}
 	if err = mysqld.Db.Where(&up).First(&up).Error; err == nil {
-		up.ShouldRedo = false
-		if err = mysqld.Db.Save(&up).Error; err == nil {
+		if err = up.RemoveFromUserPlan(); err != nil {
 			util.ResponseSuccess(c, nil)
 			return
 		}
 	}
 
-	log.Errorf("set problem not redo error: %+v", err)
+	log.Errorf("remove problem: %d from user: %d 's plan error: %+v", problemId, userId, err)
 	util.ResponseError(c, 500, "db error")
 }
