@@ -4,11 +4,13 @@ import (
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.Request.Header.Get("x-jwt-token")
+		token := c.Request.Header.Get("Authorization")
+		token = strings.TrimPrefix(token, "Bearer ")
 		if token == "" {
 			util.ResponseHTTPError(c, 401, "no token for authentication")
 			c.Abort()
