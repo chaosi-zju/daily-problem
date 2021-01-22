@@ -53,8 +53,8 @@ export default {
   },
 
   methods: {
-    jumpToInfo: function () {
-
+    jumpToInfo: function (id) {
+      this.$router.push({path: "/problemInfo", query: {problem_id: id}});
     },
     removeFromPlan: function (idx) {
       removeFromProblemPlan({problem_id: this.rawList[idx].ID}).then(() => {

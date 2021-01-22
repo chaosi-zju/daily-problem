@@ -61,8 +61,8 @@ export default {
     jumpToLocal: function () {
 
     },
-    jumpToResult: function () {
-
+    jumpToResult: function (id) {
+      this.$router.push({path: "/problemInfo", query: {problem_id: id}});
     },
     finish: function (idx) {
       console.log(this.rawList[idx])

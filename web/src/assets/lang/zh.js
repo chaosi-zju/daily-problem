@@ -5,6 +5,7 @@ const zh = {
         insertProblem: '插入题目',
         problemPlan: '学习计划',
         problemSquare: '习题广场',
+        problemInfo: '题目详情',
         '404': '404',
         '403': '403'
     },

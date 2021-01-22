@@ -5,6 +5,7 @@ const en = {
         insertProblem: 'InsertProblem',
         problemPlan: 'ProblemPlan',
         problemSquare: 'ProblemSquare',
+        problemInfo: 'ProblemInfo',
         '404': '404',
         '403': '403'
     },

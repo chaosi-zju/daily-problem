@@ -77,6 +77,13 @@ const myRouter = new Router({
                     meta: {
                         title: 'problemPlan'
                     }
+                },
+                {
+                    path: '/problemInfo',
+                    component: getComponent('problem', 'info'),
+                    meta: {
+                        title: 'problemInfo'
+                    }
                 }
             ]
         },

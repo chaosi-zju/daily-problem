@@ -96,6 +96,21 @@ func UpdateProblem(c *gin.Context) {
 	}
 }
 
+func GetProblemByID(c *gin.Context) {
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	if problem, err := model.GetProblemByID(uint(problemId)); err == nil {
+		util.ResponseSuccess(c, problem)
+		return
+	}
+
+	util.ResponseError(c, 500, "problem not found")
+}
+
 func FinishProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {

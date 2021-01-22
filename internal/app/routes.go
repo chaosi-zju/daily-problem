@@ -31,6 +31,7 @@ func SetupRoutes() *gin.Engine {
 	userRouter.GET("/problem/update", handler.UpdateProblem)
 	userRouter.GET("/problem/finish", handler.FinishProblem)
 	userRouter.GET("/problem/unplanned", handler.GetAllUnPlanned)
+	userRouter.GET("/problem/get", handler.GetProblemByID)
 
 	userRouter.GET("/problem/plan/all", handler.GetAllPlanned)
 	userRouter.GET("/problem/plan/add", handler.AddToUserPlann)
