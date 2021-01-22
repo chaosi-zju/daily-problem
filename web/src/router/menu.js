@@ -15,4 +15,14 @@ export const menu = [
     index: "insertProblem",
     title: "insertProblem"
   },
+  {
+    icon: "el-icon-date",
+    index: "problemPlan",
+    title: "problemPlan"
+  },
+  {
+    icon: "el-icon-goods",
+    index: "problemSquare",
+    title: "problemSquare"
+  },
 ];

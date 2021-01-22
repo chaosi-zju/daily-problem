@@ -3,6 +3,8 @@ const zh = {
         home: '首页',
         getProblem: '每日做题',
         insertProblem: '插入题目',
+        problemPlan: '学习计划',
+        problemSquare: '习题广场',
         '404': '404',
         '403': '403'
     },

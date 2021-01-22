@@ -3,6 +3,8 @@ const en = {
         home: 'Home',
         getProblem: 'DailyProblem',
         insertProblem: 'InsertProblem',
+        problemPlan: 'ProblemPlan',
+        problemSquare: 'ProblemSquare',
         '404': '404',
         '403': '403'
     },

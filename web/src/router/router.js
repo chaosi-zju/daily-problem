@@ -59,9 +59,23 @@ const myRouter = new Router({
                 },
                 {
                     path: '/getProblem',
-                    component: getComponent('problem', 'get'),
+                    component: getComponent('problem', 'daily'),
                     meta: {
                         title: 'getProblem'
+                    }
+                },
+                {
+                    path: '/problemSquare',
+                    component: getComponent('problem', 'square'),
+                    meta: {
+                        title: 'problemSquare'
+                    }
+                },
+                {
+                    path: '/problemPlan',
+                    component: getComponent('problem', 'plan'),
+                    meta: {
+                        title: 'problemPlan'
                     }
                 }
             ]

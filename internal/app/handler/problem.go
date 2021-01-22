@@ -115,7 +115,7 @@ func FinishProblem(c *gin.Context) {
 		up.Finished = true
 		up.Times++
 		if err = mysqld.Db.Save(&up).Error; err == nil {
-			util.ResponseSuccess(c, up)
+			util.ResponseSuccess(c, nil)
 			return
 		}
 	} else if err == gorm.ErrRecordNotFound {
@@ -142,7 +142,7 @@ func RemoveFromPlan(c *gin.Context) {
 
 	up := model.UserProblem{UserId: userId, ProblemId: uint(problemId)}
 	if err = mysqld.Db.Where(&up).First(&up).Error; err == nil {
-		if err = up.RemoveFromUserPlan(); err != nil {
+		if err = up.RemoveFromUserPlan(); err == nil {
 			util.ResponseSuccess(c, nil)
 			return
 		}
@@ -150,4 +150,61 @@ func RemoveFromPlan(c *gin.Context) {
 
 	log.Errorf("remove problem: %d from user: %d 's plan error: %+v", problemId, userId, err)
 	util.ResponseError(c, 500, "db error")
+}
+
+func GetAllUnPlanned(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+	}
+
+	var problems []model.Problem
+	err = mysqld.Db.Raw(consts.SelectProblemUnplannedSQL, userId, userId).Scan(&problems).Error
+	if err != nil {
+		util.ResponseError(c, 500, "db error")
+		return
+	}
+
+	util.ResponseSuccess(c, problems)
+}
+
+func GetAllPlanned(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+	}
+
+	var problems []model.Problem
+	err = mysqld.Db.Raw(consts.SelectProblemPlannedSQL, userId).Scan(&problems).Error
+	if err != nil {
+		util.ResponseError(c, 500, "db error")
+		return
+	}
+
+	util.ResponseSuccess(c, problems)
+}
+
+func AddToUserPlann(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	var problem model.Problem
+	if problem, err = model.GetProblemByID(uint(problemId)); err == nil {
+		if err = problem.AddToUserStudyPlan(userId); err == nil {
+			util.ResponseSuccess(c, nil)
+			return
+		}
+	}
+
+	log.Errorf("add problem %d to user %d study plan falied: %+v", problemId, userId, err)
+	util.ResponseError(c, 500, "add to user plan failed")
 }

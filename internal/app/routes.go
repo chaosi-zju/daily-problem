@@ -25,10 +25,15 @@ func SetupRoutes() *gin.Engine {
 
 	userRouter := r.Group("/api/user")
 	userRouter.Use(middleware.JWTAuth())
+
 	userRouter.GET("/problem/daily", handler.GetDailyProblem)
 	userRouter.GET("/problem/add", handler.AddProblem)
 	userRouter.GET("/problem/update", handler.UpdateProblem)
 	userRouter.GET("/problem/finish", handler.FinishProblem)
+	userRouter.GET("/problem/unplanned", handler.GetAllUnPlanned)
+
+	userRouter.GET("/problem/plan/all", handler.GetAllPlanned)
+	userRouter.GET("/problem/plan/add", handler.AddToUserPlann)
 	userRouter.GET("/problem/plan/remove", handler.RemoveFromPlan)
 
 	return r

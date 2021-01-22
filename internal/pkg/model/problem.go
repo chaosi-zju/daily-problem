@@ -25,15 +25,16 @@ type Problem struct {
 // 将题目加入某用户的学习计划
 func (p Problem) AddToUserStudyPlan(userId uint) error {
 	// 将该题插入user_problem表中
+	loc, _ := time.LoadLocation("Local")
+	t, _ := time.ParseInLocation("2006-01-02 15:04:05", "2006-01-02 15:04:05", loc)
 	up := UserProblem{
 		UserId:      userId,
 		ProblemId:   p.ID,
 		ProblemType: p.Type,
-		Picked:      true,
-		//TODO
-		PickTime: nil,
-		Finished: false,
-		Times:    0,
+		Picked:      false,
+		PickTime:    t,
+		Finished:    false,
+		Times:       0,
 	}
 	return mysqld.Db.Create(&up).Error
 }

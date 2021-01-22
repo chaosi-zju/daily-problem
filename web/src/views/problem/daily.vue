@@ -65,9 +65,11 @@ export default {
 
     },
     finish: function (idx) {
+      console.log(this.rawList[idx])
       finishProblem({problem_id: this.rawList[idx].ID}).then(() => {
         this.$messages('success', 'success')
         this.rawList.splice(idx, 1)
+        this.currentChangePage(this.rawList, 1)
       })
     },
     handleSizeChange: function (pageSize) {
@@ -93,12 +95,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-button--info {
-  width: 60px;
+.el-button {
+  width: auto;
   height: 25px;
   font-size: 10px;
-  padding: 2px;
-  margin: 2px;
+  padding: 3px 5px;
+  margin: 2px 5px;
 }
 
 .type-big {
