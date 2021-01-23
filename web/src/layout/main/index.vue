@@ -27,11 +27,11 @@ export default {
   overflow: hidden;
   /*background: #f0f0f0;*/
   width: 100%;
-  overflow: hidden;
   .contents{
-    height: calc(100vh - 78px);
+    //height: calc(100vh - 78px);
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    padding: 10px 20px 60px 20px;
   }
 }
 </style>
