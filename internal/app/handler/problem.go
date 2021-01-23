@@ -18,7 +18,7 @@ func GetDailyProblem(c *gin.Context) {
 		util.ResponseError(c, 500, err.Error())
 	}
 
-	var problems []model.Problem
+	problems := make([]model.Problem, 0)
 	err = mysqld.Db.Raw(consts.GetDailyProblemSQL, userId).Scan(&problems).Error
 	if err != nil {
 		util.ResponseError(c, 500, "db error")
@@ -33,12 +33,12 @@ func AddProblem(c *gin.Context) {
 	var user model.User
 	var problem model.Problem
 
-	if err := c.BindJSON(&problem); err != nil {
+	if err = c.BindJSON(&problem); err != nil {
 		util.ResponseError(c, 500, "param invalid")
 		return
 	}
 
-	if err := validator.New().Struct(problem); err != nil {
+	if err = validator.New().Struct(problem); err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
@@ -173,7 +173,7 @@ func GetAllUnPlanned(c *gin.Context) {
 		util.ResponseError(c, 500, err.Error())
 	}
 
-	var problems []model.Problem
+	problems := make([]model.Problem, 0)
 	err = mysqld.Db.Raw(consts.SelectProblemUnplannedSQL, userId, userId).Scan(&problems).Error
 	if err != nil {
 		util.ResponseError(c, 500, "db error")
@@ -189,7 +189,7 @@ func GetAllPlanned(c *gin.Context) {
 		util.ResponseError(c, 500, err.Error())
 	}
 
-	var problems []model.Problem
+	problems := make([]model.Problem, 0)
 	err = mysqld.Db.Raw(consts.SelectProblemPlannedSQL, userId).Scan(&problems).Error
 	if err != nil {
 		util.ResponseError(c, 500, "db error")

@@ -7,6 +7,9 @@ const mutations = {
     COMMIT_USER(state, user) {
         state.user = user
     },
+    SET_CUR_PROBLEM(state, problem){
+        state.curProblem = problem
+    },
     // 保存标签
     TAGS_LIST(state, arr) {
         state.tagsList = arr;
@@ -14,6 +17,10 @@ const mutations = {
     // 设置折叠
     SET_COLLAPSE(state, bool) {
         state.isCollapse = bool;
+    },
+    // 设置全屏
+    SET_FULLSCREEN(state, bool){
+        state.isFullScreen = bool
     },
     // 设置语言
     SET_LANGUAGE(state, lang) {

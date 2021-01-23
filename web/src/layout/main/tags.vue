@@ -4,12 +4,12 @@
     <scroll-pane wrap-class="scrollbar-wrapper">
       <ul>
         <li
-          class="tags-li"
-          v-for="(item,index) in tagsList"
-          :key="index"
-          :class="{'active': isActive(item.path)}"
+            class="tags-li"
+            v-for="(item,index) in tagsList"
+            :key="index"
+            :class="{'active': isActive(item.path)}"
         >
-          <router-link :to="item.path" class="tags-li-title">{{$t('route.'+item.title)}}</router-link>
+          <router-link :to="item.path" class="tags-li-title">{{ $t('route.' + item.title) }}</router-link>
           <span class="tags-li-icon" @click="closeTags(index,item.path)">
             <i class="el-icon-close"></i>
           </span>
@@ -19,11 +19,11 @@
     <div class="tags-close-box">
       <el-dropdown @command="handleCommand">
         <el-button size="mini" type="primary">
-          {{$t('header.labelOptions')}}
+          {{ $t('header.labelOptions') }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
         <el-dropdown-menu size="small" slot="dropdown">
-          <el-dropdown-item command="closeOther">{{$t('header.closeOthers')}}</el-dropdown-item>
+          <el-dropdown-item command="closeOther">{{ $t('header.closeOthers') }}</el-dropdown-item>
           <!-- <el-dropdown-item command="all">关闭所有</el-dropdown-item> -->
         </el-dropdown-menu>
       </el-dropdown>
@@ -31,13 +31,14 @@
   </div>
 </template>
 <script>
-import { messages } from "@/assets/js/common.js";
+import {messages} from "@/assets/js/common.js";
 // import { mapState } from "vuex";
 import ScrollPane from "./scrollPane";
+
 export default {
   created() {
     //判断标签里面是否有值 有的话直接加载
-    if (this.tagsList.length == 0) {
+    if (this.tagsList.length === 0) {
       this.setTags(this.$route);
     }
   },
@@ -47,10 +48,10 @@ export default {
   computed: {
     //computed 方法里面没有set方法因此不能使用mapState,需要重新定义set方法
     tagsList: {
-      get: function() {
+      get: function () {
         return this.$store.state.tagsList;
       },
-      set: function(newValue) {
+      set: function (newValue) {
         this.$store.commit("TAGS_LIST", newValue);
         // this.$store.state.tagsList = newValue;
       }
@@ -68,12 +69,11 @@ export default {
       return path === this.$route.fullPath;
     },
     handleCommand(command) {
-      if (command == "closeOther") {
+      if (command === "closeOther") {
         // 关闭其他标签
-        const curItem = this.tagsList.filter(item => {
+        this.tagsList = this.tagsList.filter(item => {
           return item.path === this.$route.fullPath;
         });
-        this.tagsList = curItem;
       }
     },
     //添加标签
@@ -84,8 +84,14 @@ export default {
       });
       //不存在
       if (!isIn) {
+        // 对做题页面的特殊处理
+        let subTitle = ''
+        if (route.path === '/problemDo' && route.query.problem_id) {
+          subTitle = '：' + route.query.problem_id
+        }
         this.tagsList.push({
           title: route.meta.title,
+          sub_title: subTitle,
           path: route.fullPath,
           name: route.name
         });
@@ -94,17 +100,22 @@ export default {
       }
     },
     closeTags(index, path) {
-      if (this.tagsList.length == 1) {
+      if (this.tagsList.length === 1) {
         messages("warning", "不可全都关闭");
       } else {
+        //对做题页面的特殊处理
+        if (path.indexOf('/problemDo') === 0) {
+          this.$store.commit('SET_COLLAPSE', false)
+          this.$store.commit('SET_FULLSCREEN', false)
+        }
         //删除当前
-        let tags = this.tagsList.splice(index, 1);
+        this.tagsList.splice(index, 1);
         this.$store.commit("TAGS_LIST", this.tagsList);
       }
       if (path === this.$route.fullPath) {
         //如果关闭当前直接跳到下一个
         this.$router.push(
-          this.$store.state.tagsList[this.$store.state.tagsList.length - 1]
+            this.$store.state.tagsList[this.$store.state.tagsList.length - 1]
         );
       }
     }

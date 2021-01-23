@@ -46,11 +46,10 @@ export default {
       pageList: []
     };
   },
-
   mounted() {
     dailyProblem().then(data => {
-      this.rawList = data;
-      this.currentChangePage(this.rawList, 1);
+      this.rawList = data ? data : []
+      this.currentChangePage(this.rawList, 1)
     })
   },
 
@@ -58,19 +57,30 @@ export default {
     jumpToLink: function (link) {
       window.open(link)
     },
-    jumpToLocal: function () {
-
+    jumpToLocal: function (id) {
+      this.$store.commit('SET_COLLAPSE', true)
+      this.$store.commit('SET_FULLSCREEN', true)
+      this.$router.push({path: "/problemDo", query:{problem_id: id}})
     },
     jumpToResult: function (id) {
-      this.$router.push({path: "/problemInfo", query: {problem_id: id}});
+      let cur = this.$store.state.curProblem
+      cur.id = id
+      cur.isInPlan = true
+      this.$store.commit('SET_CUR_PROBLEM', cur)
+      this.$router.push({path: "/problemInfo"})
     },
     finish: function (idx) {
-      console.log(this.rawList[idx])
-      finishProblem({problem_id: this.rawList[idx].ID}).then(() => {
-        this.$messages('success', 'success')
-        this.rawList.splice(idx, 1)
-        this.currentChangePage(this.rawList, 1)
-      })
+      this.$confirm("完成后今日将不再展示该题，确认完成？", '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        finishProblem({problem_id: this.rawList[idx].ID}).then(() => {
+          this.$messages('success', 'success')
+          this.rawList.splice(idx, 1)
+          this.currentChangePage(this.rawList, 1)
+        })
+      });
     },
     handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;
@@ -99,7 +109,7 @@ export default {
   width: auto;
   height: 25px;
   font-size: 10px;
-  padding: 3px 5px;
+  padding: 3px 6px;
   margin: 2px 5px;
 }
 

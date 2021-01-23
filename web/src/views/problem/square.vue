@@ -47,14 +47,18 @@ export default {
 
   mounted() {
     problemSquare().then(data => {
-      this.rawList = data;
-      this.currentChangePage(this.rawList, 1);
+      this.rawList = data ? data : []
+      this.currentChangePage(this.rawList, 1)
     })
   },
 
   methods: {
     jumpToInfo: function (id) {
-      this.$router.push({path: "/problemInfo", query: {problem_id: id}});
+      let cur = this.$store.state.curProblem
+      cur.id = id
+      cur.isInPlan = false
+      this.$store.commit('SET_CUR_PROBLEM', cur)
+      this.$router.push({path: "/problemInfo"})
     },
     addToPlan: function (idx) {
       addToProblemPlan({problem_id: this.rawList[idx].ID}).then(() => {

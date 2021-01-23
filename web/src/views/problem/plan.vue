@@ -47,21 +47,31 @@ export default {
 
   mounted() {
     problemPlan().then(data => {
-      this.rawList = data;
-      this.currentChangePage(this.rawList, 1);
+      this.rawList = data ? data : []
+      this.currentChangePage(this.rawList, 1)
     })
   },
 
   methods: {
     jumpToInfo: function (id) {
-      this.$router.push({path: "/problemInfo", query: {problem_id: id}});
+      let cur = this.$store.state.curProblem
+      cur.id = id
+      cur.isInPlan = true
+      this.$store.commit('SET_CUR_PROBLEM', cur)
+      this.$router.push({path: "/problemInfo"})
     },
     removeFromPlan: function (idx) {
-      removeFromProblemPlan({problem_id: this.rawList[idx].ID}).then(() => {
-        this.$messages('success', 'success')
-        this.rawList.splice(idx, 1)
-        this.currentChangePage(this.rawList, 1)
-      })
+      this.$confirm('移出学习计划后将不再做此题，确认移出？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeFromProblemPlan({problem_id: this.rawList[idx].ID}).then(() => {
+          this.$messages('success', 'success')
+          this.rawList.splice(idx, 1)
+          this.currentChangePage(this.rawList, 1)
+        })
+      });
     },
     handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;

@@ -11,6 +11,10 @@ export const dailyProblem = (form) => get('/api/user/problem/daily', form)
 export const getProblemByID = (form) => get('/api/user/problem/get', form)
 // 完成题目
 export const finishProblem = (form) => get('/api/user/problem/finish', form)
+// 新增题目
+export const insertProblem = (form) => post('/api/user/problem/add', form)
+// 更新题目
+export const updateProblem = (form) => post('/api/user/problem/update', form)
 
 // 获取学习计划
 export const problemPlan = (form) => get('/api/user/problem/plan/all', form)

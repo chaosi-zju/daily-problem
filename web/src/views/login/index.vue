@@ -1,23 +1,31 @@
 <template>
   <div class="login-container">
-    <vue-particles color="#fff" :particlesNumber='60' :moveSpeed='1.5' :lineOpacity='0.5' class="bg"></vue-particles>
+    <vue-particles color="#fff" :particlesNumber='100' :moveSpeed='1.5' :lineOpacity='0.5' class="bg"></vue-particles>
     <div class="login-form" id="login-form">
-      <el-row :gutter="20">
-        <el-col :lg="6" :sm="10" class="aa">
+      <el-row type="flex" justify="center">
+        <el-col :xs="3" :sm="5" :md="6" :lg="7" :xl="8"></el-col>
+        <el-col :xs="16" :sm="12" :md="10" :lg="8" :xl="6" class="aa">
           <h3>{{ $t('login.system') }}</h3>
           <el-form :model="loginForm" status-icon :rules="loginRules" ref="ruleForm" label-width="100px">
-            <el-form-item :label="$t('login.username')" :required="true" prop="name">
+            <el-form-item :label="$t('login.username')" :required="true" prop="name" class="item">
               <el-input v-model="loginForm.name"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('login.password')" :required="true" prop="password">
+            <el-form-item :label="$t('login.password')" :required="true" prop="password" class="item">
               <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="loginFunc('ruleForm')" class="btn">登录</el-button>
-              <el-button type="info" @click="registerFunc('ruleForm')" class="btn">注册</el-button>
+              <el-row :gutter="0" type="flex" justify="center">
+                <el-col :span="12">
+                  <el-button type="primary" @click="loginFunc('ruleForm')">登录</el-button>
+                </el-col>
+                <el-col :span="12">
+                  <el-button type="info" @click="registerFunc('ruleForm')">注册</el-button>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-form>
         </el-col>
+        <el-col :xs="5" :sm="7" :md="8" :lg="9" :xl="10"></el-col>
       </el-row>
     </div>
   </div>
@@ -82,7 +90,13 @@ export default {
           this.loginForm.password = md5(temp)
           register(this.loginForm).then(() => {
             this.loginForm.password = temp
-            this.$messages('success', '注册成功，请点击登录')
+            this.$confirm('注册成功，是否立即登录？', '成功', {
+              confirmButtonText: '立即登录',
+              cancelButtonText: '暂不登录',
+              type: 'success'
+            }).then(() => {
+              this.loginFunc('ruleForm')
+            })
           }).catch(() => {
             this.loginForm.password = temp
           })
@@ -93,7 +107,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .bg {
   position: fixed;
   z-index: -1;
@@ -119,18 +133,21 @@ export default {
       margin: auto;
       float: none;
       font-weight: bolder;
+
+      .el-form-item__label{
+        color: wheat;
+      }
     }
 
     h3 {
       line-height: 60px;
       margin-left: 100px
     }
-
-    .btn {
-      margin-left: 35px;
-      margin-right: 35px;
-    }
   }
+
+  //.item {
+  //
+  //}
 }
 </style>
 

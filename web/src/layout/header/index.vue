@@ -53,7 +53,7 @@ import showAside from "./showAside";
 import selectLang from './selectLang'
 import breadcrumb from './breadCrumb'
 export default {
-  // name:'header',
+  name:'header',
   components: {
     showAside,
     selectLang,
@@ -61,11 +61,38 @@ export default {
   },
   data() {
     return {
-      fullscreen: false,
-      name: "chaosi",
+      fullscreen: this.$store.state.isFullScreen,
       message: 2,
-      username: "pcs"
+      username: this.$store.state.user.name
     };
+  },
+  watch:{
+    isFullScreen(val, oldVal){
+      this.fullscreen = val
+      let element = document.documentElement;
+      if (oldVal === false && val === true) {
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
   },
   computed: {
     isCollapse: {
@@ -75,6 +102,9 @@ export default {
       set: function(newValue) {
         this.$store.commit("SET_COLLAPSE", newValue);
       }
+    },
+    isFullScreen(){
+      return this.$store.state.isFullScreen
     }
   },
   methods: {
@@ -89,30 +119,8 @@ export default {
     },
     // 全屏事件
     handleFullScreen() {
-      let element = document.documentElement;
-      if (this.fullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.msRequestFullscreen) {
-          // IE11
-          element.msRequestFullscreen();
-        }
-      }
-      this.fullscreen = !this.fullscreen;
+      let isFullScreen = this.$store.state.isFullScreen
+      this.$store.commit('SET_FULLSCREEN', !isFullScreen)
     }
   }
 }; 

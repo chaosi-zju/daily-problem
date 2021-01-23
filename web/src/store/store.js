@@ -19,6 +19,7 @@ export default new Vuex.Store({
         // 只储存state中的token
         token: val.token,
         user: val.user,
+        curProblem: val.curProblem,
         lang:val.lang,
         tagsList: val.tagsList,
         breadList:val.breadList
