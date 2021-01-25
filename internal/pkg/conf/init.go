@@ -10,17 +10,15 @@ import (
 )
 
 var (
-	mode    = flag.String("mode", "dev", "operational mode")
-	confDir = flag.String("conf_dir", "conf", "path to config directory")
+	conf = flag.String("conf", "conf/config_dev.yaml", "path to config directory")
 )
 
 func Init(ctx context.Context) (err error) {
 	flag.Parse()
-	configPath := fmt.Sprintf("%s/config_%s.yaml", *confDir, *mode)
 
-	viper.SetConfigFile(configPath)
+	viper.SetConfigFile(*conf)
 	if err := viper.ReadInConfig(); err != nil {
-		return fmt.Errorf("failed to read config, path: %s, err: %+v", configPath, err)
+		return fmt.Errorf("failed to read config, path: %s, err: %+v", *conf, err)
 	}
 
 	viper.WatchConfig()
