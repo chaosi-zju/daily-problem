@@ -26,13 +26,12 @@ jobs:
         run: |
           make build_server
           make build_client
-          tar -zcvf release.tgz output
 
-      - name: Scp to deploy
+      - name: Scp to remote
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "release.tgz"
-          target: "~/chaosi"
+          source: "output/*"
+          target: "~/chaosi/release/daily-problem"
