@@ -45,8 +45,14 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            systemctl disable daily_problem.service
+            systemctl stop daily_problem.service
             mv ~/release/daily-problem/daily-problem ~/chaosi/node/
+            mv ~/release/daily-problem/daily_problem.service /etc/systemd/system/
             mv ~/release/daily-problem ~/chaosi/server
+            systemctl enable daily_problem.service
+            systemctl start daily_problem.service
+            systemctl status daily_problem.service
 
 
 
