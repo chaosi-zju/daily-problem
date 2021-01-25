@@ -1,4 +1,4 @@
-name: Release And Deploy
+name: Build And Deploy
 on:
   push:
     tags:
@@ -7,12 +7,12 @@ on:
       - master
 
 jobs:
-  release-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@master
         with:
             go-version: 1.14
 
@@ -20,10 +20,19 @@ jobs:
         uses: actions/setup-node@master
 
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Build
         run: |
           make build_server
           make build_client
           tar -zcvf release.tgz output
+
+      - name: Scp to deploy
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "release.tgz"
+          target: "~/chaosi"
