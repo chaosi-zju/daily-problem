@@ -37,6 +37,7 @@ jobs:
           target: "~/release/daily-problem"
           rm: true
           strip_components: 1
+          command_timeout: 15m
 
       - name: Deploy
         uses: appleboy/ssh-action@master
