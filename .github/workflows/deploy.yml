@@ -35,3 +35,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           source: "output/*"
           target: "~/chaosi/release/daily-problem"
+
