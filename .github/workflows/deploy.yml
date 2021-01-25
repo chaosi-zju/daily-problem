@@ -34,8 +34,19 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "output/*"
-          target: "~/chaosi/release/daily-problem"
+          target: "~/release/daily-problem"
           rm: true
           strip_components: 1
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            mv ~/release/daily-problem/daily-problem ~/chaosi/node/
+            mv ~/release/daily-problem ~/chaosi/server
+
 
 
