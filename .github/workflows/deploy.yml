@@ -33,6 +33,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          rm: true
           source: "output/*"
           target: "~/chaosi/release/daily-problem"
+
 
