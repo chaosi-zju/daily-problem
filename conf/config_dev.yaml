@@ -2,7 +2,7 @@ gin:
   port: 5001
   mode: debug
 mysql:
-  host: 127.0.0.1:3306
+  host: chaosi-zju.com:3306
   username: root
   password: xxxx
   database: daily_problem

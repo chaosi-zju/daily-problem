@@ -11,6 +11,7 @@
     "@riophae/vue-treeselect": "^0.0.38",
     "axios": "^0.21.1",
     "clipboard": "^2.0.4",
+    "compression-webpack-plugin": "^5.0.1",
     "echarts": "^4.2.1",
     "element-ui": "^2.10.1",
     "js-md5": "^0.7.3",
@@ -38,7 +39,6 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.2",
     "@vue/cli-service": "^4.5.11",
-    "compression-webpack-plugin": "^7.1.2",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",

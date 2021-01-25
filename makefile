@@ -1,7 +1,10 @@
 default: build_server build_client
 
 build_server:
-	go build -o bin/daily-problem cmd/main.go
+	go build -o output/daily-problem cmd/main.go
+	cp conf/config_prod.yaml output/
 
 build_client:
-	cd web && npm run server
+	cd web
+	npm install
+	npm run build
