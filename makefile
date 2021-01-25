@@ -5,6 +5,4 @@ build_server:
 	cp conf/config_prod.yaml output/
 
 build_client:
-	cd web
-	npm install
-	npm run build
+	cd web && npm install && npm run build

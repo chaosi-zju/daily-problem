@@ -26,3 +26,4 @@ jobs:
         run: |
           make build_server
           make build_client
+          tar -zcvf release.tgz output
