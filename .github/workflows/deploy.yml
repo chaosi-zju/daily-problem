@@ -35,7 +35,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          source: "output/*"
+          source: "release.tar.gz"
           target: "~/release"
           rm: true
           strip_components: 1
