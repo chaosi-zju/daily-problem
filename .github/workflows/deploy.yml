@@ -64,12 +64,11 @@ jobs:
             systemctl stop daily_problem.service
             cp -rf output/server/* ~/chaosi/server/daily-problem/
             cp -rf output/dist/* /usr/local/nginx/html/daily-problem/
-            cp -rf output/server/daily_problem.service /etc/systemd/system/
+            cp -rf output/daily_problem.service /etc/systemd/system/
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
             systemctl status daily_problem.service
             rm -r output
-            rm daily-problem.tgz
 
 
 
