@@ -53,6 +53,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          command_timeout: 30m
           script: |
             mkdir -p ~/release
             mkdir -p ~/chaosi/server/daily-problem
