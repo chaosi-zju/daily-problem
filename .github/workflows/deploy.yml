@@ -26,20 +26,28 @@ jobs:
         run: |
           make build_server
           make build_client
-          mv output daily-problem
-          tar -zcvf release.tar.gz daily-problem
+          tar -zcvf release.tgz output
 
-      - name: Scp to remote
-        uses: appleboy/scp-action@master
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          source: "release.tar.gz"
-          target: "~/release"
-          rm: true
-#          strip_components: 1
-          command_timeout: 15m
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release.tgz
+          asset_name: release.tgz
+          asset_content_type: application/x-tgz
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -48,17 +56,21 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            tar -zxvf ~/release/release.tar.gz
-            systemctl disable daily_problem.service
-            systemctl stop daily_problem.service
+            cd ~/release
+            wget https://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
+            tar -zxvf daily-problem.tgz
             mkdir -p ~/chaosi/server/daily-problem
             mkdir -p /usr/local/nginx/html/daily-problem
-            cp -rf ~/release/daily-problem/server/* ~/chaosi/server/daily-problem/
-            cp -rf ~/release/daily-problem/dist/* /usr/local/nginx/html/daily-problem/
-            cp -rf ~/release/daily-problem/server/daily_problem.service /etc/systemd/system/
+            systemctl disable daily_problem.service
+            systemctl stop daily_problem.service
+            cp -rf output/server/* ~/chaosi/server/daily-problem/
+            cp -rf output/dist/* /usr/local/nginx/html/daily-problem/
+            cp -rf output/server/daily_problem.service /etc/systemd/system/
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
             systemctl status daily_problem.service
+            rm -r output
+            rm daily-problem.tgz
 
 
 
