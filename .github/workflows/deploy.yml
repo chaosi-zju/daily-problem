@@ -46,11 +46,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            cp -rfa ~/release/daily-problem/server ~/chaosi/server/daily-problem
+            cp -rfa ~/release/daily-problem/dist ~/chaosi/node/daily-problem
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
-            mv -f ~/release/daily-problem/daily-problem ~/chaosi/node/
-            mv -f ~/release/daily-problem/daily_problem.service /etc/systemd/system/
-            mv -f ~/release/daily-problem ~/chaosi/server
+            cp -rf ~/release/daily-problem/server/daily_problem.service /etc/systemd/system/
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
             systemctl status daily_problem.service
