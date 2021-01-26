@@ -19,8 +19,7 @@ let externals = {
   "vue-router": "VueRouter",
   vuex: "Vuex",
   echarts: "echarts",
-  "vue2-editor": "VueEditor",
-  "mavon-editor": "mavon-editor"
+  "vue2-editor": "VueEditor"
 };
 module.exports = {
   //基本路径
