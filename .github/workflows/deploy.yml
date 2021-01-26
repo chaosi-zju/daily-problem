@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - master
 
 jobs:
   build-and-deploy:
@@ -56,11 +54,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            mkdir -p ~/release
+            mkdir -p ~/chaosi/server/daily-problem
+            mkdir -p /usr/local/nginx/html/daily-problem
             cd ~/release
             wget https://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
             tar -zxvf daily-problem.tgz
-            mkdir -p ~/chaosi/server/daily-problem
-            mkdir -p /usr/local/nginx/html/daily-problem
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
             cp -rf output/server/* ~/chaosi/server/daily-problem/
