@@ -26,6 +26,8 @@ jobs:
         run: |
           make build_server
           make build_client
+          mv output daily-problem
+          tar -zcvf release.tar.gz daily-problem
 
       - name: Scp to remote
         uses: appleboy/scp-action@master
@@ -34,7 +36,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           source: "output/*"
-          target: "~/release/daily-problem"
+          target: "~/release"
           rm: true
           strip_components: 1
           command_timeout: 15m
@@ -46,6 +48,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            tar -zxvf release.tar.gz
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
             mkdir -p ~/chaosi/server/daily-problem
