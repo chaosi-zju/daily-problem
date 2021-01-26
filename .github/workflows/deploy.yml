@@ -38,7 +38,7 @@ jobs:
           source: "release.tar.gz"
           target: "~/release"
           rm: true
-          strip_components: 1
+#          strip_components: 1
           command_timeout: 15m
 
       - name: Deploy
@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            tar -zxvf release.tar.gz
+            tar -zxvf ~/release/release.tar.gz
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
             mkdir -p ~/chaosi/server/daily-problem
