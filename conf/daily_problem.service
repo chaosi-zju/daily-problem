@@ -2,11 +2,9 @@
 Description=daily-problem daemon
 
 [Service]
-ExecStart=/root/chaosi/server/daily-problem/main -conf=/root/chaosi/server/daily-problem/config_prod.yaml
+ExecStart=/home/chaosi/server/daily-problem/main -conf=/home/chaosi/server/daily-problem/config_prod.yaml
 Restart=always
 RestartSec=4s500ms
-LimitCORE=infinity
-CPUAffinity=1
 
 [Install]
 WantedBy=multi-user.target
