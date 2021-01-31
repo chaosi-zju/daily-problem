@@ -23,7 +23,7 @@ func (up UserProblem) RemoveFromUserPlan() error {
 }
 
 func GetUserProblemType(userId uint) ([]string, error) {
-	rows, err := mysqld.Db.Raw(consts.SelectUserProblemTypeSQL).Rows()
+	rows, err := mysqld.Db.Raw(consts.SelectUserProblemTypeSQL, userId).Rows()
 	if err != nil {
 		return []string{}, err
 	}

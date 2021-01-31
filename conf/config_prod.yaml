@@ -9,7 +9,7 @@ mysql:
   password: ssbb
   database: daily_problem
 cron:
-  update_problem: '0 0 0 * * *'
+  pick_problem: '0 0 0 * * *'
 problem:
   default_daily_num: 3
 

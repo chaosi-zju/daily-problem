@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -49,9 +52,11 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if _, err := model.Register(param); err != nil {
+	if user, err := model.Register(param); err != nil {
 		util.ResponseError(c, 500, "register failed: "+err.Error())
 	} else {
+		// 生成默认的个人学习计划，忽略失败
+		go generateDefaultPlan(user)
 		util.ResponseSuccess(c, nil)
 	}
 }
@@ -72,4 +77,19 @@ func generateToken(user model.User) (string, error) {
 	}
 
 	return j.CreateToken(claims)
+}
+
+func generateDefaultPlan(user model.User) {
+	var problems []model.Problem
+	if err := mysqld.Db.Where("id <= ?", 235).Find(&problems).Error; err == nil {
+		for _, p := range problems {
+			if err = p.AddToUserStudyPlan(user.ID); err != nil {
+				// 只做log记录
+				log.Errorf("add problem %d to user %d study plan falied: %+v", p.ID, user.ID, err)
+			}
+		}
+	}
+	if err := cronjob.PickProblemByUser(user); err != nil {
+		log.Errorf("%+v", err)
+	}
 }

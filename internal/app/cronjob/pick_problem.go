@@ -2,6 +2,7 @@ package cronjob
 
 import (
 	"context"
+	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -9,11 +10,10 @@ import (
 	"time"
 )
 
-func UpdateProblem(ctx context.Context) {
+// PickProblem the detail of cornjob, pick daily problem for every user
+func PickProblem(ctx context.Context) {
 
 	begin := time.Now()
-	rand.Seed(time.Now().UnixNano())
-	defaultDailyNum := viper.GetInt("problem.default_daily_num")
 
 	users, err := model.GetAllUsers()
 	if err != nil {
@@ -22,40 +22,56 @@ func UpdateProblem(ctx context.Context) {
 
 	// 遍历每一个用户
 	for _, user := range users {
-		// 查询该用户的所有题类型
-		types, err := model.GetUserProblemType(user.ID)
-		if err != nil {
-			log.Errorf("get problem types of user %d failed: %+v", user.ID, err)
-			continue
-		}
-		// 遍历该用户的每一种题类型
-		for _, ttype := range types {
-
-			// 如果用户自定义了各类型的题目数量
-			dailyNum := defaultDailyNum
-			if num, ok := user.Config.ProblemNum[ttype]; ok {
-				dailyNum = num
-			}
-			// 遍历出题次数
-			for i := 0; i < dailyNum; i++ {
-
-				// 优先从没选过的题中选
-				if picked, err := model.PickRandonUnPicked(user.ID, ttype); err != nil {
-					log.Errorf("select unpicked problem for %s failed: %+v", user.Name, err)
-				} else if picked {
-					continue
-				}
-
-				// 再从做过的题中选
-				if picked, err := model.PickRandonFinished(user.ID, ttype); err != nil {
-					log.Errorf("select finished problem for %s failed: %+v", user.Name, err)
-				} else if picked {
-					continue
-				}
-
-				log.Errorf("no problem left for %s to pick", user.Name)
-			}
+		if err := PickProblemByUser(user); err != nil {
+			log.Errorf("%+v", err)
 		}
 	}
-	log.Infof("cronjob update_problem cost %+v", time.Now().Sub(begin))
+
+	log.Infof("cronjob pick_problem cost %+v", time.Now().Sub(begin))
+}
+
+func PickProblemByUser(user model.User) error {
+	rand.Seed(time.Now().UnixNano())
+
+	// 查询该用户的所有题类型
+	types, err := model.GetUserProblemType(user.ID)
+	if err != nil {
+		return fmt.Errorf("get problem types of user %d failed: %+v", user.ID, err)
+	}
+	// 遍历该用户的每一种题类型
+	for _, ttype := range types {
+
+		// 如果用户自定义了各类型的题目数量
+		dailyNum := viper.GetInt("problem.default_daily_num")
+		if num, ok := user.Config.ProblemNum[ttype]; ok {
+			dailyNum = num
+		}
+		if err := PickProblemByTypeAndNum(user.ID, ttype, dailyNum); err != nil {
+			log.Errorf("%+v", err)
+		}
+	}
+	return nil
+}
+
+func PickProblemByTypeAndNum(userid uint, ttype string, dailyNum int) error {
+	// 遍历出题次数
+	for i := 0; i < dailyNum; i++ {
+
+		// 优先从没选过的题中选
+		if picked, err := model.PickRandonUnPicked(userid, ttype); err != nil {
+			log.Errorf("select unpicked problem for user(%d) failed: %+v", userid, err)
+		} else if picked {
+			continue
+		}
+
+		// 再从做过的题中选
+		if picked, err := model.PickRandonFinished(userid, ttype); err != nil {
+			log.Errorf("select finished problem for user(%d) failed: %+v", userid, err)
+		} else if picked {
+			continue
+		}
+
+		return fmt.Errorf("no %s problem left for user(%d) to pick", ttype, userid)
+	}
+	return nil
 }

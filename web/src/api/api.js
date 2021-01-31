@@ -15,9 +15,15 @@ export const finishProblem = (form) => get('/api/user/problem/finish', form)
 export const insertProblem = (form) => post('/api/user/problem/add', form)
 // 更新题目
 export const updateProblem = (form) => post('/api/user/problem/update', form)
+// 获取所有题目类别
+export const getAllTypes = (form) => get('/api/user/problem/types', form)
+// 再来几道题
+export const moreProblem = (form) => get('/api/user/problem/pickmore', form)
 
 // 获取学习计划
 export const problemPlan = (form) => get('/api/user/problem/plan/all', form)
+// 加入今日任务
+export const addToDaily = (form) => get('/api/user/problem/plan/doitnow', form)
 // 移出学习计划
 export const removeFromProblemPlan = (form) => get('/api/user/problem/plan/remove', form)
 

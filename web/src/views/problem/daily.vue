@@ -19,6 +19,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页栏 -->
       <div class="block">
         <el-pagination
             @size-change="handleSizeChange"
@@ -30,20 +31,51 @@
             :total="rawList.length"
         ></el-pagination>
       </div>
+      <!-- 再来几道 -->
+      <div style="float:left">
+        <el-link icon="el-icon-question" type="warning" v-if="rawList.length === 0"
+                 @click="showDialog">不够？再来几道
+        </el-link>
+      </div>
+
+      <el-dialog title="哪种题再来几道?" :visible.sync="more.dialogVisible" width="30%">
+        <el-row :gutter="30" type="flex" justify="center">
+          <el-col :span="12">
+            <el-select v-model="more.ttype" placeholder="请选择题目类型">
+              <el-option v-for="item in more.typeOptions" :key="item" :label="item" :value="item"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="12">
+            <el-input v-model="more.num" placeholder="请输入题目数量"></el-input>
+          </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+          <el-button class="more-btn" @click="more.dialogVisible = false">取 消</el-button>
+          <el-button class="more-btn" type="primary" @click="getMoreProblem">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import {dailyProblem, finishProblem} from "@api";
+import {dailyProblem, finishProblem, getAllTypes, moreProblem} from "@api";
+import InsertProblem from "@/views/problem/insert";
 
 export default {
+  components: {InsertProblem},
   data() {
     return {
       rawList: [],
       currentPage: 1,
       pageSize: 10,
-      pageList: []
+      pageList: [],
+      more: {
+        dialogVisible: false,
+        typeOptions: [],
+        ttype: '',
+        num: 1,
+      }
     };
   },
   mounted() {
@@ -60,7 +92,7 @@ export default {
     jumpToLocal: function (id) {
       this.$store.commit('SET_COLLAPSE', true)
       this.$store.commit('SET_FULLSCREEN', true)
-      this.$router.push({path: "/problemDo", query:{problem_id: id}})
+      this.$router.push({path: "/problemDo", query: {problem_id: id}})
     },
     jumpToResult: function (id) {
       let cur = this.$store.state.curProblem
@@ -82,6 +114,23 @@ export default {
         })
       });
     },
+    showDialog: function () {
+      getAllTypes().then(data => {
+        this.more.typeOptions = data ? data : []
+        this.more.dialogVisible = true
+      })
+    },
+    getMoreProblem: function () {
+      if (this.more.ttype === "") {
+        this.$messages('error', '请选择题目类型')
+        return
+      }
+      moreProblem({type: this.more.ttype, num: this.more.num}).then(data => {
+        this.rawList = data ? data : []
+        this.currentChangePage(this.rawList, 1)
+        this.more.dialogVisible = false
+      })
+    },
     handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;
       this.handleCurrentChange(this.currentPage);
@@ -92,7 +141,7 @@ export default {
     },
     currentChangePage(list, currentPage) {
       let from = (currentPage - 1) * this.pageSize;
-      if (currentPage > 1 && from >= this.rawList.length){
+      if (currentPage > 1 && from >= this.rawList.length) {
         this.currentPage = this.rawList.length / this.pageSize;
         from = (this.currentPage - 1) * this.pageSize;
       }
@@ -109,7 +158,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-button {
+.el-button--info {
   width: auto;
   height: 25px;
   font-size: 10px;
@@ -125,6 +174,14 @@ export default {
 .type-small {
   font-size: xx-small;
   font-weight: 300;
+}
+
+.more-btn {
+  width: auto;
+  height: 27px;
+  font-size: 13px;
+  padding: 5px 10px;
+  margin: 5px 5px;
 }
 </style>
 

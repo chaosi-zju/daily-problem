@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
@@ -10,18 +11,56 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 func GetDailyProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
+		return
 	}
 
 	problems := make([]model.Problem, 0)
 	err = mysqld.Db.Raw(consts.GetDailyProblemSQL, userId).Scan(&problems).Error
 	if err != nil {
 		util.ResponseError(c, 500, "db error")
+		return
+	}
+
+	util.ResponseSuccess(c, problems)
+}
+
+func PickMoreProblem(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	ttype := c.Query("type")
+	if ttype == "" {
+		util.ResponseError(c, 500, "no type specificed")
+		return
+	}
+
+	num, err := strconv.Atoi(c.Query("num"))
+	if err != nil || num <= 0 {
+		util.ResponseError(c, 500, "no valid num specificed")
+		return
+	}
+
+	// pick problem
+	if err := cronjob.PickProblemByTypeAndNum(userId, ttype, num); err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	// get problem
+	problems := make([]model.Problem, 0)
+	err = mysqld.Db.Raw(consts.GetDailyProblemSQL, userId).Scan(&problems).Error
+	if err != nil {
+		util.ResponseError(c, 500, "选题成功，但刷新失败，请重新刷新")
 		return
 	}
 
@@ -142,6 +181,63 @@ func FinishProblem(c *gin.Context) {
 	util.ResponseError(c, 500, "db error")
 }
 
+func AddToDaily(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	var up model.UserProblem
+	err = mysqld.Db.Where("user_id = ? and problem_id = ?", userId, problemId).First(&up).Error
+	if err == nil {
+		if up.Picked == true && up.Finished == false {
+			util.ResponseError(c, 500, "该题已在今日任务，不需重复加入")
+			return
+		}
+		up.Picked = true
+		up.PickTime = time.Now()
+		up.Finished = false
+		if err = mysqld.Db.Save(&up).Error; err == nil {
+			util.ResponseSuccess(c, nil)
+			return
+		}
+	}
+
+	util.ResponseError(c, 500, "db error")
+}
+
+func AddToUserPlan(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	problemId, err := strconv.Atoi(c.Query("problem_id"))
+	if err != nil || problemId == 0 {
+		util.ResponseError(c, 500, "no problem_id specificed in url")
+		return
+	}
+
+	var problem model.Problem
+	if problem, err = model.GetProblemByID(uint(problemId)); err == nil {
+		if err = problem.AddToUserStudyPlan(userId); err == nil {
+			util.ResponseSuccess(c, nil)
+			return
+		}
+	}
+
+	log.Errorf("add problem %d to user %d study plan falied: %+v", problemId, userId, err)
+	util.ResponseError(c, 500, "add to user plan failed")
+}
+
 func RemoveFromPlan(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
@@ -171,6 +267,7 @@ func GetAllUnPlanned(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
+		return
 	}
 
 	problems := make([]model.Problem, 0)
@@ -187,6 +284,7 @@ func GetAllPlanned(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
+		return
 	}
 
 	problems := make([]model.Problem, 0)
@@ -199,27 +297,17 @@ func GetAllPlanned(c *gin.Context) {
 	util.ResponseSuccess(c, problems)
 }
 
-func AddToUserPlann(c *gin.Context) {
+func GetAllTypes(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
 
-	problemId, err := strconv.Atoi(c.Query("problem_id"))
-	if err != nil || problemId == 0 {
-		util.ResponseError(c, 500, "no problem_id specificed in url")
-		return
+	if types, err := model.GetUserProblemType(userId); err != nil {
+		log.Errorf("get user(%d) problem types failed: %+v", userId, err)
+		util.ResponseError(c, 500, "get user problem types failed")
+	} else {
+		util.ResponseSuccess(c, types)
 	}
-
-	var problem model.Problem
-	if problem, err = model.GetProblemByID(uint(problemId)); err == nil {
-		if err = problem.AddToUserStudyPlan(userId); err == nil {
-			util.ResponseSuccess(c, nil)
-			return
-		}
-	}
-
-	log.Errorf("add problem %d to user %d study plan falied: %+v", problemId, userId, err)
-	util.ResponseError(c, 500, "add to user plan failed")
 }

@@ -1,7 +1,7 @@
 const zh = {
     route: {
         home: '首页',
-        getProblem: '每日做题',
+        getProblem: '今日任务',
         insertProblem: '插入题目',
         problemPlan: '学习计划',
         problemSquare: '习题广场',
