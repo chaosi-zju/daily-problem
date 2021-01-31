@@ -61,10 +61,10 @@ export default {
       this.$router.push({path: "/problemInfo"})
     },
     addToPlan: function (idx) {
-      addToProblemPlan({problem_id: this.rawList[idx].ID}).then(() => {
+      addToProblemPlan({problem_id: this.pageList[idx].ID}).then(() => {
         this.$messages('success', 'success')
-        this.rawList.splice(idx, 1)
-        this.currentChangePage(this.rawList, 1)
+        this.rawList.splice((this.currentPage - 1) * this.pageSize + idx, 1)
+        this.currentChangePage(this.rawList, this.currentPage)
       })
     },
     handleSizeChange: function (pageSize) {
@@ -77,7 +77,11 @@ export default {
     },
     currentChangePage(list, currentPage) {
       let from = (currentPage - 1) * this.pageSize;
-      let to = currentPage * this.pageSize;
+      if (currentPage > 1 && from >= this.rawList.length){
+        this.currentPage = this.rawList.length / this.pageSize;
+        from = (this.currentPage - 1) * this.pageSize;
+      }
+      let to = from + this.pageSize;
       this.pageList = [];
       for (; from < to; from++) {
         if (list[from]) {

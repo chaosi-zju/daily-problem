@@ -55,7 +55,6 @@ axios.interceptors.response.use(
         if (loading) {
             loading.close();
         }
-        console.log(error.response)
         // 断网处理或者请求超时
         if (!error.response) {
             //请求超时
