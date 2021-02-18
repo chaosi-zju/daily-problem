@@ -67,7 +67,7 @@ jobs:
             cp -rf output/dist/* /usr/local/nginx/html/daily-problem/
             cp -rf output/daily_problem.service /etc/systemd/system/
             export MYSQL_HOST=${{ secrets.MYSQL_HOST }} MYSQL_USER=${{ secrets.MYSQL_USER }} MYSQL_PASSWD=${{ secrets.MYSQL_PASSWD }}
-            cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml
+            cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml && cd -
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
             systemctl status daily_problem.service
