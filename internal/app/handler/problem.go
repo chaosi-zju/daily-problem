@@ -351,7 +351,7 @@ func GetTodayOverview(c *gin.Context) {
 		PersistNum:   num,
 		PersistTimes: times,
 		Todulist: []model.TodoItem{
-			{Done: hasDone, Content: fmt.Sprintf("今日应做%d道题，已完成%d道题", numArr[0].Cnt+numArr[1].Cnt, numArr[1].Cnt)},
+			{Done: hasDone, Content: fmt.Sprintf("今日应做 %d 道题，已完成 %d 道题", numArr[0].Cnt+numArr[1].Cnt, numArr[1].Cnt)},
 		},
 	})
 
