@@ -1,17 +1,17 @@
 /*
  Navicat MySQL Data Transfer
 
- Source Server         : local
+ Source Server         : LOCALHOST
  Source Server Type    : MySQL
- Source Server Version : 80022
- Source Host           : localhost:3306
+ Source Server Version : 50722
+ Source Host           : 127.0.0.1:3306
  Source Schema         : daily_problem
 
  Target Server Type    : MySQL
- Target Server Version : 80022
+ Target Server Version : 50722
  File Encoding         : 65001
 
- Date: 25/01/2021 00:11:08
+ Date: 19/02/2021 17:15:14
 */
 
 SET NAMES utf8mb4;
@@ -21,48 +21,51 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for confs
 -- ----------------------------
 DROP TABLE IF EXISTS `confs`;
-CREATE TABLE `confs`  (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created_at` datetime NULL DEFAULT NULL,
-  `updated_at` datetime NULL DEFAULT NULL,
-  `deleted_at` datetime NULL DEFAULT NULL,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `value` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+CREATE TABLE `confs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `value` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_confs_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  KEY `idx_confs_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of confs
 -- ----------------------------
+BEGIN;
 INSERT INTO `confs` VALUES (1, '2021-01-17 22:33:04', '2021-01-17 22:33:04', NULL, 'JWT-SignKey', 'chaosi_zju_20200101');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for problems
 -- ----------------------------
 DROP TABLE IF EXISTS `problems`;
-CREATE TABLE `problems`  (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) NULL DEFAULT NULL,
-  `updated_at` datetime(3) NULL DEFAULT NULL,
-  `deleted_at` datetime(3) NULL DEFAULT NULL,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
-  `result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
-  `link` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `sub_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `is_public` tinyint(1) NULL DEFAULT NULL,
-  `creator_id` bigint UNSIGNED NULL DEFAULT NULL,
+CREATE TABLE `problems` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `content` text COLLATE utf8mb4_bin,
+  `result` text COLLATE utf8mb4_bin,
+  `link` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `sub_type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `is_public` tinyint(1) DEFAULT NULL,
+  `creator_id` bigint(20) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_problems_deleted_at`(`deleted_at`) USING BTREE,
-  INDEX `fk_problems_creator`(`creator_id`) USING BTREE,
-  CONSTRAINT `fk_problems_creator` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 236 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  KEY `idx_problems_deleted_at` (`deleted_at`) USING BTREE,
+  KEY `fk_problems_creator` (`creator_id`) USING BTREE,
+  CONSTRAINT `fk_problems_creator` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of problems
 -- ----------------------------
+BEGIN;
 INSERT INTO `problems` VALUES (1, '2021-01-17 13:00:09.606', '2021-01-17 13:00:09.606', NULL, '二维数组中的查找', '在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数\n\n', '选取右上角或左下角的元素，以左下角为例：\n\n* 如果左下角元素大于查找元素，则删除所在行\n* 如果左上角元素小于查找元素，则删除所在列\n\n```c++\nclass Solution {\npublic:\n    bool Find(int target, vector<vector<int> > array) {\n        int rows = array.size();\n        int columns = array[0].size();\n         \n        int r = rows - 1,c = 0;\n        while(r >= 0 && c < columns){\n            if(array[r][c] < target)\n                c++;\n            else if(array[r][c] > target)\n                r--;\n            else\n                return true;\n        }\n         \n        return false;\n    }\n};\n```\n', 'https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&tPage=1&rp=2&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking', 'algorithm', '数组', 1, 1);
 INSERT INTO `problems` VALUES (2, '2021-01-17 13:00:09.614', '2021-01-17 13:00:09.614', NULL, '链表节点排序', '在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序。\n\n示例 1:\n\n```\n输入: 4->2->1->3\n输出: 1->2->3->4\n```\n\n示例 2:\n\n```\n输入: -1->5->3->4->0\n输出: -1->0->3->4->5\n```\n\n', '分治，将大链表拆分成2个长度相等的小链表，递归处理，每次递归返回后，两个小链表已经有序，然后将2个小链表进行归并\n\n每次将链表分成2个长度相等的链表时，需要找到中间节点，可以使用1个快指针和1个慢指针\n\n#### 1）递归\n\n递归是“从上往下”的思想，如果考虑递归调用的函数栈帧，那么空间复杂度为O(n)，不考虑则空间复杂度为O(1)\n\n```c++\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* sortList(ListNode* head) {\n        if(!head || !head->next)    return head;\n        ListNode *slow = head,*fast = head;\n        while(fast && fast->next && fast->next->next){\n            fast = fast->next->next;\n            slow = slow->next;\n        }\n        ListNode *l1 = head,*l2 = slow->next;\n        slow->next = NULL;\n        l1 = sortList(l1);\n        l2 = sortList(l2);\n        //归并\n        ListNode node(0),*curr = &node;\n        while(l1 && l2){\n            if(l1->val < l2->val){\n                curr->next = l1;\n                l1 = l1->next;\n            }\n            else{\n                curr->next = l2;\n                l2 = l2->next;\n            }\n            curr = curr->next;\n        }\n        if(l1)      curr->next = l1;\n        else if(l2) curr->next = l2;\n\n        return node.next;\n    }\n};\n```\n\n#### 2）迭代\n\n也可以[“从下往上”](https://leetcode.com/problems/sort-list/discuss/46712/Bottom-to-up(not-recurring)-with-o(1)-space-complextity-and-o(nlgn)-time-complextity)，避免函数栈帧的开销\n\n```c++\n/**\n * Merge sort use bottom-up policy, \n * so Space Complexity is O(1)\n * Time Complexity is O(NlgN)\n * stable sort\n*/\nclass Solution {\npublic:\n    ListNode *sortList(ListNode *head) {\n        if(!head || !(head->next)) return head;\n        \n        //get the linked list\'s length\n        ListNode* cur = head;\n        int length = 0;\n        while(cur){\n            length++;\n            cur = cur->next;\n        }\n        \n        ListNode dummy(0);\n        dummy.next = head;\n        ListNode *left, *right, *tail;\n        for(int step = 1; step < length; step <<= 1){\n            cur = dummy.next;\n            tail = &dummy;\n            while(cur){\n                left = cur;\n                right = split(left, step);\n                cur = split(right,step);\n                tail = merge(left, right, tail);\n            }\n        }\n        return dummy.next;\n    }\nprivate:\n    /**\n     * Divide the linked list into two lists,\n     * while the first list contains first n ndoes\n     * return the second list\'s head\n     */\n    ListNode* split(ListNode *head, int n){\n        //if(!head) return NULL;\n        for(int i = 1; head && i < n; i++) head = head->next;\n        \n        if(!head) return NULL;\n        ListNode *second = head->next;\n        head->next = NULL;\n        return second;\n    }\n    /**\n      * merge the two sorted linked list l1 and l2,\n      * then append the merged sorted linked list to the node head\n      * return the tail of the merged sorted linked list\n     */\n    ListNode* merge(ListNode* l1, ListNode* l2, ListNode* head){\n        ListNode *cur = head;\n        while(l1 && l2){\n            if(l1->val > l2->val){\n                cur->next = l2;\n                cur = l2;\n                l2 = l2->next;\n            }\n            else{\n                cur->next = l1;\n                cur = l1;\n                l1 = l1->next;\n            }\n        }\n        cur->next = (l1 ? l1 : l2);\n        while(cur->next) cur = cur->next;\n        return cur;\n    }\n};\n```\n', 'https://leetcode.com/problems/sort-list/description/', 'algorithm', '链表', 1, 1);
 INSERT INTO `problems` VALUES (3, '2021-01-17 13:00:09.615', '2021-01-17 13:00:09.615', NULL, '将链表偶数位置的节点移至尾部', '给定一个单链表，把所有的奇数节点和偶数节点分别排在一起。请注意，这里的奇数节点和偶数节点指的是节点编号的奇偶性，而不是节点的值的奇偶性。\n\n请尝试使用原地算法完成。你的算法的空间复杂度应为 O(1)，时间复杂度应为 O(nodes)，nodes 为节点总数。\n\n示例 1:\n\n```\n输入: 1->2->3->4->5->NULL\n输出: 1->3->5->2->4->NULL\n```\n\n示例 2:\n\n```\n输入: 2->1->3->5->6->4->7->NULL \n输出: 2->3->6->7->1->5->4->NULL\n```\n\n说明:\n\n* 应当保持奇数节点和偶数节点的相对顺序。\n* 链表的第一个节点视为奇数节点，第二个节点视为偶数节点，以此类推。\n\n', '使用两个指针oddlist和evenlist指向奇数链表和偶数链表的表头节点。然后使用一个指针p1遍历原链表，每次将一个节点指向它的下下个节点，从而将奇数链表和偶数链表拆开\n\np1最后会指向原链表的最后一个结尾，这个节点可能是奇数链表的尾节点，也可能是偶数链表的尾节点。因此可以使用一个int变量odd做状态记录，通过odd判断p1是奇数链表的尾节点还是偶数链表的尾节点：\n\n* 如果是奇数链表的尾节点，那么将这个节点的下一个节点设为偶数链表的头结点，处理完成\n* 如果是偶数链表的尾节点，那么没有办法访问奇数链表的尾节点，因此使用另外一个指针p2，p2步伐p1慢，每次p1前移之前更新p2，因此在这种情况下p2指向奇数链表的尾节点，将其下一个节点设为偶数链表的头结点来完成处理\n\n```c++\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* oddEvenList(ListNode* head) {\n        if(!head)    return head;\n        \n        ListNode *oddlist = head,*evenlist = head->next,*p1 = head,*p2 = NULL;\n        int odd = 1;\n        while(p1->next){\n            ListNode *tp = p1->next;\n            p1->next = tp->next;\n            p2 = p1;\n            p1 = tp;\n            odd = 1 - odd;\n        }\n        \n        if(odd)//此时p1是奇数链表的尾节点\n            p1->next = evenlist;\n        else//此时p2是奇数链表的尾节点，因为odd不为1，说明上面while循环体至少被执行1次，所以p2不为NULL\n            p2->next = evenlist;\n        return oddlist;\n    }\n};\n```\n', 'https://leetcode.com/problems/odd-even-linked-list/description/', 'algorithm', '链表', 1, 1);
@@ -298,53 +301,293 @@ INSERT INTO `problems` VALUES (232, '2021-01-17 13:00:09.800', '2021-01-17 13:00
 INSERT INTO `problems` VALUES (233, '2021-01-17 13:00:09.801', '2021-01-17 13:00:09.801', NULL, '两个文件共同的url', '给定a、b两个文件，各存放50亿个url，每个url各占64字节，内存限制是4GB。找出a、b文件共同的url\n\n', '可以估计每个文件的大小为5Gx64B=320GB，远远大于内存限制的4GB。所以不可能将其完全加载到内存中处理。考虑分治法\n\n1. 遍历文件a，对每个url求取hash(url)%1024，然后根据所取得的值将url分别存储到1024个小文件中，这样每个小文件大约为300MB\n\n> * **为什么要做hash**？每个文件中可能包含相同的url，同一文件中相同的url可能分布在同一文件的不同位置。不同文件中相同的url可能也分布在不同位置。hash可以保证相同url映射到同一个小文件中\n> * **为什么是1024个小文件**？这里1024应该不是唯一值，分成1024个小文件，每个只有300多M，在后面查找过程中，将小文件中的url存储set时不会超过4G的限制\n\n2. 遍历文件b，采取和a相同的方式，将url分别存储到1024个小文件中。这样处理后，所有可能相同的url都在对应的小文件[(a0,b0),(a1,b1),...,(a1023,b1023)]中，不对应的小文件不可能有相同的url（**也就是hash的目的**）\n\n3. 求出1024对小文件中相同的url：把其中一个小文件的url存储到hash_set中。然后遍历另一个小文件的每个url，看其是否在刚才构建的hash_set中，如果是，那么就是共同的url\n', '', 'algorithm', '海量数据', 1, 1);
 INSERT INTO `problems` VALUES (234, '2021-01-17 13:00:09.801', '2021-01-17 13:00:09.801', NULL, '实现strcpy', '', '```c\n#include <cassert>\n\n//字符串拷贝\nchar* strcpy(char *strDest,const char *strSrc)\n{\n    assert(strDest && strSrc);\n\n    char *p = strDest;\n    while(*p++ = *strSrc++);\n    return strDest;\n}\n```\n', '', 'algorithm', 'c/c++基础', 1, 1);
 INSERT INTO `problems` VALUES (235, '2021-01-17 13:00:09.802', '2021-01-17 13:00:09.802', NULL, 'Dijkstra算法', '* 时间限制:10000ms\n* 单点时限:1000ms\n* 内存限制:256MB\n\n**描述**\n\n万圣节的早上，小Hi和小Ho在经历了一个小时的争论后，终于决定了如何度过这样有意义的一天——他们决定去闯鬼屋！\n\n在鬼屋门口排上了若干小时的队伍之后，刚刚进入鬼屋的小Hi和小Ho都颇饥饿，于是他们决定利用进门前领到的地图，找到一条通往终点的最短路径。\n\n鬼屋中一共有N个地点，分别编号为1..N，这N个地点之间互相有一些道路连通，两个地点之间可能有多条道路连通，但是并不存在一条两端都是同一个地点的道路。那么小Hi和小Ho至少要走多少路程才能够走出鬼屋去吃东西呢？\n\n**输入**\n\n每个测试点（输入文件）有且仅有一组测试数据。\n\n在一组测试数据中：\n\n第1行为4个整数N、M、S、T，分别表示鬼屋中地点的个数和道路的条数，入口（也是一个地点）的编号，出口（同样也是一个地点）的编号。\n\n接下来的M行，每行描述一条道路：其中的第i行为三个整数u_i, v_i, length_i，表明在编号为u_i的地点和编号为v_i的地点之间有一条长度为length_i的道路。\n\n对于100%的数据，满足N<=10^3，M<=10^4, 1 <= length_i <= 10^3, 1 <= S, T <= N, 且S不等于T。\n\n对于100%的数据，满足小Hi和小Ho总是有办法从入口通过地图上标注出来的道路到达出口。\n\n**输出**\n\n对于每组测试数据，输出一个整数Ans，表示那么小Hi和小Ho为了走出鬼屋至少要走的路程\n\n**样例输入**\n\n```\n5 23 5 4\n1 2 708\n2 3 112\n3 4 721\n4 5 339\n5 4 960\n1 5 849\n2 5 98\n1 4 99\n2 4 25\n2 1 200\n3 1 146\n3 2 106\n1 4 860\n4 1 795\n5 4 479\n5 4 280\n3 4 341\n1 4 622\n4 2 362\n2 3 415\n4 1 904\n2 1 716\n2 5 575\n```\n\n**样例输出**\n\n```\n123\n```\n\n', '```c++\n#include <iostream>\n#include <vector>\n#include <set>\n#include <climits>\n\nusing namespace std;\n\n#define rep(i,b,e) for(int i = b ; i < e ; i++)\n\n//根据输入的数据范围可知，图中最长路径不会超过INT_MAX，因此可以用于表示节点之间不可达\nconst int UNREACHABLE = INT_MAX; \n\nvector<int> dijkstra(const vector<vector<int> > &graph,int b){\n    if(graph.empty() || graph.size() != graph[0].size() || b < 0 || b >= graph.size())\n        return vector<int>();\n\n    vector<int> state = graph[b];   //所有顶点到达顶点b的初始距离\n    int vertexes = graph.size();    //顶点总数\n    set<int> rest_vertexes;         //未处理的顶点集合\n    rep(i,0,vertexes)\n        if(i != b)\n            rest_vertexes.insert(i);\n\n    int min_vertex;                 //每次找出距起点b最近的一个顶点处理\n    while(!rest_vertexes.empty()){\n        min_vertex = *(rest_vertexes.begin());//初始化为第一个未处理的顶点\n        for(int vertex : rest_vertexes)\n            if(state[vertex] != UNREACHABLE && state[vertex] < state[min_vertex])\n                min_vertex = vertex;\n\n        rest_vertexes.erase(min_vertex);\n\n        //看剩余节点通过min_vertex到达b的距离是否更短\n        for(int vertex : rest_vertexes)\n            //这个顶点要能到达min_vertex，并且min_vertex能到达b，这个顶点才可能到达b\n            if(graph[vertex][min_vertex] != UNREACHABLE && state[min_vertex] != UNREACHABLE){\n                if(state[vertex] == UNREACHABLE)\n                    state[vertex] = graph[vertex][min_vertex] + state[min_vertex];\n                else if (state[vertex] > graph[vertex][min_vertex] + state[min_vertex])\n                    state[vertex] = graph[vertex][min_vertex] + state[min_vertex];\n            }\n    }\n\n    return state;\n}\n\nint main(){\n\n    vector<vector<int> > graph;\n\n    //N：地点数\n    //M：道路数\n    //S：起点\n    //T：终点\n    //u：每条道路的第一个顶点\n    //v：每条道路的第二个顶点\n    //length：道路的长度\n    int N,M,S,T,u,v,length;\n    cin >> N >> M >> S >> T;\n\n    rep(i,0,N){\n        vector<int> tp;\n        rep(j,0,N){\n            if(i == j)  tp.push_back(0);    //顶点到自身的距离为0\n            else    tp.push_back(UNREACHABLE);\n        }\n        graph.push_back(tp);\n    }\n\n    rep(i, 0, M) {\n        cin >> u >> v >> length;\n        if(graph[u - 1][v - 1] > length)\n            graph[u - 1][v - 1] = length;\n        if(graph[v - 1][u - 1] > length)\n            graph[v - 1][u - 1] = length;\n    }\n\n    vector<int> state = dijkstra(graph,S - 1);\n    cout << state[T - 1] << endl;\n\n    return 0;\n}\n```\n', 'http://hihocoder.com/problemset/problem/1081', 'algorithm', '图', 1, 1);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for user_problems
 -- ----------------------------
 DROP TABLE IF EXISTS `user_problems`;
-CREATE TABLE `user_problems`  (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) NULL DEFAULT NULL,
-  `updated_at` datetime(3) NULL DEFAULT NULL,
-  `deleted_at` datetime(3) NULL DEFAULT NULL,
-  `user_id` bigint NOT NULL,
-  `problem_id` bigint NOT NULL,
-  `problem_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `picked` tinyint(1) NULL DEFAULT NULL,
-  `pick_time` datetime(3) NULL DEFAULT NULL,
-  `finished` tinyint(1) NULL DEFAULT NULL,
-  `times` bigint NULL DEFAULT NULL,
-  PRIMARY KEY (`id`, `user_id`, `problem_id`) USING BTREE,
-  INDEX `idx_user_problems_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+CREATE TABLE `user_problems` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `problem_id` bigint(20) NOT NULL,
+  `problem_type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `picked` tinyint(1) DEFAULT NULL,
+  `pick_time` datetime(3) DEFAULT NULL,
+  `finished` tinyint(1) DEFAULT NULL,
+  `times` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`,`user_id`,`problem_id`) USING BTREE,
+  KEY `idx_user_problems_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of user_problems
 -- ----------------------------
+BEGIN;
+INSERT INTO `user_problems` VALUES (1, '2021-02-19 17:02:12.916', '2021-02-19 17:02:12.916', NULL, 1, 1, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (2, '2021-02-19 17:02:12.922', '2021-02-19 17:02:12.922', NULL, 1, 2, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (3, '2021-02-19 17:02:12.933', '2021-02-19 17:02:12.933', NULL, 1, 3, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (4, '2021-02-19 17:02:12.938', '2021-02-19 17:02:12.938', NULL, 1, 4, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (5, '2021-02-19 17:02:12.943', '2021-02-19 17:02:14.165', NULL, 1, 5, 'algorithm', 1, '2021-02-19 17:02:14.165', 0, 0);
+INSERT INTO `user_problems` VALUES (6, '2021-02-19 17:02:12.948', '2021-02-19 17:02:12.948', NULL, 1, 6, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (7, '2021-02-19 17:02:12.953', '2021-02-19 17:02:12.953', NULL, 1, 7, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (8, '2021-02-19 17:02:12.958', '2021-02-19 17:02:12.958', NULL, 1, 8, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (9, '2021-02-19 17:02:12.964', '2021-02-19 17:02:12.964', NULL, 1, 9, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (10, '2021-02-19 17:02:12.969', '2021-02-19 17:02:12.969', NULL, 1, 10, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (11, '2021-02-19 17:02:12.975', '2021-02-19 17:02:12.975', NULL, 1, 11, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (12, '2021-02-19 17:02:12.979', '2021-02-19 17:02:12.979', NULL, 1, 12, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (13, '2021-02-19 17:02:12.983', '2021-02-19 17:02:12.983', NULL, 1, 13, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (14, '2021-02-19 17:02:12.989', '2021-02-19 17:02:12.989', NULL, 1, 14, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (15, '2021-02-19 17:02:12.994', '2021-02-19 17:02:12.994', NULL, 1, 15, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (16, '2021-02-19 17:02:12.998', '2021-02-19 17:02:12.998', NULL, 1, 16, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (17, '2021-02-19 17:02:13.007', '2021-02-19 17:02:13.007', NULL, 1, 17, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (18, '2021-02-19 17:02:13.018', '2021-02-19 17:02:13.018', NULL, 1, 18, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (19, '2021-02-19 17:02:13.023', '2021-02-19 17:02:13.023', NULL, 1, 19, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (20, '2021-02-19 17:02:13.028', '2021-02-19 17:02:13.028', NULL, 1, 20, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (21, '2021-02-19 17:02:13.035', '2021-02-19 17:02:13.035', NULL, 1, 21, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (22, '2021-02-19 17:02:13.040', '2021-02-19 17:02:13.040', NULL, 1, 22, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (23, '2021-02-19 17:02:13.046', '2021-02-19 17:02:13.046', NULL, 1, 23, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (24, '2021-02-19 17:02:13.051', '2021-02-19 17:02:13.051', NULL, 1, 24, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (25, '2021-02-19 17:02:13.055', '2021-02-19 17:02:13.055', NULL, 1, 25, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (26, '2021-02-19 17:02:13.061', '2021-02-19 17:02:13.061', NULL, 1, 26, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (27, '2021-02-19 17:02:13.066', '2021-02-19 17:02:13.066', NULL, 1, 27, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (28, '2021-02-19 17:02:13.071', '2021-02-19 17:02:13.071', NULL, 1, 28, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (29, '2021-02-19 17:02:13.076', '2021-02-19 17:02:13.076', NULL, 1, 29, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (30, '2021-02-19 17:02:13.082', '2021-02-19 17:02:13.082', NULL, 1, 30, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (31, '2021-02-19 17:02:13.087', '2021-02-19 17:02:13.087', NULL, 1, 31, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (32, '2021-02-19 17:02:13.094', '2021-02-19 17:02:13.094', NULL, 1, 32, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (33, '2021-02-19 17:02:13.099', '2021-02-19 17:02:13.099', NULL, 1, 33, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (34, '2021-02-19 17:02:13.103', '2021-02-19 17:02:13.103', NULL, 1, 34, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (35, '2021-02-19 17:02:13.108', '2021-02-19 17:02:13.108', NULL, 1, 35, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (36, '2021-02-19 17:02:13.113', '2021-02-19 17:02:13.113', NULL, 1, 36, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (37, '2021-02-19 17:02:13.117', '2021-02-19 17:02:13.117', NULL, 1, 37, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (38, '2021-02-19 17:02:13.122', '2021-02-19 17:02:13.122', NULL, 1, 38, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (39, '2021-02-19 17:02:13.127', '2021-02-19 17:02:13.127', NULL, 1, 39, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (40, '2021-02-19 17:02:13.132', '2021-02-19 17:02:13.132', NULL, 1, 40, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (41, '2021-02-19 17:02:13.136', '2021-02-19 17:02:13.136', NULL, 1, 41, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (42, '2021-02-19 17:02:13.141', '2021-02-19 17:02:13.141', NULL, 1, 42, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (43, '2021-02-19 17:02:13.145', '2021-02-19 17:02:13.145', NULL, 1, 43, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (44, '2021-02-19 17:02:13.150', '2021-02-19 17:02:13.150', NULL, 1, 44, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (45, '2021-02-19 17:02:13.155', '2021-02-19 17:02:13.155', NULL, 1, 45, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (46, '2021-02-19 17:02:13.160', '2021-02-19 17:02:13.160', NULL, 1, 46, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (47, '2021-02-19 17:02:13.165', '2021-02-19 17:02:13.165', NULL, 1, 47, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (48, '2021-02-19 17:02:13.170', '2021-02-19 17:02:14.159', NULL, 1, 48, 'algorithm', 1, '2021-02-19 17:02:14.159', 0, 0);
+INSERT INTO `user_problems` VALUES (49, '2021-02-19 17:02:13.174', '2021-02-19 17:02:13.174', NULL, 1, 49, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (50, '2021-02-19 17:02:13.178', '2021-02-19 17:02:13.178', NULL, 1, 50, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (51, '2021-02-19 17:02:13.182', '2021-02-19 17:02:13.182', NULL, 1, 51, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (52, '2021-02-19 17:02:13.187', '2021-02-19 17:02:13.187', NULL, 1, 52, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (53, '2021-02-19 17:02:13.191', '2021-02-19 17:02:13.191', NULL, 1, 53, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (54, '2021-02-19 17:02:13.196', '2021-02-19 17:02:13.196', NULL, 1, 54, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (55, '2021-02-19 17:02:13.201', '2021-02-19 17:02:13.201', NULL, 1, 55, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (56, '2021-02-19 17:02:13.206', '2021-02-19 17:02:13.206', NULL, 1, 56, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (57, '2021-02-19 17:02:13.211', '2021-02-19 17:02:13.211', NULL, 1, 57, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (58, '2021-02-19 17:02:13.216', '2021-02-19 17:02:13.216', NULL, 1, 58, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (59, '2021-02-19 17:02:13.221', '2021-02-19 17:02:13.221', NULL, 1, 59, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (60, '2021-02-19 17:02:13.225', '2021-02-19 17:02:13.225', NULL, 1, 60, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (61, '2021-02-19 17:02:13.230', '2021-02-19 17:02:13.230', NULL, 1, 61, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (62, '2021-02-19 17:02:13.236', '2021-02-19 17:02:13.236', NULL, 1, 62, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (63, '2021-02-19 17:02:13.242', '2021-02-19 17:02:13.242', NULL, 1, 63, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (64, '2021-02-19 17:02:13.247', '2021-02-19 17:02:13.247', NULL, 1, 64, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (65, '2021-02-19 17:02:13.254', '2021-02-19 17:02:13.254', NULL, 1, 65, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (66, '2021-02-19 17:02:13.259', '2021-02-19 17:02:13.259', NULL, 1, 66, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (67, '2021-02-19 17:02:13.265', '2021-02-19 17:02:13.265', NULL, 1, 67, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (68, '2021-02-19 17:02:13.271', '2021-02-19 17:02:13.271', NULL, 1, 68, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (69, '2021-02-19 17:02:13.280', '2021-02-19 17:02:13.280', NULL, 1, 69, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (70, '2021-02-19 17:02:13.285', '2021-02-19 17:02:13.285', NULL, 1, 70, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (71, '2021-02-19 17:02:13.290', '2021-02-19 17:02:13.290', NULL, 1, 71, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (72, '2021-02-19 17:02:13.297', '2021-02-19 17:02:13.297', NULL, 1, 72, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (73, '2021-02-19 17:02:13.302', '2021-02-19 17:02:13.302', NULL, 1, 73, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (74, '2021-02-19 17:02:13.308', '2021-02-19 17:02:13.308', NULL, 1, 74, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (75, '2021-02-19 17:02:13.313', '2021-02-19 17:02:13.313', NULL, 1, 75, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (76, '2021-02-19 17:02:13.320', '2021-02-19 17:02:13.320', NULL, 1, 76, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (77, '2021-02-19 17:02:13.325', '2021-02-19 17:02:13.325', NULL, 1, 77, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (78, '2021-02-19 17:02:13.331', '2021-02-19 17:02:13.331', NULL, 1, 78, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (79, '2021-02-19 17:02:13.340', '2021-02-19 17:02:13.340', NULL, 1, 79, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (80, '2021-02-19 17:02:13.345', '2021-02-19 17:02:13.345', NULL, 1, 80, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (81, '2021-02-19 17:02:13.349', '2021-02-19 17:02:13.349', NULL, 1, 81, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (82, '2021-02-19 17:02:13.354', '2021-02-19 17:02:13.354', NULL, 1, 82, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (83, '2021-02-19 17:02:13.359', '2021-02-19 17:02:13.359', NULL, 1, 83, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (84, '2021-02-19 17:02:13.363', '2021-02-19 17:02:13.363', NULL, 1, 84, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (85, '2021-02-19 17:02:13.369', '2021-02-19 17:02:13.369', NULL, 1, 85, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (86, '2021-02-19 17:02:13.373', '2021-02-19 17:02:13.373', NULL, 1, 86, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (87, '2021-02-19 17:02:13.378', '2021-02-19 17:02:13.378', NULL, 1, 87, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (88, '2021-02-19 17:02:13.383', '2021-02-19 17:02:13.383', NULL, 1, 88, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (89, '2021-02-19 17:02:13.387', '2021-02-19 17:02:13.387', NULL, 1, 89, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (90, '2021-02-19 17:02:13.392', '2021-02-19 17:02:13.392', NULL, 1, 90, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (91, '2021-02-19 17:02:13.399', '2021-02-19 17:02:13.399', NULL, 1, 91, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (92, '2021-02-19 17:02:13.408', '2021-02-19 17:02:13.408', NULL, 1, 92, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (93, '2021-02-19 17:02:13.413', '2021-02-19 17:02:13.413', NULL, 1, 93, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (94, '2021-02-19 17:02:13.419', '2021-02-19 17:02:13.419', NULL, 1, 94, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (95, '2021-02-19 17:02:13.429', '2021-02-19 17:02:13.429', NULL, 1, 95, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (96, '2021-02-19 17:02:13.434', '2021-02-19 17:02:13.434', NULL, 1, 96, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (97, '2021-02-19 17:02:13.438', '2021-02-19 17:02:13.438', NULL, 1, 97, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (98, '2021-02-19 17:02:13.443', '2021-02-19 17:02:13.443', NULL, 1, 98, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (99, '2021-02-19 17:02:13.448', '2021-02-19 17:02:13.448', NULL, 1, 99, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (100, '2021-02-19 17:02:13.452', '2021-02-19 17:02:13.452', NULL, 1, 100, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (101, '2021-02-19 17:02:13.457', '2021-02-19 17:02:13.457', NULL, 1, 101, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (102, '2021-02-19 17:02:13.464', '2021-02-19 17:02:13.464', NULL, 1, 102, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (103, '2021-02-19 17:02:13.468', '2021-02-19 17:02:13.468', NULL, 1, 103, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (104, '2021-02-19 17:02:13.473', '2021-02-19 17:02:13.473', NULL, 1, 104, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (105, '2021-02-19 17:02:13.478', '2021-02-19 17:02:13.478', NULL, 1, 105, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (106, '2021-02-19 17:02:13.482', '2021-02-19 17:02:13.482', NULL, 1, 106, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (107, '2021-02-19 17:02:13.488', '2021-02-19 17:02:13.488', NULL, 1, 107, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (108, '2021-02-19 17:02:13.497', '2021-02-19 17:02:13.497', NULL, 1, 108, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (109, '2021-02-19 17:02:13.502', '2021-02-19 17:02:13.502', NULL, 1, 109, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (110, '2021-02-19 17:02:13.511', '2021-02-19 17:02:13.511', NULL, 1, 110, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (111, '2021-02-19 17:02:13.515', '2021-02-19 17:02:13.515', NULL, 1, 111, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (112, '2021-02-19 17:02:13.521', '2021-02-19 17:02:13.521', NULL, 1, 112, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (113, '2021-02-19 17:02:13.529', '2021-02-19 17:02:13.529', NULL, 1, 113, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (114, '2021-02-19 17:02:13.533', '2021-02-19 17:02:13.533', NULL, 1, 114, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (115, '2021-02-19 17:02:13.539', '2021-02-19 17:02:13.539', NULL, 1, 115, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (116, '2021-02-19 17:02:13.543', '2021-02-19 17:02:13.543', NULL, 1, 116, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (117, '2021-02-19 17:02:13.549', '2021-02-19 17:02:13.549', NULL, 1, 117, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (118, '2021-02-19 17:02:13.553', '2021-02-19 17:02:13.553', NULL, 1, 118, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (119, '2021-02-19 17:02:13.558', '2021-02-19 17:02:13.558', NULL, 1, 119, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (120, '2021-02-19 17:02:13.563', '2021-02-19 17:02:13.563', NULL, 1, 120, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (121, '2021-02-19 17:02:13.568', '2021-02-19 17:02:13.568', NULL, 1, 121, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (122, '2021-02-19 17:02:13.573', '2021-02-19 17:02:13.573', NULL, 1, 122, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (123, '2021-02-19 17:02:13.579', '2021-02-19 17:02:13.579', NULL, 1, 123, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (124, '2021-02-19 17:02:13.584', '2021-02-19 17:02:13.584', NULL, 1, 124, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (125, '2021-02-19 17:02:13.589', '2021-02-19 17:02:13.589', NULL, 1, 125, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (126, '2021-02-19 17:02:13.594', '2021-02-19 17:02:13.594', NULL, 1, 126, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (127, '2021-02-19 17:02:13.598', '2021-02-19 17:02:13.598', NULL, 1, 127, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (128, '2021-02-19 17:02:13.603', '2021-02-19 17:02:13.603', NULL, 1, 128, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (129, '2021-02-19 17:02:13.608', '2021-02-19 17:02:13.608', NULL, 1, 129, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (130, '2021-02-19 17:02:13.613', '2021-02-19 17:02:13.613', NULL, 1, 130, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (131, '2021-02-19 17:02:13.618', '2021-02-19 17:02:13.618', NULL, 1, 131, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (132, '2021-02-19 17:02:13.622', '2021-02-19 17:02:13.622', NULL, 1, 132, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (133, '2021-02-19 17:02:13.626', '2021-02-19 17:02:13.626', NULL, 1, 133, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (134, '2021-02-19 17:02:13.631', '2021-02-19 17:02:13.631', NULL, 1, 134, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (135, '2021-02-19 17:02:13.635', '2021-02-19 17:02:13.635', NULL, 1, 135, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (136, '2021-02-19 17:02:13.640', '2021-02-19 17:02:13.640', NULL, 1, 136, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (137, '2021-02-19 17:02:13.644', '2021-02-19 17:02:13.644', NULL, 1, 137, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (138, '2021-02-19 17:02:13.649', '2021-02-19 17:02:14.173', NULL, 1, 138, 'algorithm', 1, '2021-02-19 17:02:14.173', 0, 0);
+INSERT INTO `user_problems` VALUES (139, '2021-02-19 17:02:13.653', '2021-02-19 17:02:13.653', NULL, 1, 139, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (140, '2021-02-19 17:02:13.658', '2021-02-19 17:02:13.658', NULL, 1, 140, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (141, '2021-02-19 17:02:13.662', '2021-02-19 17:02:13.662', NULL, 1, 141, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (142, '2021-02-19 17:02:13.667', '2021-02-19 17:02:13.667', NULL, 1, 142, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (143, '2021-02-19 17:02:13.672', '2021-02-19 17:02:13.672', NULL, 1, 143, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (144, '2021-02-19 17:02:13.677', '2021-02-19 17:02:13.677', NULL, 1, 144, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (145, '2021-02-19 17:02:13.682', '2021-02-19 17:02:13.682', NULL, 1, 145, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (146, '2021-02-19 17:02:13.686', '2021-02-19 17:02:13.686', NULL, 1, 146, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (147, '2021-02-19 17:02:13.690', '2021-02-19 17:02:13.690', NULL, 1, 147, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (148, '2021-02-19 17:02:13.694', '2021-02-19 17:02:13.694', NULL, 1, 148, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (149, '2021-02-19 17:02:13.705', '2021-02-19 17:02:13.705', NULL, 1, 149, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (150, '2021-02-19 17:02:13.714', '2021-02-19 17:02:13.714', NULL, 1, 150, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (151, '2021-02-19 17:02:13.718', '2021-02-19 17:02:13.718', NULL, 1, 151, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (152, '2021-02-19 17:02:13.726', '2021-02-19 17:02:13.726', NULL, 1, 152, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (153, '2021-02-19 17:02:13.731', '2021-02-19 17:02:13.731', NULL, 1, 153, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (154, '2021-02-19 17:02:13.735', '2021-02-19 17:02:13.735', NULL, 1, 154, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (155, '2021-02-19 17:02:13.740', '2021-02-19 17:02:13.740', NULL, 1, 155, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (156, '2021-02-19 17:02:13.744', '2021-02-19 17:02:13.744', NULL, 1, 156, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (157, '2021-02-19 17:02:13.749', '2021-02-19 17:02:13.749', NULL, 1, 157, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (158, '2021-02-19 17:02:13.753', '2021-02-19 17:02:13.753', NULL, 1, 158, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (159, '2021-02-19 17:02:13.757', '2021-02-19 17:02:13.757', NULL, 1, 159, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (160, '2021-02-19 17:02:13.762', '2021-02-19 17:02:13.762', NULL, 1, 160, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (161, '2021-02-19 17:02:13.766', '2021-02-19 17:02:13.766', NULL, 1, 161, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (162, '2021-02-19 17:02:13.771', '2021-02-19 17:02:13.771', NULL, 1, 162, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (163, '2021-02-19 17:02:13.776', '2021-02-19 17:02:13.776', NULL, 1, 163, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (164, '2021-02-19 17:02:13.781', '2021-02-19 17:02:13.781', NULL, 1, 164, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (165, '2021-02-19 17:02:13.786', '2021-02-19 17:02:13.786', NULL, 1, 165, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (166, '2021-02-19 17:02:13.792', '2021-02-19 17:02:13.792', NULL, 1, 166, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (167, '2021-02-19 17:02:13.797', '2021-02-19 17:02:13.797', NULL, 1, 167, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (168, '2021-02-19 17:02:13.802', '2021-02-19 17:02:13.802', NULL, 1, 168, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (169, '2021-02-19 17:02:13.808', '2021-02-19 17:02:13.808', NULL, 1, 169, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (170, '2021-02-19 17:02:13.814', '2021-02-19 17:02:13.814', NULL, 1, 170, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (171, '2021-02-19 17:02:13.819', '2021-02-19 17:02:13.819', NULL, 1, 171, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (172, '2021-02-19 17:02:13.823', '2021-02-19 17:02:13.823', NULL, 1, 172, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (173, '2021-02-19 17:02:13.829', '2021-02-19 17:02:13.829', NULL, 1, 173, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (174, '2021-02-19 17:02:13.833', '2021-02-19 17:02:13.833', NULL, 1, 174, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (175, '2021-02-19 17:02:13.838', '2021-02-19 17:02:13.838', NULL, 1, 175, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (176, '2021-02-19 17:02:13.843', '2021-02-19 17:02:13.843', NULL, 1, 176, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (177, '2021-02-19 17:02:13.847', '2021-02-19 17:02:13.847', NULL, 1, 177, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (178, '2021-02-19 17:02:13.852', '2021-02-19 17:02:13.852', NULL, 1, 178, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (179, '2021-02-19 17:02:13.856', '2021-02-19 17:02:13.856', NULL, 1, 179, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (180, '2021-02-19 17:02:13.861', '2021-02-19 17:02:13.861', NULL, 1, 180, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (181, '2021-02-19 17:02:13.865', '2021-02-19 17:02:13.865', NULL, 1, 181, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (182, '2021-02-19 17:02:13.870', '2021-02-19 17:02:13.870', NULL, 1, 182, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (183, '2021-02-19 17:02:13.875', '2021-02-19 17:02:13.875', NULL, 1, 183, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (184, '2021-02-19 17:02:13.880', '2021-02-19 17:02:13.880', NULL, 1, 184, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (185, '2021-02-19 17:02:13.885', '2021-02-19 17:02:13.885', NULL, 1, 185, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (186, '2021-02-19 17:02:13.890', '2021-02-19 17:02:13.890', NULL, 1, 186, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (187, '2021-02-19 17:02:13.895', '2021-02-19 17:02:13.895', NULL, 1, 187, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (188, '2021-02-19 17:02:13.900', '2021-02-19 17:02:13.900', NULL, 1, 188, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (189, '2021-02-19 17:02:13.904', '2021-02-19 17:02:13.904', NULL, 1, 189, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (190, '2021-02-19 17:02:13.910', '2021-02-19 17:02:13.910', NULL, 1, 190, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (191, '2021-02-19 17:02:13.919', '2021-02-19 17:02:13.919', NULL, 1, 191, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (192, '2021-02-19 17:02:13.925', '2021-02-19 17:02:13.925', NULL, 1, 192, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (193, '2021-02-19 17:02:13.930', '2021-02-19 17:02:13.930', NULL, 1, 193, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (194, '2021-02-19 17:02:13.934', '2021-02-19 17:02:13.934', NULL, 1, 194, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (195, '2021-02-19 17:02:13.940', '2021-02-19 17:02:13.940', NULL, 1, 195, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (196, '2021-02-19 17:02:13.946', '2021-02-19 17:02:13.946', NULL, 1, 196, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (197, '2021-02-19 17:02:13.951', '2021-02-19 17:02:13.951', NULL, 1, 197, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (198, '2021-02-19 17:02:13.955', '2021-02-19 17:02:13.955', NULL, 1, 198, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (199, '2021-02-19 17:02:13.961', '2021-02-19 17:02:13.961', NULL, 1, 199, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (200, '2021-02-19 17:02:13.966', '2021-02-19 17:02:13.966', NULL, 1, 200, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (201, '2021-02-19 17:02:13.971', '2021-02-19 17:02:13.971', NULL, 1, 201, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (202, '2021-02-19 17:02:13.980', '2021-02-19 17:02:13.980', NULL, 1, 202, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (203, '2021-02-19 17:02:13.985', '2021-02-19 17:02:13.985', NULL, 1, 203, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (204, '2021-02-19 17:02:13.991', '2021-02-19 17:02:13.991', NULL, 1, 204, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (205, '2021-02-19 17:02:13.996', '2021-02-19 17:02:13.996', NULL, 1, 205, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (206, '2021-02-19 17:02:14.001', '2021-02-19 17:02:14.001', NULL, 1, 206, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (207, '2021-02-19 17:02:14.007', '2021-02-19 17:02:14.007', NULL, 1, 207, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (208, '2021-02-19 17:02:14.012', '2021-02-19 17:02:14.012', NULL, 1, 208, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (209, '2021-02-19 17:02:14.017', '2021-02-19 17:02:14.017', NULL, 1, 209, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (210, '2021-02-19 17:02:14.027', '2021-02-19 17:02:14.027', NULL, 1, 210, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (211, '2021-02-19 17:02:14.032', '2021-02-19 17:02:14.032', NULL, 1, 211, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (212, '2021-02-19 17:02:14.036', '2021-02-19 17:02:14.036', NULL, 1, 212, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (213, '2021-02-19 17:02:14.041', '2021-02-19 17:02:14.041', NULL, 1, 213, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (214, '2021-02-19 17:02:14.046', '2021-02-19 17:02:14.046', NULL, 1, 214, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (215, '2021-02-19 17:02:14.053', '2021-02-19 17:02:14.053', NULL, 1, 215, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (216, '2021-02-19 17:02:14.058', '2021-02-19 17:02:14.058', NULL, 1, 216, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (217, '2021-02-19 17:02:14.063', '2021-02-19 17:02:14.063', NULL, 1, 217, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (218, '2021-02-19 17:02:14.069', '2021-02-19 17:02:14.069', NULL, 1, 218, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (219, '2021-02-19 17:02:14.075', '2021-02-19 17:02:14.075', NULL, 1, 219, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (220, '2021-02-19 17:02:14.081', '2021-02-19 17:02:14.081', NULL, 1, 220, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (221, '2021-02-19 17:02:14.086', '2021-02-19 17:02:14.086', NULL, 1, 221, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (222, '2021-02-19 17:02:14.091', '2021-02-19 17:02:14.091', NULL, 1, 222, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (223, '2021-02-19 17:02:14.095', '2021-02-19 17:02:14.095', NULL, 1, 223, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (224, '2021-02-19 17:02:14.100', '2021-02-19 17:02:14.100', NULL, 1, 224, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (225, '2021-02-19 17:02:14.104', '2021-02-19 17:02:14.104', NULL, 1, 225, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (226, '2021-02-19 17:02:14.109', '2021-02-19 17:02:14.109', NULL, 1, 226, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (227, '2021-02-19 17:02:14.113', '2021-02-19 17:02:14.113', NULL, 1, 227, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (228, '2021-02-19 17:02:14.118', '2021-02-19 17:02:14.118', NULL, 1, 228, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (229, '2021-02-19 17:02:14.122', '2021-02-19 17:02:14.122', NULL, 1, 229, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (230, '2021-02-19 17:02:14.128', '2021-02-19 17:02:14.128', NULL, 1, 230, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (231, '2021-02-19 17:02:14.132', '2021-02-19 17:02:14.132', NULL, 1, 231, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (232, '2021-02-19 17:02:14.137', '2021-02-19 17:02:14.137', NULL, 1, 232, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (233, '2021-02-19 17:02:14.141', '2021-02-19 17:02:14.141', NULL, 1, 233, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (234, '2021-02-19 17:02:14.146', '2021-02-19 17:02:14.146', NULL, 1, 234, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+INSERT INTO `user_problems` VALUES (235, '2021-02-19 17:02:14.151', '2021-02-19 17:02:14.151', NULL, 1, 235, 'algorithm', 0, '2006-01-02 15:04:05.000', 0, 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users`  (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  `created_at` datetime(3) NULL DEFAULT NULL,
-  `updated_at` datetime(3) NULL DEFAULT NULL,
-  `deleted_at` datetime(3) NULL DEFAULT NULL,
-  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `phone` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `role` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
-  `config` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `email` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `phone` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `password` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `role` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `config` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_users_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+  KEY `idx_users_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES (1, '2021-01-17 21:02:55.000', '2021-01-17 21:02:56.000', NULL, '1', NULL, NULL, 'c4ca4238a0b923820dcc509a6f75849b', 'admin', '{\"problem_num\":{\"algorithm\":3}}');
+BEGIN;
+INSERT INTO `users` VALUES (1, '2021-02-19 17:02:12.886', '2021-02-19 17:02:12.886', NULL, 'admin', '', '', '21232f297a57a5a743894a0e4a801fc3', 'user', '{\"problem_num\":{\"algorithm\":3}}');
+COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
