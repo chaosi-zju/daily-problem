@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
@@ -310,4 +311,24 @@ func GetAllTypes(c *gin.Context) {
 	} else {
 		util.ResponseSuccess(c, types)
 	}
+}
+
+func GetTodayOverview(c *gin.Context) {
+	userId, err := util.GetUserIdFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	fmt.Println(userId)
+	util.ResponseSuccess(c, model.OverviewRes{
+		PersistDay:   10,
+		InterruptDay: 20,
+		PersistNum:   30,
+		PersistTimes: 40,
+		Todulist: []model.TodoItem{
+			{Done: true, Content: "完成每日的做题"},
+		},
+	})
+
 }

@@ -76,8 +76,8 @@ axios.interceptors.response.use(
                 break;
             case 401:
                 messages("warning", "用户登陆过期，请重新登陆");
-                this.$store.commit('COMMIT_TOKEN', '')
-                this.$store.commit('COMMIT_USER', '')
+                store.commit('COMMIT_TOKEN', '')
+                store.commit('COMMIT_USER', '')
                 setTimeout(() => {
                     router.replace({
                         path: "/login",

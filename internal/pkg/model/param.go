@@ -34,3 +34,16 @@ func (param *UpdateProblemParam) ToMap() map[string]interface{} {
 		"IsPublic": param.IsPublic,
 	}
 }
+
+type OverviewRes struct {
+	PersistDay   int        `json:"persist_day"`
+	InterruptDay int        `json:"interrupt_day"`
+	PersistNum   int        `json:"persist_num"`
+	PersistTimes int        `json:"persist_times"`
+	Todulist     []TodoItem `json:"todulist"`
+}
+
+type TodoItem struct {
+	Done    bool   `json:"done"`
+	Content string `json:"content"`
+}

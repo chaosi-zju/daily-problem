@@ -4,6 +4,8 @@ import {get, post} from './request';
 export const login = (form) => post('/api/login', form)
 // 注册
 export const register = (form) => post('/api/register', form)
+// 获取每日概况
+export const getTodayOverview = (form) => get('/api/user/overview', form)
 
 // 获取每日的题目
 export const dailyProblem = (form) => get('/api/user/problem/daily', form)
