@@ -6,7 +6,7 @@ gin:
 mysql:
   host: 127.0.0.1:3306
   username: root
-  password: ssbb
+  password: PCS123456
   database: daily_problem
 cron:
   pick_problem: '0 0 0 * * *'

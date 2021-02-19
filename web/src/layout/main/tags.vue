@@ -84,14 +84,8 @@ export default {
       });
       //不存在
       if (!isIn) {
-        // 对做题页面的特殊处理
-        let subTitle = ''
-        if (route.path === '/problemDo' && route.query.problem_id) {
-          subTitle = '：' + route.query.problem_id
-        }
         this.tagsList.push({
           title: route.meta.title,
-          sub_title: subTitle,
           path: route.fullPath,
           name: route.name
         });

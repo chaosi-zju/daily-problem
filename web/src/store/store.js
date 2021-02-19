@@ -20,6 +20,7 @@ export default new Vuex.Store({
         token: val.token,
         user: val.user,
         curProblem: val.curProblem,
+        curDoProblemId: val.curDoProblemId,
         lang:val.lang,
         tagsList: val.tagsList,
         breadList:val.breadList

@@ -15,8 +15,7 @@ export default {
     }
   },
   mounted() {
-    let problemId = this.$route.query.problem_id
-    getProblemByID({problem_id: problemId}).then(data => {
+    getProblemByID({problem_id: this.$store.state.curDoProblemId}).then(data => {
       this.problem = data
       if (data.link.indexOf('leetcode.com') !== -1) {
         this.$message({

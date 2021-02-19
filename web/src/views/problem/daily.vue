@@ -92,7 +92,8 @@ export default {
     jumpToLocal: function (id) {
       this.$store.commit('SET_COLLAPSE', true)
       this.$store.commit('SET_FULLSCREEN', true)
-      this.$router.push({path: "/problemDo", query: {problem_id: id}})
+      this.$store.commit('SET_CUR_DO_PROBLEM', id)
+      this.$router.push({path: "/problemDo"})
     },
     jumpToResult: function (id) {
       let cur = this.$store.state.curProblem

@@ -7,8 +7,13 @@ const mutations = {
     COMMIT_USER(state, user) {
         state.user = user
     },
+    // 保存正在查看的题目
     SET_CUR_PROBLEM(state, problem){
         state.curProblem = problem
+    },
+    // 保存正在做的题目的ID
+    SET_CUR_DO_PROBLEM(state, id){
+        state.curDoProblemId = id
     },
     // 保存标签
     TAGS_LIST(state, arr) {
