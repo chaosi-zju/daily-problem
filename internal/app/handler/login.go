@@ -71,7 +71,7 @@ func generateToken(user model.User) (string, error) {
 		Phone:  user.Phone,
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix() - 1000,
-			ExpiresAt: time.Now().Unix() + 3600,
+			ExpiresAt: time.Now().Unix() + 86400,
 			Issuer:    "chaosi-zju",
 		},
 	}

@@ -115,6 +115,8 @@ export default {
     logout(command) {
       this.$store.commit('TAGS_LIST',[])
       this.$store.commit('SET_BREAD',['home'])
+      this.$store.commit('COMMIT_TOKEN', '')
+      this.$store.commit('COMMIT_USER', '')
       this.$router.push("/login");
     },
     // 全屏事件
