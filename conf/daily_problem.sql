@@ -1,17 +1,17 @@
 /*
  Navicat MySQL Data Transfer
 
- Source Server         : LOCALHOST
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50722
- Source Host           : 127.0.0.1:3306
+ Source Server Version : 80022
+ Source Host           : localhost:3306
  Source Schema         : daily_problem
 
  Target Server Type    : MySQL
- Target Server Version : 50722
+ Target Server Version : 80022
  File Encoding         : 65001
 
- Date: 19/02/2021 17:15:14
+ Date: 20/02/2021 00:47:03
 */
 
 SET NAMES utf8mb4;
@@ -22,12 +22,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `confs`;
 CREATE TABLE `confs` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `value` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `value` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_confs_deleted_at` (`deleted_at`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
@@ -44,18 +44,18 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `problems`;
 CREATE TABLE `problems` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `content` text COLLATE utf8mb4_bin,
-  `result` text COLLATE utf8mb4_bin,
-  `link` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `sub_type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `link` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `sub_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `is_public` tinyint(1) DEFAULT NULL,
-  `creator_id` bigint(20) unsigned DEFAULT NULL,
+  `creator_id` bigint unsigned DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_problems_deleted_at` (`deleted_at`) USING BTREE,
   KEY `fk_problems_creator` (`creator_id`) USING BTREE,
@@ -308,17 +308,17 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user_problems`;
 CREATE TABLE `user_problems` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `user_id` bigint(20) NOT NULL,
-  `problem_id` bigint(20) NOT NULL,
-  `problem_type` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `user_id` bigint NOT NULL,
+  `problem_id` bigint NOT NULL,
+  `problem_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `picked` tinyint(1) DEFAULT NULL,
   `pick_time` datetime(3) DEFAULT NULL,
   `finished` tinyint(1) DEFAULT NULL,
-  `times` bigint(20) DEFAULT NULL,
+  `times` bigint DEFAULT NULL,
   PRIMARY KEY (`id`,`user_id`,`problem_id`) USING BTREE,
   KEY `idx_user_problems_deleted_at` (`deleted_at`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
@@ -569,16 +569,18 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `name` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `email` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `phone` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `password` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `role` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
-  `config` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `email` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `phone` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `password` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `role` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `persist_day` bigint DEFAULT NULL,
+  `interrupt_day` bigint DEFAULT NULL,
+  `config` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_users_deleted_at` (`deleted_at`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
@@ -587,7 +589,7 @@ CREATE TABLE `users` (
 -- Records of users
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` VALUES (1, '2021-02-19 17:02:12.886', '2021-02-19 17:02:12.886', NULL, 'admin', '', '', '21232f297a57a5a743894a0e4a801fc3', 'user', '{\"problem_num\":{\"algorithm\":3}}');
+INSERT INTO `users` VALUES (1, '2021-02-19 17:02:12.886', '2021-02-19 17:02:12.886', NULL, 'admin', '', '', '21232f297a57a5a743894a0e4a801fc3', 'user', 0, 0, '{\"problem_num\":{\"algorithm\":3}}');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
