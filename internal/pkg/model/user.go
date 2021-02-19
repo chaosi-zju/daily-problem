@@ -10,12 +10,14 @@ import (
 
 type User struct {
 	gorm.Model
-	Name     string     `gorm:"column:name" json:"name"`
-	Email    string     `gorm:"column:email" json:"email"`
-	Phone    string     `gorm:"column:phone" json:"phone"`
-	Password string     `gorm:"column:password" json:"-"`
-	Role     string     `gorm:"column:role" json:"role"`
-	Config   UserConfig `gorm:"column:config;type:string" json:"config"`
+	Name         string     `gorm:"column:name" json:"name"`
+	Email        string     `gorm:"column:email" json:"email"`
+	Phone        string     `gorm:"column:phone" json:"phone"`
+	Password     string     `gorm:"column:password" json:"-"`
+	Role         string     `gorm:"column:role" json:"role"`
+	PersistDay   int        `gorm:"column:persist_day" json:"persist_day"`
+	InterruptDay int        `gorm:"column:interrupt_day" json:"interrupt_day"`
+	Config       UserConfig `gorm:"column:config;type:string" json:"config"`
 }
 
 type UserConfig struct {
@@ -40,6 +42,15 @@ func (uc UserConfig) Value() (driver.Value, error) {
 	}
 
 	return string(buf), nil
+}
+
+func (u *User) UpdateComplete(complete bool) error {
+	if complete {
+		u.PersistDay++
+	} else {
+		u.InterruptDay++
+	}
+	return mysqld.Db.Save(u).Error
 }
 
 func LoginCheck(param LoginParam) (User, error) {
@@ -77,12 +88,14 @@ func Register(param RegisterParam) (User, error) {
 	}
 
 	user = User{
-		Name:     param.Name,
-		Email:    param.Email,
-		Phone:    param.Phone,
-		Password: param.Password,
-		Role:     "user",
-		Config:   UserConfig{ProblemNum: map[string]int{"algorithm": 3}},
+		Name:         param.Name,
+		Email:        param.Email,
+		Phone:        param.Phone,
+		Password:     param.Password,
+		Role:         "user",
+		PersistDay:   0,
+		InterruptDay: 0,
+		Config:       UserConfig{ProblemNum: map[string]int{"algorithm": 3}},
 	}
 	err := mysqld.Db.Create(&user).Error
 

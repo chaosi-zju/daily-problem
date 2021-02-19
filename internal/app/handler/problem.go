@@ -314,20 +314,44 @@ func GetAllTypes(c *gin.Context) {
 }
 
 func GetTodayOverview(c *gin.Context) {
-	userId, err := util.GetUserIdFromContext(c)
+	user, err := util.GetUserFromContext(c)
 	if err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
 
-	fmt.Println(userId)
+	num, times := 0, 0
+	if err := mysqld.Db.Raw(consts.SelectDoneProblemSQL, user.ID).Row().Scan(&num, &times); err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
+	type res struct {
+		Cnt int `json:"cnt"`
+	}
+
+	numArr := make([]res, 0)
+	err = mysqld.Db.Raw(consts.SelectTodayWorkloadSQL, user.ID, user.ID).Scan(&numArr).Error
+	if err != nil || len(numArr) < 2 {
+		util.ResponseError(c, 500, "查询今日任务完成量失败")
+		return
+	}
+
+	fmt.Println(numArr)
+
+	// 如果今日没做完的题数>0，则还未完成今日任务
+	hasDone := true
+	if numArr[0].Cnt > 0 {
+		hasDone = false
+	}
+
 	util.ResponseSuccess(c, model.OverviewRes{
-		PersistDay:   10,
-		InterruptDay: 20,
-		PersistNum:   30,
-		PersistTimes: 40,
+		PersistDay:   user.PersistDay,
+		InterruptDay: user.InterruptDay,
+		PersistNum:   num,
+		PersistTimes: times,
 		Todulist: []model.TodoItem{
-			{Done: true, Content: "完成每日的做题"},
+			{Done: hasDone, Content: fmt.Sprintf("今日应做%d道题，已完成%d道题", numArr[0].Cnt+numArr[1].Cnt, numArr[1].Cnt)},
 		},
 	})
 

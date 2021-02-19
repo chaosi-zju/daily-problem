@@ -19,7 +19,12 @@ type UserProblem struct {
 }
 
 func (up UserProblem) RemoveFromUserPlan() error {
-	return mysqld.Db.Unscoped().Delete(&up).Error
+	// 移出学习计划默认你完成了该题
+	up.Finished = true
+	up.Times++
+	up.DeletedAt.Time = time.Now()
+	up.DeletedAt.Valid = true
+	return mysqld.Db.Save(&up).Error
 }
 
 func GetUserProblemType(userId uint) ([]string, error) {

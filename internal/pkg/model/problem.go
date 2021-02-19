@@ -24,19 +24,31 @@ type Problem struct {
 
 // 将题目加入某用户的学习计划
 func (p Problem) AddToUserStudyPlan(userId uint) error {
-	// 将该题插入user_problem表中
-	loc, _ := time.LoadLocation("Local")
-	t, _ := time.ParseInLocation("2006-01-02 15:04:05", "2006-01-02 15:04:05", loc)
-	up := UserProblem{
-		UserId:      userId,
-		ProblemId:   p.ID,
-		ProblemType: p.Type,
-		Picked:      false,
-		PickTime:    t,
-		Finished:    false,
-		Times:       0,
+	// 先判断该题是否在学习计划，即被软删除过
+	var up UserProblem
+	err := mysqld.Db.Unscoped().Where(&UserProblem{UserId: userId, ProblemId: p.ID}).First(&up).Error
+
+	if err == gorm.ErrRecordNotFound {
+		// 不曾在学习计划，将该题插入user_problem表中
+		loc, _ := time.LoadLocation("Local")
+		t, _ := time.ParseInLocation("2006-01-02 15:04:05", "2006-01-02 15:04:05", loc)
+		up := UserProblem{
+			UserId:      userId,
+			ProblemId:   p.ID,
+			ProblemType: p.Type,
+			Picked:      false,
+			PickTime:    t,
+			Finished:    false,
+			Times:       0,
+		}
+		return mysqld.Db.Create(&up).Error
+	} else if err == nil {
+		// 曾在学习计划，恢复
+		up.DeletedAt.Valid = false
+		return mysqld.Db.Save(&up).Error
+	} else {
+		return err
 	}
-	return mysqld.Db.Create(&up).Error
 }
 
 // GetProblemByID 获取指定ID的题目

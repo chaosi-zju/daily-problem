@@ -51,7 +51,7 @@ export default {
       this.$router.push({path: "/problemUpdate"})
     },
     removePlan: function () {
-      this.$confirm('移出学习计划后将不再做此题，确认移出？', '提示', {
+      this.$confirm('移出即默认完成了此题并不再做此题，确认移出？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"math/rand"
@@ -39,17 +40,28 @@ func PickProblemByUser(user model.User) error {
 		return fmt.Errorf("get problem types of user %d failed: %+v", user.ID, err)
 	}
 	// 遍历该用户的每一种题类型
+	complete := true
 	for _, ttype := range types {
 
-		// 如果用户自定义了各类型的题目数量
+		// 1. 如果用户自定义了各类型的题目数量
 		dailyNum := viper.GetInt("problem.default_daily_num")
 		if num, ok := user.Config.ProblemNum[ttype]; ok {
 			dailyNum = num
 		}
+		// 2. 对于昨天新出的题目，如果完成的题数小于要求的题数，则不达标 (移出学习计划的也算完成)
+		if num, err := GetDailyDoneNum(user.ID, ttype); err == nil && num < dailyNum {
+			complete = false
+		}
+		// 3. 出今天的新题
 		if err := PickProblemByTypeAndNum(user.ID, ttype, dailyNum); err != nil {
-			log.Errorf("%+v", err)
+			log.Errorf("pick problem error: %+v", err)
 		}
 	}
+	// 依据用户是否完成昨天的任务，更新用户相应字段
+	if err := user.UpdateComplete(complete); err != nil {
+		log.Errorf("update user error: %+v", err)
+	}
+
 	return nil
 }
 
@@ -74,4 +86,18 @@ func PickProblemByTypeAndNum(userid uint, ttype string, dailyNum int) error {
 		return fmt.Errorf("no %s problem left for user(%d) to pick", ttype, userid)
 	}
 	return nil
+}
+
+func GetDailyDoneNum(userId uint, ttype string) (int, error) {
+	up := model.UserProblem{
+		UserId:      userId,
+		ProblemType: ttype,
+		Picked:      true,
+		Finished:    true,
+	}
+
+	var cnt int64 = 0
+	err := mysqld.Db.Unscoped().Model(&up).Where(&up).Where("TO_DAYS(NOW()) - TO_DAYS(pick_time) = 1").Count(&cnt).Error
+
+	return 0, err
 }

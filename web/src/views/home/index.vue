@@ -118,7 +118,7 @@
         <div class="todulist">
           <div class="item"><span>今日待办</span></div>
           <div class="item" v-for="(item,i) in userinfo.todulist" :key="i">
-            <el-checkbox v-model="item.done"></el-checkbox>
+            <el-checkbox v-model="item.done" disabled="true"></el-checkbox>
             <span :class="item.done?'done':''">{{ item.content }}</span>
           </div>
         </div>
