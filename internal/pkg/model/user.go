@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"gorm.io/gorm"
+	"time"
 )
 
 type User struct {
@@ -45,11 +46,18 @@ func (uc UserConfig) Value() (driver.Value, error) {
 }
 
 func (u *User) UpdateComplete(complete bool) error {
+
+	// 如果是今天新注册的用户，不用更新坚持或中断了几天
+	if u.CreatedAt.Format("2006-01-02") == time.Now().Format("2006-01-02") {
+		return nil
+	}
+
 	if complete {
 		u.PersistDay++
 	} else {
 		u.InterruptDay++
 	}
+
 	return mysqld.Db.Save(u).Error
 }
 
