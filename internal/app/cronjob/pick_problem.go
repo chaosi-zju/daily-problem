@@ -3,12 +3,14 @@ package cronjob
 import (
 	"context"
 	"fmt"
-	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
-	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"math/rand"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+
+	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 )
 
 // PickProblem the detail of cornjob, pick daily problem for every user
@@ -99,5 +101,5 @@ func GetDailyDoneNum(userId uint, ttype string) (int, error) {
 	var cnt int64 = 0
 	err := mysqld.Db.Unscoped().Model(&up).Where(&up).Where("TO_DAYS(NOW()) - TO_DAYS(pick_time) = 1").Count(&cnt).Error
 
-	return 0, err
+	return int(cnt), err
 }
