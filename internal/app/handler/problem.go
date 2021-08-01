@@ -2,17 +2,19 @@ package handler
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+
 	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	log "github.com/sirupsen/logrus"
-	"gorm.io/gorm"
-	"strconv"
-	"time"
 )
 
 func GetDailyProblem(c *gin.Context) {
@@ -89,12 +91,16 @@ func AddProblem(c *gin.Context) {
 	}
 
 	problem.Creator = user
-	if err := mysqld.Db.Create(&problem).Error; err != nil {
+	if err = mysqld.Db.Create(&problem).Error; err != nil {
 		util.ResponseError(c, 500, "add problem failed: "+err.Error())
 	} else {
 		if err = problem.AddToUserStudyPlan(user.ID); err != nil {
 			// 只做log记录
 			log.Errorf("add problem %d to user %d study plan falied: %+v", problem.ID, user.ID, err)
+		}
+		if err = problem.LogCreateProblem(); err != nil {
+			// 只做log记录
+			log.Errorf("log user %d created problem %d falied: %+v", user.ID, problem.ID, err)
 		}
 		util.ResponseSuccess(c, problem)
 	}
@@ -166,16 +172,16 @@ func FinishProblem(c *gin.Context) {
 
 	var up model.UserProblem
 	err = mysqld.Db.Where("user_id = ? and problem_id = ? and finished = ?", userId, problemId, false).First(&up).Error
+	if err == gorm.ErrRecordNotFound {
+		util.ResponseError(c, 500, "problem_id invalid or has been finished")
+		return
+	}
+
 	if err == nil {
-		up.Finished = true
-		up.Times++
-		if err = mysqld.Db.Save(&up).Error; err == nil {
+		if err = up.FinishProblem(); err == nil {
 			util.ResponseSuccess(c, nil)
 			return
 		}
-	} else if err == gorm.ErrRecordNotFound {
-		util.ResponseError(c, 500, "problem_id invalid or has been finished")
-		return
 	}
 
 	log.Errorf("finish problem error: %+v", err)
@@ -252,7 +258,7 @@ func RemoveFromPlan(c *gin.Context) {
 		return
 	}
 
-	up := model.UserProblem{UserId: userId, ProblemId: uint(problemId)}
+	up := model.UserProblem{UserID: userId, ProblemID: uint(problemId)}
 	if err = mysqld.Db.Where(&up).First(&up).Error; err == nil {
 		if err = up.RemoveFromUserPlan(); err == nil {
 			util.ResponseSuccess(c, nil)

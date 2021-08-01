@@ -2,11 +2,13 @@ package model
 
 import (
 	"fmt"
-	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
-	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
-	"gorm.io/gorm"
 	"math/rand"
 	"time"
+
+	"gorm.io/gorm"
+
+	"github.com/chaosi-zju/daily-problem/internal/pkg/consts"
+	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 )
 
 type Problem struct {
@@ -26,15 +28,15 @@ type Problem struct {
 func (p Problem) AddToUserStudyPlan(userId uint) error {
 	// 先判断该题是否在学习计划，即被软删除过
 	var up UserProblem
-	err := mysqld.Db.Unscoped().Where(&UserProblem{UserId: userId, ProblemId: p.ID}).First(&up).Error
+	err := mysqld.Db.Unscoped().Where(&UserProblem{UserID: userId, ProblemID: p.ID}).First(&up).Error
 
 	if err == gorm.ErrRecordNotFound {
 		// 不曾在学习计划，将该题插入user_problem表中
 		loc, _ := time.LoadLocation("Local")
 		t, _ := time.ParseInLocation("2006-01-02 15:04:05", "2006-01-02 15:04:05", loc)
-		up := UserProblem{
-			UserId:      userId,
-			ProblemId:   p.ID,
+		up = UserProblem{
+			UserID:      userId,
+			ProblemID:   p.ID,
 			ProblemType: p.Type,
 			Picked:      false,
 			PickTime:    t,
@@ -49,6 +51,18 @@ func (p Problem) AddToUserStudyPlan(userId uint) error {
 	} else {
 		return err
 	}
+}
+
+// 创建题目的日志
+func (p Problem) LogCreateProblem() error {
+	log := UserProblemLog{
+		UserID:      p.CreatorID,
+		ProblemID:   p.ID,
+		ProblemType: p.Type,
+		Action:      CREATE,
+		ActionTime:  time.Now(),
+	}
+	return mysqld.Db.Create(&log).Error
 }
 
 // GetProblemByID 获取指定ID的题目

@@ -92,7 +92,7 @@ func PickProblemByTypeAndNum(userid uint, ttype string, dailyNum int) error {
 
 func GetDailyDoneNum(userId uint, ttype string) (int, error) {
 	up := model.UserProblem{
-		UserId:      userId,
+		UserID:      userId,
 		ProblemType: ttype,
 		Picked:      true,
 		Finished:    true,
