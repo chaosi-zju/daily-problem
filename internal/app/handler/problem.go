@@ -321,7 +321,7 @@ func GetTodayOverview(c *gin.Context) {
 	}
 
 	num, times := 0, 0
-	if err := mysqld.Db.Raw(consts.SelectDoneProblemSQL, user.ID).Row().Scan(&num, &times); err != nil {
+	if err = mysqld.Db.Raw(consts.SelectDoneProblemSQL, user.ID).Row().Scan(&num, &times); err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
@@ -330,7 +330,7 @@ func GetTodayOverview(c *gin.Context) {
 		Cnt int `json:"cnt"`
 	}
 
-	numArr := make([]res, 0)
+	numArr := make([]res, 2)
 	err = mysqld.Db.Raw(consts.SelectTodayWorkloadSQL, user.ID, user.ID).Scan(&numArr).Error
 	if err != nil || len(numArr) < 2 {
 		util.ResponseError(c, 500, "查询今日任务完成量失败")
