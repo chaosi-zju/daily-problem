@@ -565,6 +565,24 @@ INSERT INTO `user_problems` VALUES (235, '2021-02-19 17:02:14.151', '2021-02-19 
 COMMIT;
 
 -- ----------------------------
+-- Table structure for user_problem_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `user_problem_logs`;
+CREATE TABLE `user_problem_logs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `deleted_at` datetime(3) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `problem_id` bigint(20) NOT NULL,
+  `problem_type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `action` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `action_time` datetime(3) DEFAULT NULL,
+  PRIMARY KEY (`id`,`user_id`,`problem_id`) USING BTREE,
+  KEY `idx_user_problems_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+
+-- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS `users`;

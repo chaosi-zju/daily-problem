@@ -56,7 +56,7 @@ func (up UserProblem) FinishProblem() error {
 		Action:      FINISH,
 		ActionTime:  time.Now(),
 	}
-	return mysqld.Db.Save(&log).Error
+	return mysqld.Db.Create(&log).Error
 }
 
 func GetUserProblemType(userId uint) ([]string, error) {
