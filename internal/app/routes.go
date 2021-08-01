@@ -27,6 +27,7 @@ func SetupRoutes() *gin.Engine {
 	userRouter.Use(middleware.JWTAuth())
 
 	userRouter.GET("/overview", handler.GetTodayOverview)
+	userRouter.GET("/finish_info", handler.GetFinishInfo)
 	userRouter.GET("/problem/daily", handler.GetDailyProblem)
 	userRouter.POST("/problem/add", handler.AddProblem)
 	userRouter.POST("/problem/update", handler.UpdateProblem)

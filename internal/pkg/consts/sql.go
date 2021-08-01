@@ -36,7 +36,7 @@ const (
 		order by created_at desc`
 
 	// 查询某人迄今已做多少道题、已做多少次题
-	SelectDoneProblemSQL = `select count(times) num, coalesce(sum(times),0) times from user_problems
+	SelectDoneProblemSQL = `select count(times) num, coalesce(sum(times), 0) times from user_problems
 		where user_id = ? and times > 0`
 
 	// 查询某人今天有多少题没做、已做多少题

@@ -1,6 +1,21 @@
 # daily-problem
+
 日常做题工具
-test
+
+####本地运行
+```
+// 导入数据库
+conf/daily_problem.sql
+
+// 启动server端
+在goland中运行main函数
+
+// 启动web前端
+cd web
+npm install
+npm run serve
+```
+
 
 - [x] 新用户未达标天数是1
 

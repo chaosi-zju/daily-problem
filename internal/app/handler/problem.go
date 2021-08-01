@@ -360,3 +360,19 @@ func GetTodayOverview(c *gin.Context) {
 	})
 
 }
+
+func GetFinishInfo(c *gin.Context) {
+	res := make([]map[string]string, 0)
+
+	tmp := map[string]string{
+		"date":    "2016-05-02",
+		"name":    "王小虎",
+		"address": "上海市普陀区金沙江路 1518 弄",
+	}
+
+	for i := 0; i < 16; i++ {
+		res = append(res, tmp)
+	}
+
+	util.ResponseSuccess(c, res)
+}

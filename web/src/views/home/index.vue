@@ -96,8 +96,8 @@
       </el-col>
     </el-row>
     <!-- 数据概况 end -->
+    <!-- 我的账户&今日待办 start -->
     <el-row :gutter="40">
-      <!-- 我的账户 start -->
       <el-col :lg="6" :sm="8" :xs="24">
         <div class="main-center clearfix">
           <div class="pull-left center-left">
@@ -113,7 +113,6 @@
           </div>
         </div>
       </el-col>
-      <!-- 我的账户 end -->
       <el-col :lg="18" :sm="16" :xs="24">
         <div class="todulist">
           <div class="item"><span>今日待办</span></div>
@@ -124,13 +123,34 @@
         </div>
       </el-col>
     </el-row>
+    <!-- 我的账户&今日待办 end -->
+    <!-- 每日完成量 start -->
+    <el-row :gutter="40">
+      <el-col>
+        <el-table :data="finishInfoPageList" class="finish_info">
+          <el-table-column prop="name" label="用户" width="250"></el-table-column>
+          <el-table-column prop="date" label="日期" width="250"></el-table-column>
+          <el-table-column prop="address" label="完成量"></el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="finishInfoCurPage"
+            :page-sizes="[1, 5, 10, 20, 50]"
+            :page-size="finishInfoPageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="finishInfoRawList.length"
+        ></el-pagination>
+      </el-col>
+    </el-row>
+    <!-- 每日完成量 end -->
   </div>
 </template>
 
 <script>
 // 数字滚动插件
 import countTo from "vue-count-to"
-import {getTodayOverview} from "@api"
+import {getTodayOverview, getFinishInfo} from "@api"
 
 export default {
   name: "home",
@@ -143,8 +163,12 @@ export default {
         interrupt_day: 0,
         persist_num: 0,
         persist_times: 0,
-        todulist: []
+        todulist: [],
       },
+      finishInfoCurPage: 1,
+      finishInfoPageSize: 1,
+      finishInfoRawList: [],
+      finishInfoPageList: [],
     };
   },
   mounted() {
@@ -152,6 +176,37 @@ export default {
     getTodayOverview().then(data => {
       this.userinfo = data
     })
+    getFinishInfo().then(data => {
+      this.finishInfoRawList = data ? data : []
+      this.currentChangePage(this.finishInfoRawList, 1)
+    })
+  },
+  methods: {
+    handleSizeChange: function (pageSize) {
+      this.finishInfoPageSize = pageSize;
+      this.handleCurrentChange(this.finishInfoCurPage);
+    },
+    handleCurrentChange: function (currentPage) {
+      this.finishInfoCurPage = currentPage;
+      this.currentChangePage(this.finishInfoRawList, currentPage);
+    },
+    currentChangePage(list, currentPage) {
+      let from = (currentPage - 1) * this.finishInfoPageSize;
+      if (currentPage > 1 && from >= this.finishInfoRawList.length) {
+        this.finishInfoCurPage = this.finishInfoRawList.length / this.finishInfoPageSize;
+        from = (this.finishInfoCurPage - 1) * this.finishInfoPageSize;
+      }
+      let to = from + this.finishInfoPageSize;
+      this.finishInfoPageList = [];
+      console.log(from)
+      console.log(to)
+      for (; from < to; from++) {
+        if (list[from]) {
+          this.finishInfoPageList.push(list[from]);
+        }
+      }
+      console.log(this.finishInfoPageList)
+    }
   }
 };
 </script>
@@ -292,6 +347,10 @@ export default {
     .time {
       line-height: 15px;
     }
+  }
+
+  .finish_info {
+    margin-top: 40px;
   }
 
   .todulist {
