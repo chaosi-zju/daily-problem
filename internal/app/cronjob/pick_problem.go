@@ -90,16 +90,15 @@ func PickProblemByTypeAndNum(userid uint, ttype string, dailyNum int) error {
 	return nil
 }
 
-func GetDailyDoneNum(userId uint, ttype string) (int, error) {
-	up := model.UserProblem{
-		UserID:      userId,
+func GetDailyDoneNum(userID uint, ttype string) (int, error) {
+	upLog := model.UserProblemLog{
+		UserID:      userID,
 		ProblemType: ttype,
-		Picked:      true,
-		Finished:    true,
+		Action:      model.FINISH,
 	}
 
 	var cnt int64 = 0
-	err := mysqld.Db.Unscoped().Model(&up).Where(&up).Where("updated_at >= NOW() - INTERVAL 24 HOUR").Count(&cnt).Error
+	err := mysqld.Db.Model(&upLog).Where(&upLog).Where("action_time >= NOW() - INTERVAL 24 HOUR").Count(&cnt).Error
 
 	return int(cnt), err
 }
