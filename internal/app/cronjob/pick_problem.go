@@ -99,7 +99,7 @@ func GetDailyDoneNum(userId uint, ttype string) (int, error) {
 	}
 
 	var cnt int64 = 0
-	err := mysqld.Db.Unscoped().Model(&up).Where(&up).Where("TO_DAYS(NOW()) - TO_DAYS(pick_time) = 1").Count(&cnt).Error
+	err := mysqld.Db.Unscoped().Model(&up).Where(&up).Where("updated_at >= NOW() - INTERVAL 24 HOUR").Count(&cnt).Error
 
 	return int(cnt), err
 }

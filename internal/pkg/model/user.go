@@ -47,7 +47,7 @@ func (uc UserConfig) Value() (driver.Value, error) {
 
 func (u *User) UpdateComplete(complete bool) error {
 
-	// 如果是今天新注册的用户，不用更新坚持或中断了几天
+	// 如果是新注册的用户，本次是给新用户出今天的题，不用更新坚持或中断了几天
 	if u.CreatedAt.Format("2006-01-02") == time.Now().Format("2006-01-02") {
 		return nil
 	}
