@@ -19,7 +19,7 @@ var (
 func Init(ctx context.Context) (err error) {
 	flag.Parse()
 
-	//viper.SetDefault("log.path", "/tmp/daily_problem.log")
+	viper.SetDefault("log.path", "/tmp/daily_problem.log")
 	viper.SetConfigFile(*conf)
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read config, path: %s, err: %+v", *conf, err)
@@ -30,9 +30,9 @@ func Init(ctx context.Context) (err error) {
 		logrus.Infof("config file changed: %s", e.Name)
 	})
 
-	//if err := initLogger(); err != nil {
-	//	return err
-	//}
+	if err := initLogger(); err != nil {
+		return err
+	}
 
 	return nil
 }

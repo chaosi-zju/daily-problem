@@ -338,12 +338,14 @@ func GetTodayOverview(c *gin.Context) {
 
 	numArr := make([]res, 2)
 	err = mysqld.Db.Raw(consts.SelectTodayWorkloadSQL, user.ID, user.ID).Scan(&numArr).Error
-	if err != nil || len(numArr) < 2 {
-		util.ResponseError(c, 500, "查询今日任务完成量失败")
+	if err != nil {
+		util.ResponseError(c, 500, "查询今日任务完成量失败: "+err.Error())
 		return
 	}
-
-	fmt.Println(numArr)
+	log.Info("num_art: %+v", numArr)
+	if len(numArr) < 2 {
+		numArr = []res{{Cnt: 0}, {Cnt: 0}}
+	}
 
 	// 如果今日没做完的题数>0，则还未完成今日任务
 	hasDone := true

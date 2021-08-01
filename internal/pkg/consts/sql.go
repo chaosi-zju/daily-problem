@@ -42,7 +42,7 @@ const (
 	// 查询某人今天有多少题没做、已做多少题
 	SelectTodayWorkloadSQL = `select count(1) cnt from user_problems where 
 		user_id = ? and picked = true and finished = false 
-		union 
+		union all
 		select count(1) cnt from user_problems where 
 		user_id = ? and picked = true and finished = true and to_days(now()) = to_days(updated_at)`
 
