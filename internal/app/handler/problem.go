@@ -3,11 +3,13 @@ package handler
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 
 	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
@@ -337,7 +339,12 @@ func GetTodayOverview(c *gin.Context) {
 	}
 
 	numArr := make([]res, 2)
-	err = mysqld.Db.Raw(consts.SelectTodayWorkloadSQL, user.ID, user.ID).Scan(&numArr).Error
+	hour := "0"
+	specArr := strings.Split(viper.GetString("cron.pick_problem"), " ")
+	if len(specArr) >= 3 {
+		hour = specArr[2]
+	}
+	err = mysqld.Db.Raw(consts.SelectTodayWorkloadSQL, user.ID, user.ID, hour).Scan(&numArr).Error
 	if err != nil || len(numArr) < 2 {
 		util.ResponseError(c, 500, fmt.Sprintf("查询今日任务完成量失败, err: %+v, numArr: %+v", err, numArr))
 		return
@@ -362,17 +369,35 @@ func GetTodayOverview(c *gin.Context) {
 }
 
 func GetFinishInfo(c *gin.Context) {
-	res := make([]map[string]string, 0)
-
-	tmp := map[string]string{
-		"date":    "2016-05-02",
-		"name":    "王小虎",
-		"address": "上海市普陀区金沙江路 1518 弄",
+	type item struct {
+		Date   string `json:"date"`
+		User   string `json:"user"`
+		Amount string `json:"amount"`
 	}
 
-	for i := 0; i < 16; i++ {
-		res = append(res, tmp)
+	finishInfoList := make([]item, 0)
+	hour := 0
+	specArr := strings.Split(viper.GetString("cron.pick_problem"), " ")
+	if len(specArr) >= 3 {
+		hour, _ = strconv.Atoi(specArr[2])
 	}
 
-	util.ResponseSuccess(c, res)
+	err := mysqld.Db.Raw(consts.SelectFinishInfoSQL, hour).Scan(&finishInfoList).Error
+	if err != nil {
+		util.ResponseError(c, 500, "查询各用户完成量失败"+err.Error())
+		return
+	}
+
+	finishInfoChart := map[string]interface{}{
+		"xData": []string{"04-02", "04-03", "04-03", "04-04", "04-05", "04-06", "04-07"},
+		"yData": map[string][]int{
+			"algorithm": {3, 5, 7, 4, 8, 11, 7},
+			"SHELL":     {5, 7, 4, 8, 11, 7, 8},
+		},
+	}
+
+	util.ResponseSuccess(c, map[string]interface{}{
+		"list_info":  finishInfoList,
+		"chart_info": finishInfoChart,
+	})
 }

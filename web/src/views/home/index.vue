@@ -124,32 +124,43 @@
       </el-col>
     </el-row>
     <!-- 我的账户&今日待办 end -->
-    <!-- 每日完成量 start -->
+    <!-- 我的近30日完成量 start-->
+    <el-row :gutter="40">
+      <el-col>
+        <div id="charts" ref="charts"></div>
+      </el-col>
+    </el-row>
+    <!-- 我的近30日完成量 end-->
+    <!-- 各用户完成量 start -->
     <el-row :gutter="40">
       <el-col>
         <el-table :data="finishInfoPageList" class="finish_info">
-          <el-table-column prop="name" label="用户" width="250"></el-table-column>
+          <el-table-column prop="user" label="用户" width="250"></el-table-column>
           <el-table-column prop="date" label="日期" width="250"></el-table-column>
-          <el-table-column prop="address" label="完成量"></el-table-column>
+          <el-table-column prop="amount" label="完成量"></el-table-column>
         </el-table>
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="finishInfoCurPage"
-            :page-sizes="[1, 5, 10, 20, 50]"
-            :page-size="finishInfoPageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="finishInfoRawList.length"
-        ></el-pagination>
+        <div class="block">
+          <el-pagination style="padding-top: 14px"
+               @size-change="handleSizeChange"
+               @current-change="handleCurrentChange"
+               :current-page="finishInfoCurPage"
+               :page-sizes="[5, 10, 20, 50]"
+               :page-size="finishInfoPageSize"
+               layout="total, sizes, prev, pager, next, jumper"
+               :total="finishInfoRawList.length"
+          ></el-pagination>
+        </div>
+
       </el-col>
     </el-row>
-    <!-- 每日完成量 end -->
+    <!-- 各用户完成量 end -->
   </div>
 </template>
 
 <script>
 // 数字滚动插件
 import countTo from "vue-count-to"
+import echarts from "echarts"
 import {getTodayOverview, getFinishInfo} from "@api"
 
 export default {
@@ -166,9 +177,10 @@ export default {
         todulist: [],
       },
       finishInfoCurPage: 1,
-      finishInfoPageSize: 1,
+      finishInfoPageSize: 10,
       finishInfoRawList: [],
       finishInfoPageList: [],
+      finishInfoChartData: {}
     };
   },
   mounted() {
@@ -177,11 +189,28 @@ export default {
       this.userinfo = data
     })
     getFinishInfo().then(data => {
-      this.finishInfoRawList = data ? data : []
+      this.finishInfoRawList = data.list_info ? data.list_info : []
       this.currentChangePage(this.finishInfoRawList, 1)
+      if(data.chart_info){
+        this.finishInfoChartData.xData = data.chart_info.xData
+        this.finishInfoChartData.yData = new Map(Object.entries(data.chart_info.yData))
+      }
+      this.drawChart();
+      this.init();
     })
   },
+  destroyed(){
+    window.onresize=null
+  },
   methods: {
+    init() {
+      //图表自适应
+      window.onresize = () => {
+        if (this.$refs.charts) {
+          echarts.init(this.$refs.charts).resize();
+        }
+      };
+    },
     handleSizeChange: function (pageSize) {
       this.finishInfoPageSize = pageSize;
       this.handleCurrentChange(this.finishInfoCurPage);
@@ -198,14 +227,76 @@ export default {
       }
       let to = from + this.finishInfoPageSize;
       this.finishInfoPageList = [];
-      console.log(from)
-      console.log(to)
       for (; from < to; from++) {
         if (list[from]) {
           this.finishInfoPageList.push(list[from]);
         }
       }
-      console.log(this.finishInfoPageList)
+    },
+    drawChart() {
+      let myChart = echarts.init(this.$refs.charts);
+      let options = {
+        title: {
+          text: "最近30天我的完成量",
+          x: "center",
+          textStyle: {
+            fontSize: 16,
+            fontWeight: "normal",
+            color: "#696969",
+          },
+        },
+        legend: {
+          orient: "vertical",
+          top: 20,
+          left: 10,
+          textStyle:{
+            color: "#696969",
+          },
+          data: [],  // legend array
+        },
+        tooltip: {
+          trigger: "axis",
+          padding: [4, 10],
+          extraCssText: "text-align:left",
+          formatter: function(arg) {
+            let s = ""
+            for (let i = 0; i < arg.length; i++) {
+              if(i === 0){
+                s += arg[i].name + " 完成了"
+              }
+              s += "<br/>" + arg[i].value + " 道 " + arg[i].seriesName + " 题"
+            }
+            return s
+          }
+        },
+        xAxis: {
+          type: "category",
+          data: this.finishInfoChartData.xData,  // x axis data
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: []    // y axis data
+      }
+      this.finishInfoChartData.yData.forEach(function (v, k){
+        options.legend.data.push(k)
+        let color = "#bd" + ['a', 'b', 'c', 'd', 'e', 'f'][Math.ceil(Math.random()*6)] + "7" + ['a', 'b', 'c', 'd', 'e', 'f'][Math.ceil(Math.random()*6)] +"f"
+        console.log(color)
+        options.series.push({
+          name: k,
+          type: "line",
+          data: v,
+          itemStyle: {
+            normal: {
+              color: color,
+              lineStyle: {
+                color: color,
+              },
+            },
+          },
+        })
+      })
+      myChart.setOption(options);
     }
   }
 };
@@ -347,6 +438,15 @@ export default {
     .time {
       line-height: 15px;
     }
+  }
+
+  #charts {
+    height: 350px;
+    background: $base-white;
+    margin-top: 40px;
+    -webkit-box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
   }
 
   .finish_info {

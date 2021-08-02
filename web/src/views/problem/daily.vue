@@ -21,7 +21,7 @@
       </el-table>
       <!-- 分页栏 -->
       <div class="block">
-        <el-pagination
+        <el-pagination style="padding-top: 14px"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
