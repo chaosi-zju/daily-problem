@@ -369,6 +369,12 @@ func GetTodayOverview(c *gin.Context) {
 }
 
 func GetFinishInfo(c *gin.Context) {
+	user, err := util.GetUserFromContext(c)
+	if err != nil {
+		util.ResponseError(c, 500, err.Error())
+		return
+	}
+
 	type item struct {
 		Date   string `json:"date"`
 		User   string `json:"user"`
@@ -382,18 +388,53 @@ func GetFinishInfo(c *gin.Context) {
 		hour, _ = strconv.Atoi(specArr[2])
 	}
 
-	err := mysqld.Db.Raw(consts.SelectFinishInfoSQL, hour).Scan(&finishInfoList).Error
+	err = mysqld.Db.Raw(consts.SelectFinishInfoSQL, hour).Scan(&finishInfoList).Error
 	if err != nil {
 		util.ResponseError(c, 500, "查询各用户完成量失败"+err.Error())
 		return
 	}
 
+	type item2 struct {
+		Date        string `json:"date"`
+		ProblemType string `json:"problem_type"`
+		Count       int    `json:"count"`
+	}
+
+	finishInfoList2 := make([]item2, 0)
+	err = mysqld.Db.Raw(consts.SelectFinishChartSQL, hour, user.ID).Scan(&finishInfoList2).Error
+	if err != nil {
+		util.ResponseError(c, 500, "查询该用户历史完成量失败"+err.Error())
+		return
+	}
+
+	xData := make([]string, 30)
+	startDate := time.Now()
+	for i := 29; i >= 0; i-- {
+		xData[i] = startDate.Format("01-02")
+		startDate = startDate.AddDate(0, 0, -1)
+
+	}
+	infoMap := make(map[string]map[string]int)
+	for _, v := range finishInfoList2 {
+		if _, ok := infoMap[v.ProblemType]; !ok {
+			infoMap[v.ProblemType] = make(map[string]int)
+		}
+		infoMap[v.ProblemType][v.Date] = v.Count
+	}
+	yData := make(map[string][]int)
+	for ttype, v := range infoMap {
+		yData[ttype] = make([]int, 0)
+		for _, date := range xData {
+			if cnt, ok := v[date]; ok {
+				yData[ttype] = append(yData[ttype], cnt)
+			} else {
+				yData[ttype] = append(yData[ttype], 0)
+			}
+		}
+	}
 	finishInfoChart := map[string]interface{}{
-		"xData": []string{"04-02", "04-03", "04-03", "04-04", "04-05", "04-06", "04-07"},
-		"yData": map[string][]int{
-			"algorithm": {3, 5, 7, 4, 8, 11, 7},
-			"SHELL":     {5, 7, 4, 8, 11, 7, 8},
-		},
+		"xData": xData,
+		"yData": yData,
 	}
 
 	util.ResponseSuccess(c, map[string]interface{}{

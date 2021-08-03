@@ -133,25 +133,27 @@
     <!-- 我的近30日完成量 end-->
     <!-- 各用户完成量 start -->
     <el-row :gutter="40">
-      <el-col>
-        <el-table :data="finishInfoPageList" class="finish_info">
-          <el-table-column prop="user" label="用户" width="250"></el-table-column>
-          <el-table-column prop="date" label="日期" width="250"></el-table-column>
-          <el-table-column prop="amount" label="完成量"></el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination style="padding-top: 14px"
-               @size-change="handleSizeChange"
-               @current-change="handleCurrentChange"
-               :current-page="finishInfoCurPage"
-               :page-sizes="[5, 10, 20, 50]"
-               :page-size="finishInfoPageSize"
-               layout="total, sizes, prev, pager, next, jumper"
-               :total="finishInfoRawList.length"
-          ></el-pagination>
-        </div>
-
-      </el-col>
+      <div class="finish_info">
+        <div class="title">近期各用户完成量</div>
+        <el-col>
+          <el-table :data="finishInfoPageList">
+            <el-table-column prop="user" label="用户" width="250"></el-table-column>
+            <el-table-column prop="date" label="日期" width="250"></el-table-column>
+            <el-table-column prop="amount" label="完成量"></el-table-column>
+          </el-table>
+          <div class="block">
+            <el-pagination style="padding-top: 14px"
+                           @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange"
+                           :current-page="finishInfoCurPage"
+                           :page-sizes="[5, 10, 20, 50]"
+                           :page-size="finishInfoPageSize"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           :total="finishInfoRawList.length"
+            ></el-pagination>
+          </div>
+        </el-col>
+      </div>
     </el-row>
     <!-- 各用户完成量 end -->
   </div>
@@ -259,14 +261,15 @@ export default {
           padding: [4, 10],
           extraCssText: "text-align:left",
           formatter: function(arg) {
-            let s = ""
+            let s1 = "", s2 = "", sum = 0
             for (let i = 0; i < arg.length; i++) {
               if(i === 0){
-                s += arg[i].name + " 完成了"
+                s1 = arg[i].name + " 完成 "
               }
-              s += "<br/>" + arg[i].value + " 道 " + arg[i].seriesName + " 题"
+              s2 += "<br/>" + arg[i].value + " 道 " + arg[i].seriesName + " 题"
+              sum += arg[i].value
             }
-            return s
+            return s1 + sum + " 道题" + s2
           }
         },
         xAxis: {
@@ -280,11 +283,11 @@ export default {
       }
       this.finishInfoChartData.yData.forEach(function (v, k){
         options.legend.data.push(k)
-        let color = "#bd" + ['a', 'b', 'c', 'd', 'e', 'f'][Math.ceil(Math.random()*6)] + "7" + ['a', 'b', 'c', 'd', 'e', 'f'][Math.ceil(Math.random()*6)] +"f"
-        console.log(color)
+        let color = "#bd" + (Math.floor(Math.random()*5)+11).toString(16) + "7" + (Math.floor(Math.random()*5)+11).toString(16) + "f"
         options.series.push({
           name: k,
-          type: "line",
+          type: "bar",
+          stack:"总量",
           data: v,
           itemStyle: {
             normal: {
@@ -451,6 +454,12 @@ export default {
 
   .finish_info {
     margin-top: 40px;
+
+    .title {
+      font-size: 15px;
+      padding: 10px 0;
+      color: #696969;
+    }
   }
 
   .todulist {

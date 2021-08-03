@@ -58,5 +58,12 @@ const (
 	) d 
 	GROUP BY date, user_id ORDER BY date DESC, user_id`
 
+	SelectFinishChartSQL = `SELECT date, problem_type, count(1) count FROM
+	(
+		SELECT date_format(date_sub(action_time, INTERVAL ? HOUR), '%m-%d') AS date, a.*
+		FROM user_problem_logs a WHERE user_id = ? AND to_days(now()) - to_days(action_time) <= 32 
+	) b 
+	GROUP BY date, problem_type ORDER BY date, problem_type`
+
 	//`select problems.*, t.picked, t.pick_time, t.finished, t.times. from (select * from user_problems where user_id = ? and picked = true and finished = false) as t left join problems on t.problem_id = problems.id order by problem_type`
 )
