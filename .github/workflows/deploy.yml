@@ -71,7 +71,7 @@ jobs:
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
             systemctl status daily_problem.service
-            rm -r output
+            [ -d outout ] && rm -r output
 
 
 
