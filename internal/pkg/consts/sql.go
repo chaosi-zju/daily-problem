@@ -47,7 +47,7 @@ const (
 		user_id = ? and action = 'finish' and to_days(date_sub(action_time, interval ? hour)) = to_days(now())`
 
 	// 查询各个用户每天分别做了几道哪种类型的题 limit 1000
-	SelectFinishInfoSQL = `SELECT date, name as user, GROUP_CONCAT(CONCAT(count, '道', problem_type, '题') SEPARATOR '，') amount FROM
+	SelectFinishInfoSQL = `SELECT date, name as user, GROUP_CONCAT(CONCAT(count, '道', problem_type, '题') ORDER BY problem_type SEPARATOR '，') amount FROM
 	(
 		SELECT date, user_id, name, problem_type, count(1) AS count 
 		FROM (
