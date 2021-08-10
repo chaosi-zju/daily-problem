@@ -44,7 +44,7 @@ const (
 		user_id = ? and picked = true and finished = false 
 		union all
 		select count(1) cnt from user_problem_logs where 
-		user_id = ? and action = 'finish' and to_days(date_sub(action_time, interval ? hour)) = to_days(now())`
+		user_id = ? and action = 'finish' and to_days(date_sub(now(), interval ? hour)) = to_days(action_time)`
 
 	// 查询各个用户每天分别做了几道哪种类型的题 limit 1000
 	SelectFinishInfoSQL = `SELECT date, name as user, GROUP_CONCAT(CONCAT(count, '道', problem_type, '题') ORDER BY problem_type SEPARATOR '，') amount FROM
