@@ -2,6 +2,9 @@
   <div>
     <!-- 表格数据 -->
     <div class="table-content">
+      <el-input placeholder="搜索题目关键字" v-model="keyword" clearable @change="searchProblem">
+        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+      </el-input>
       <el-table :data="pageList" stripe style="width: 100%;">
         <el-table-column label="题目类别" min-width="19%">
           <template slot-scope="scope">
@@ -20,13 +23,13 @@
       </el-table>
       <div class="block">
         <el-pagination style="padding-top: 14px"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 20, 50]"
-            :page-size="10"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="rawList.length"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="currentPage"
+                       :page-sizes="[5, 10, 20, 50]"
+                       :page-size="10"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="rawList.length"
         ></el-pagination>
       </div>
     </div>
@@ -34,11 +37,13 @@
 </template>
 
 <script>
-import {problemPlan, addToDaily, removeFromProblemPlan} from "@api";
+import {addToDaily, problemPlan, removeFromProblemPlan} from "@api";
 
 export default {
   data() {
     return {
+      keyword: "",
+      originList: [],
       rawList: [],
       currentPage: 1,
       pageSize: 10,
@@ -48,6 +53,7 @@ export default {
 
   mounted() {
     problemPlan().then(data => {
+      this.originList = data ? data : []
       this.rawList = data ? data : []
       this.currentChangePage(this.rawList, 1)
     })
@@ -78,6 +84,21 @@ export default {
           this.currentChangePage(this.rawList, this.currentPage)
         })
       });
+    },
+    searchProblem: function () {
+      let keyword = this.keyword
+      if (keyword) {
+        let reg = new RegExp(keyword, 'ig')
+        this.rawList = this.originList.filter(function (e) {
+          if (e.ID.toString() === keyword || e.type.match(reg) || e.sub_type.match(reg) ||
+              e.name.match(reg) || e.link.match(reg) || e.content.match(reg) || e.result.match(reg)) {
+            return e
+          }
+        })
+      } else {
+        this.rawList = this.originList
+      }
+      this.currentChangePage(this.rawList, 1)
     },
     handleSizeChange: function (pageSize) {
       this.pageSize = pageSize;
