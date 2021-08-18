@@ -61,15 +61,16 @@ jobs:
             cd ~/release
             wget -q -t 3 -T 30 https://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
             tar -zxvf daily-problem.tgz
-            systemctl -q disable daily_problem.service
-            systemctl -q stop daily_problem.service
+            systemctl disable daily_problem.service
+            systemctl stop daily_problem.service
             cp -rf output/server/* ~/chaosi/server/daily-problem/
             cp -rf output/dist/* /usr/local/nginx/html/daily-problem/
             cp -rf output/daily_problem.service /etc/systemd/system/
             export MYSQL_HOST=${{ secrets.MYSQL_HOST }} MYSQL_USER=${{ secrets.MYSQL_USER }} MYSQL_PASSWD=${{ secrets.MYSQL_PASSWD }}
             cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml && cd -
-            systemctl -q enable daily_problem.service
-            systemctl -q start daily_problem.service
+            systemctl enable daily_problem.service
+            systemctl start daily_problem.service
+            (systemctl status daily_problem.service &)
             [ -d outout ] && rm -r output
 
 
