@@ -70,7 +70,6 @@ jobs:
             cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml && cd -
             systemctl -q enable daily_problem.service
             systemctl -q start daily_problem.service
-            systemctl status daily_problem.service
             [ -d outout ] && rm -r output
 
 
