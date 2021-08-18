@@ -36,6 +36,23 @@ func GetDailyProblem(c *gin.Context) {
 	util.ResponseSuccess(c, problems)
 }
 
+func GetCommonDailyProblem(c *gin.Context) {
+	hour := "0"
+	specArr := strings.Split(viper.GetString("cron.pick_problem"), " ")
+	if len(specArr) >= 3 {
+		hour = specArr[2]
+	}
+
+	problems := make([]model.Problem, 0)
+	err := mysqld.Db.Raw(consts.GetCommonDailyProblemSQL, hour).Scan(&problems).Error
+	if err != nil {
+		util.ResponseError(c, 500, "db error")
+		return
+	}
+
+	util.ResponseSuccess(c, problems)
+}
+
 func PickMoreProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {

@@ -1,11 +1,12 @@
 package app
 
 import (
-	"github.com/chaosi-zju/daily-problem/internal/app/handler"
-	"github.com/chaosi-zju/daily-problem/internal/app/middleware"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+
+	"github.com/chaosi-zju/daily-problem/internal/app/handler"
+	"github.com/chaosi-zju/daily-problem/internal/app/middleware"
 )
 
 // SetupRoutes connects the HTTP API endpoints to the handlers
@@ -22,6 +23,8 @@ func SetupRoutes() *gin.Engine {
 
 	r.POST("/api/login", handler.Login)
 	r.POST("/api/register", handler.Register)
+
+	r.GET("/api/problem/common/daily", handler.GetCommonDailyProblem)
 
 	userRouter := r.Group("/api/user")
 	userRouter.Use(middleware.JWTAuth())
