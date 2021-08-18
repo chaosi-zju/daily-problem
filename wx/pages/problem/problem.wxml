@@ -1,3 +1,4 @@
 <!--pages/problem.wxml-->
-<import src="../wxParse/wxParse.wxml"/>
-<template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+<view class="article">
+  <wemark md="{{article}}" link highlight type="wemark"></wemark>
+</view>

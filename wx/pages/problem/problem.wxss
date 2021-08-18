@@ -1,3 +1,6 @@
 /* pages/problem.wxss */
 
-@import "../wxParse/wxParse.wxss";
+.article{
+  margin: 0rpx 18px 38px; 
+  align-content: center;
+}

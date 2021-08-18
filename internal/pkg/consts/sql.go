@@ -5,13 +5,13 @@ const (
 	GetDailyProblemSQL = `select * from problems where id in 
 		(select problem_id from user_problems 
 		where user_id = ? and picked = true and finished = false and deleted_at is null)
-		order by type`
+		order by type desc`
 
 	GetCommonDailyProblemSQL = `select * from problems where id in 
 		(select problem_id from user_problems where user_id = 1 and picked = true and finished = false and deleted_at is null
 		 union
 		 select problem_id from user_problem_logs where user_id = 1 and action = 'finish' and to_days(date_sub(now(), interval ? hour)) = to_days(action_time))
-		 order by type`
+		 order by type desc`
 
 	SelectUserProblemTypeSQL = `select distinct(problem_type) from user_problems
 		where user_id = ? and (picked = false or finished = true) and deleted_at is null`

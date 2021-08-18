@@ -4,12 +4,16 @@ const util = require('../../utils/util.js')
 
 Page({
   data: {
+    title: '',
     problems: []
   },
   onLoad() {
     let that = this
     util.request(wx, '/api/problem/common/daily', 'GET', {}, function (result) {
-      that.setData({problems: result})
+      that.setData({
+        title: ' 提示：访问 chaosi-zju.com 体验更佳',
+        problems: result
+      })
       app.globalData.problems = result
     })
   },
