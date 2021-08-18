@@ -1,0 +1,30 @@
+/**index.wxss**/
+.item {
+  display: flex;
+  padding: 40rpx 15rpx;
+  border-bottom: 1rpx solid #eee;
+  cursor: pointer;
+}
+
+.name {
+  color: #666;
+  font-size: 37rpx;
+  flex: 0 0 85%;
+}
+
+.type {
+  flex: 0 0 15%;
+  flex-direction: column;
+  display: flex;
+  text-align:right;
+}
+
+.main_type {
+  color: #777;
+  font-size: 27rpx;
+}
+
+.sub_type {
+  color: #999;
+  font-size: 22rpx;
+}

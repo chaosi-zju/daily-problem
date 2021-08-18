@@ -1,0 +1,5 @@
+/**app.wxss**/
+.container{
+  padding: 0px 5px;
+  align-content: center;
+}

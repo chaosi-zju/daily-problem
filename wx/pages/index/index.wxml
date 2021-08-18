@@ -1,0 +1,12 @@
+<!--index.wxml-->
+<view class="container">
+  <view wx:for="{{problems}}" wx:key="index">
+    <view class='item' bindtap="viewProblem" data-index='{{index}}'>
+      <view class="name">{{item.name}}</view>
+      <view class="type">
+        <text class="main_type">{{item.type}}</text><br />
+        <text class="sub_type">{{item.sub_type}}</text>
+      </view>
+    </view>
+  </view>
+</view>
