@@ -23,13 +23,14 @@
 
 
 <script>
-import {addToProblemPlan, getProblemByID, removeFromProblemPlan} from '@api'
+import {addToProblemPlan, getProblemByID, finishProblem, removeFromProblemPlan} from '@api'
 
 export default {
   name: "info-problem",
   data() {
     return {
       problemId: 0,
+      isInToday: false,
       content: "",
       isCreator: false,
     };
@@ -37,13 +38,11 @@ export default {
   computed: {
     isInPlan() {
       return this.$store.state.curProblem.isInPlan
-    },
-    isInToday() {
-      return this.$store.state.curProblem.isInToday
     }
   },
   mounted() {
     this.problemId = this.$store.state.curProblem.id
+    this.isInToday = this.$store.state.curProblem.isInToday
     getProblemByID({problem_id: this.problemId}).then(data => {
       this.content = "## " + data.name + "\n[OJ链接](" + data.link + ")\n\n" + data.content + "\n### 解答\n" + data.result
       this.isCreator = (this.$store.state.user.ID === data.creator_id)
@@ -61,6 +60,10 @@ export default {
         type: 'warning'
       }).then(() => {
         finishProblem({problem_id: this.problemId}).then(() => {
+          this.isInToday = false
+          let cur = this.$store.state.curProblem
+          cur.isInToday = false
+          this.$store.commit('SET_CUR_PROBLEM', cur)
           this.$messages('success', 'success')
         })
       });
@@ -72,8 +75,10 @@ export default {
         type: 'warning'
       }).then(() => {
         removeFromProblemPlan({problem_id: this.problemId}).then(() => {
+          this.isInToday = false
           let cur = this.$store.state.curProblem
           cur.isInPlan = false
+          cur.isInToday = false
           this.$store.commit('SET_CUR_PROBLEM', cur)
           this.$messages('success', 'success')
         })

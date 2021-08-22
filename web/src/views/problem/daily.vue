@@ -109,10 +109,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        finishProblem({problem_id: this.pageList[idx].ID}).then(() => {
+        let id = this.pageList[idx].ID
+        finishProblem({problem_id: id}).then(() => {
           this.$messages('success', 'success')
           this.rawList.splice((this.currentPage - 1) * this.pageSize + idx, 1)
           this.currentChangePage(this.rawList, this.currentPage)
+          let cur = this.$store.state.curProblem
+          if (cur.id === id) {
+            cur.isInToday = false
+            this.$store.commit('SET_CUR_PROBLEM', cur)
+          }
         })
       });
     },

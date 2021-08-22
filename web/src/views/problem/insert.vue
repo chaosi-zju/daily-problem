@@ -74,6 +74,7 @@ export default {
             let cur = this.$store.state.curProblem
             cur.id = data.ID
             cur.isInPlan = true
+            cur.isInToday = false
             this.$store.commit('SET_CUR_PROBLEM', cur)
             this.$router.push({path: '/problemInfo'})
           })
