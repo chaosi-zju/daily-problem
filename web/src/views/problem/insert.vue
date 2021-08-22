@@ -57,7 +57,7 @@ export default {
         result: "",
         type: "",
         sub_type: "",
-        is_public: false
+        is_public: true
       },
       insertRules: {
         name: [{validator: validateFunc, trigger: "blur"}],
