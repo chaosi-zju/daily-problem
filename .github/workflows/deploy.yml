@@ -59,8 +59,14 @@ jobs:
             mkdir -p ~/chaosi/server/daily-problem
             mkdir -p /usr/local/nginx/html/daily-problem
             cd ~/release
-            wget --no-check-certificate http://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
-            [[ `ls -l daily-problem.tgz | awk '{print $5}'` -lt 100 ]] && echo "download failed" && exit 1
+            while :
+            do
+              wget --no-check-certificate http://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
+              (( i++ ))
+              if [ `ls -l daily-problem.tgz | awk '{print $5}'` -gt 100 ]; then break;
+              elif [ $i -gt 10 ]; then exit 1;
+              fi
+            done
             tar -zxvf daily-problem.tgz
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
