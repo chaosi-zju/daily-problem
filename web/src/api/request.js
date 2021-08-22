@@ -1,4 +1,6 @@
 import axios from "axios";
+import Vue from 'vue';
+import VueResource from 'vue-resource';
 import router from "../router/router";
 import {Loading} from "element-ui";
 import {messages} from '@/assets/js/common'
@@ -8,6 +10,17 @@ axios.defaults.timeout = process.env.VUE_APP_HTTP_TIMEOUT;
 axios.defaults.baseURL = process.env.VUE_APP_HTTP_URL;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 let loading = null;
+
+Vue.use(VueResource)
+Vue.http.options.root = process.env.VUE_APP_HTTP_URL
+Vue.http.interceptors.push((request, next) => {
+    if (store.state.token) {
+        request.headers.set('Authorization', "Bearer " + store.state.token)
+    }
+    next((response) => {
+        return response;
+    });
+})
 
 /*
  *请求前拦截
@@ -126,6 +139,27 @@ export function post(url, params) {
     return new Promise((resolve, reject) => {
         axios
             .post(url, params)
+            .then(res => {
+                resolve(res);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+}
+
+
+/*
+ *qget方法，对应get请求, q代表quiet
+ *@param {String} url [请求的url地址]
+ *@param {Object} params [请求时候携带的参数]
+ */
+export function qget(url, params) {
+    return new Promise((resolve, reject) => {
+        Vue.http
+            .get(url, {
+                params
+            })
             .then(res => {
                 resolve(res);
             })

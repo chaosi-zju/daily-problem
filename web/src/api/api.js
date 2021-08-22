@@ -1,4 +1,4 @@
-import {get, post} from './request';
+import {get, post, qget} from './request';
 
 // 登陆
 export const login = (form) => post('/api/login', form)
@@ -24,7 +24,8 @@ export const getAllTypes = (form) => get('/api/user/problem/types', form)
 // 再来几道题
 export const moreProblem = (form) => get('/api/user/problem/pickmore', form)
 
-// 获取学习计划
+// 获取学习计划 (api前面不能有反斜杠，qget函数用的是vue-resource)
+export const problemPlanQ = (form) => qget('api/user/problem/plan/all', form)
 export const problemPlan = (form) => get('/api/user/problem/plan/all', form)
 // 加入今日任务
 export const addToDaily = (form) => get('/api/user/problem/plan/doitnow', form)

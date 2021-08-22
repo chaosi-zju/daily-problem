@@ -15,6 +15,9 @@ const mutations = {
     SET_CUR_DO_PROBLEM(state, id){
         state.curDoProblemId = id
     },
+    SET_PROBLEM_PLAN(state, problems){
+        state.problemPlan = problems
+    },
     // 保存标签
     TAGS_LIST(state, arr) {
         state.tagsList = arr;

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {addToDaily, problemPlan, removeFromProblemPlan} from "@api";
+import {addToDaily, problemPlan, problemPlanQ, removeFromProblemPlan} from "@api";
 
 export default {
   data() {
@@ -50,15 +50,27 @@ export default {
       pageList: []
     };
   },
-
   mounted() {
-    problemPlan().then(data => {
-      this.originList = data ? data : []
-      this.rawList = data ? data : []
+    let planCached = this.$store.state.problemPlan
+    if(planCached instanceof Array && planCached.length > 0){
+      this.originList = planCached
+      this.rawList = planCached
       this.currentChangePage(this.rawList, 1)
-    })
+      problemPlanQ().then(res => {
+        if(res.data.code === 200) {
+          this.$store.commit('SET_PROBLEM_PLAN', res.data)
+          console.log('cache updated')
+        }
+      })
+    } else {
+      problemPlan().then(data => {
+        this.originList = data ? data : []
+        this.rawList = data ? data : []
+        this.currentChangePage(this.rawList, 1)
+        this.$store.commit('SET_PROBLEM_PLAN', data)
+      })
+    }
   },
-
   methods: {
     jumpToInfo: function (id) {
       let cur = this.$store.state.curProblem

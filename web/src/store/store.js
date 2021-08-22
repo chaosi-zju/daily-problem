@@ -21,6 +21,7 @@ export default new Vuex.Store({
         user: val.user,
         curProblem: val.curProblem,
         curDoProblemId: val.curDoProblemId,
+        problemPlan: val.problemPlan,
         lang:val.lang,
         tagsList: val.tagsList,
         breadList:val.breadList
