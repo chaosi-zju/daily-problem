@@ -2,6 +2,7 @@
   <div class="mavonEditor">
     <el-row type="flex" justify="end">
       <el-button icon="el-icon-edit" @click="edit" v-if="isCreator">编辑</el-button>
+      <el-button icon="el-icon-circle-check" @click="finish" v-if="isInToday">完成</el-button>
       <el-button icon="el-icon-delete" @click="removePlan" v-if="isInPlan">移出学习计划</el-button>
       <el-button icon="el-icon-circle-plus-outline" @click="addPlan" v-if="!isInPlan">加入学习计划</el-button>
     </el-row>
@@ -36,6 +37,9 @@ export default {
   computed: {
     isInPlan() {
       return this.$store.state.curProblem.isInPlan
+    },
+    isInToday() {
+      return this.$store.state.curProblem.isInToday
     }
   },
   mounted() {
@@ -49,6 +53,17 @@ export default {
   methods: {
     edit: function () {
       this.$router.push({path: "/problemUpdate"})
+    },
+    finish: function () {
+      this.$confirm("完成后今日将不再展示该题，确认完成？", '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        finishProblem({problem_id: this.problemId}).then(() => {
+          this.$messages('success', 'success')
+        })
+      });
     },
     removePlan: function () {
       this.$confirm('移出即默认完成了此题并不再做此题，确认移出？', '提示', {
