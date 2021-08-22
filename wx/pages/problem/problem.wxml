@@ -1,4 +1,9 @@
 <!--pages/problem.wxml-->
-<view class="article">
-  <wemark md="{{article}}" link highlight type="wemark"></wemark>
+<view>
+  <view class="article" wx:if="{{markmode==0}}">
+    <wemark md="{{article}}" link highlight type="wemark"></wemark>
+  </view>
+  <view class="container" wx:else>
+    <towxml nodes="{{article}}" />
+  </view>
 </view>

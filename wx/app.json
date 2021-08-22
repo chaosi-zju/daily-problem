@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/problem/problem"
+    "pages/problem/problem",
+    "pages/towxml/towxml",
+    "pages/towxml/decode"
   ],
   "window": {
     "backgroundTextStyle": "light",
