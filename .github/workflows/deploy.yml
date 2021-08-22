@@ -59,7 +59,9 @@ jobs:
             mkdir -p ~/chaosi/server/daily-problem
             mkdir -p /usr/local/nginx/html/daily-problem
             cd ~/release
-            wget -t 3 -T 30 https://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
+            rm daily-problem.tgz
+            wget --no-check-certificate http://github.com/chaosi-zju/daily-problem/releases/latest/download/release.tgz -O daily-problem.tgz
+            if [ ! -f "daily-problem.tgz" ]; then exit 1; fi
             tar -zxvf daily-problem.tgz
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
@@ -72,6 +74,7 @@ jobs:
             systemctl start daily_problem.service
             (systemctl status daily_problem.service &)
             [ -d outout ] && rm -r output
+            exit 0
 
 
 
