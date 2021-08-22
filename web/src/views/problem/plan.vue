@@ -58,8 +58,11 @@ export default {
       this.currentChangePage(this.rawList, 1)
       problemPlanQ().then(res => {
         if(res.data.code === 200) {
-          this.$store.commit('SET_PROBLEM_PLAN', res.data)
+          this.$store.commit('SET_PROBLEM_PLAN', res.data.data)
           console.log('cache updated')
+        }else{
+          console.log('fetch cache failed')
+          console.log(res.data)
         }
       })
     } else {
