@@ -77,7 +77,7 @@ jobs:
             cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml && cd -
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
-            [ -d outout ] && rm -r output
+            if [ -d outout ]; then rm -r output; fi
             systemctl status daily_problem.service | grep -C 20 "Active: active (running)"
             if [ $? == 0 ]; then exit 0; else exit 1; fi
 
