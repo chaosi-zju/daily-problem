@@ -14,5 +14,16 @@ Page({
       content = app.towxml(content, 'markdown', {})
     }
     this.setData({article: content})
+  },
+  onShareAppMessage(){
+    return {
+      title: '快来一起刷题吧，每天三道算法题，面试不是问题！',
+      path: 'pages/index/index'
+    }
+  },
+  onShareTimeline(){
+    return {
+      title: '快来一起刷题吧，每天三道算法题，面试不是问题！',
+    }
   }
 })

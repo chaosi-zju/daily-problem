@@ -21,18 +21,5 @@ App({
         util.toast(wx, '转发失败', 800)
       }
     })
-  },
-  onShareAppMessage(){
-    return {
-      title: '快来一起刷题吧，每天三道算法题，面试不是问题！',
-      path: 'pages/index/index',
-      // imageUrl: '/image/fan.jpg',
-    }
-  },
-  onShareTimeline(){
-    return {
-      title: '快来一起刷题吧，每天三道算法题，面试不是问题！',
-      // imageUrl: '/image/fan.jpg',
-    }
   }
 })
