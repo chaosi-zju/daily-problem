@@ -35,11 +35,12 @@ type UserProblemLog struct {
 }
 
 func (up UserProblem) RemoveFromUserPlan() error {
-	// 移出学习计划也默认你完成了该题
+	// 移出学习计划 不再默认为 完成了该题
 	up.DeletedAt.Time = time.Now()
 	up.DeletedAt.Valid = true
+	up.Picked = false
 
-	return up.FinishProblem()
+	return mysqld.Db.Save(&up).Error
 }
 
 func (up UserProblem) FinishProblem() error {
