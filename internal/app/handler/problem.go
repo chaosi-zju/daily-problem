@@ -424,9 +424,9 @@ func GetFinishInfo(c *gin.Context) {
 		return
 	}
 
-	xData := make([]string, 30)
+	xData := make([]string, 60)
 	startDate := time.Now()
-	for i := 29; i >= 0; i-- {
+	for i := 59; i >= 0; i-- {
 		xData[i] = startDate.Format("01-02")
 		startDate = startDate.AddDate(0, 0, -1)
 

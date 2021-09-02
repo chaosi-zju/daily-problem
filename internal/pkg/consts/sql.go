@@ -67,7 +67,7 @@ const (
 	SelectFinishChartSQL = `SELECT date, problem_type, count(1) count FROM
 	(
 		SELECT date_format(date_sub(action_time, INTERVAL ? HOUR), '%m-%d') AS date, a.*
-		FROM user_problem_logs a WHERE user_id = ? AND action = 'finish' AND to_days(now()) - to_days(action_time) <= 32 
+		FROM user_problem_logs a WHERE user_id = ? AND action = 'finish' AND to_days(now()) - to_days(action_time) <= 102
 	) b 
 	GROUP BY date, problem_type ORDER BY date, problem_type`
 

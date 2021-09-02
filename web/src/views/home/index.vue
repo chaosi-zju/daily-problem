@@ -239,7 +239,7 @@ export default {
       let myChart = echarts.init(this.$refs.charts);
       let options = {
         title: {
-          text: "最近30天我的完成量",
+          text: "最近60天我的完成量",
           x: "center",
           textStyle: {
             fontSize: 16,
