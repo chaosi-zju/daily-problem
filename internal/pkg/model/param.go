@@ -36,11 +36,15 @@ func (param *UpdateProblemParam) ToMap() map[string]interface{} {
 }
 
 type OverviewRes struct {
-	PersistDay   int        `json:"persist_day"`
-	InterruptDay int        `json:"interrupt_day"`
-	PersistNum   int        `json:"persist_num"`
-	PersistTimes int        `json:"persist_times"`
-	Todulist     []TodoItem `json:"todulist"`
+	PersistDay         int        `gorm:"-" json:"persist_day"`
+	InterruptDay       int        `gorm:"-" json:"interrupt_day"`
+	AlgorithmDoneNum   int        `gorm:"column:algorithm_done_num" json:"algorithm_done_num"`
+	AlgorithmDoneTimes int        `gorm:"column:algorithm_done_times" json:"algorithm_done_times"`
+	AlgorithmAllNum    int        `gorm:"column:algorithm_all_num" json:"algorithm_all_num"`
+	OtherDoneNum       int        `gorm:"column:other_done_num" json:"other_done_num"`
+	OtherDoneTimes     int        `gorm:"column:other_done_times" json:"other_done_times"`
+	OtherAllNum        int        `gorm:"column:other_all_num" json:"other_all_num"`
+	Todulist           []TodoItem `gorm:"-" json:"todulist"`
 }
 
 type TodoItem struct {

@@ -42,8 +42,17 @@ const (
 		order by created_at desc`
 
 	// 查询某人迄今已做多少道题、已做多少次题
-	SelectDoneProblemSQL = `select count(times) num, coalesce(sum(times), 0) times from user_problems
-		where user_id = ? and times > 0`
+	SelectDoneProblemSQL = `SELECT
+		  	sum(IF(problem_type = 'algorithm' and finished = true, 1, 0)) algorithm_done_num,
+			sum(IF(problem_type = 'algorithm' and finished = true, times, 0)) algorithm_done_times,
+			sum(IF(problem_type = 'algorithm', 1, 0)) algorithm_all_num,
+			sum(IF(problem_type != 'algorithm' and finished = true, 1, 0)) other_done_num,
+			sum(IF(problem_type != 'algorithm' and finished = true, times, 0)) other_done_times,
+			sum(IF(problem_type != 'algorithm', 1, 0)) other_all_num
+		FROM
+			user_problems 
+		WHERE
+			user_id = ?`
 
 	// 查询某人今天有多少题没做、已做多少题
 	SelectTodayWorkloadSQL = `select count(1) cnt from user_problems where 

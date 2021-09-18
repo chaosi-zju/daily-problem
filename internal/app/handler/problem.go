@@ -345,8 +345,8 @@ func GetTodayOverview(c *gin.Context) {
 		return
 	}
 
-	num, times := 0, 0
-	if err = mysqld.Db.Raw(consts.SelectDoneProblemSQL, user.ID).Row().Scan(&num, &times); err != nil {
+	overView := model.OverviewRes{}
+	if err = mysqld.Db.Raw(consts.SelectDoneProblemSQL, user.ID).Scan(&overView).Error; err != nil {
 		util.ResponseError(c, 500, err.Error())
 		return
 	}
@@ -355,7 +355,7 @@ func GetTodayOverview(c *gin.Context) {
 		Cnt int `json:"cnt"`
 	}
 
-	numArr := make([]res, 2)
+	numArr := make([]res, 2) // numArr = [今日待完成题数, 今日已完成题数]
 	hour := "0"
 	specArr := strings.Split(viper.GetString("cron.pick_problem"), " ")
 	if len(specArr) >= 3 {
@@ -372,17 +372,13 @@ func GetTodayOverview(c *gin.Context) {
 	if numArr[0].Cnt > 0 {
 		hasDone = false
 	}
+	overView.PersistDay = user.PersistDay
+	overView.InterruptDay = user.InterruptDay
+	overView.Todulist = []model.TodoItem{
+		{Done: hasDone, Content: fmt.Sprintf("今日应做 %d 道题，已完成 %d 道题", numArr[0].Cnt+numArr[1].Cnt, numArr[1].Cnt)},
+	}
 
-	util.ResponseSuccess(c, model.OverviewRes{
-		PersistDay:   user.PersistDay,
-		InterruptDay: user.InterruptDay,
-		PersistNum:   num,
-		PersistTimes: times,
-		Todulist: []model.TodoItem{
-			{Done: hasDone, Content: fmt.Sprintf("今日应做 %d 道题，已完成 %d 道题", numArr[0].Cnt+numArr[1].Cnt, numArr[1].Cnt)},
-		},
-	})
-
+	util.ResponseSuccess(c, overView)
 }
 
 func GetFinishInfo(c *gin.Context) {

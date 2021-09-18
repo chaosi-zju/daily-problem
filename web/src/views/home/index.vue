@@ -2,93 +2,78 @@
   <div class="home">
     <!-- 数据概况 start -->
     <el-row :gutter="40">
-      <el-col :lg="6" :sm="12">
+      <el-col :lg="8" :sm="24">
         <div class="grid-content bg-white">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="6">
               <div class="grid-content">
                 <div class="icons">
                   <i class="iconfont icon-chenggong"></i>
                 </div>
               </div>
             </el-col>
-            <el-col :span="12">
-              <div class="grid-content">
-                <ul class="icons-right">
-                  <li class="chain">坚持天数</li>
-                  <li>
-                    <countTo :startVal="0" :endVal="userinfo.persist_day" :duration="1000"></countTo>
-                  </li>
-                </ul>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-col>
-      <el-col :lg="6" :sm="12">
-        <div class="grid-content bg-white">
-          <el-row>
-            <el-col :span="12">
-              <div class="grid-content">
-                <div class="icons icons1">
-                  <i class="iconfont icon-zanting"></i>
+            <el-col :span="18">
+              <div class="grid-content icons-right">
+                <div>
+                  <span class="chain">达标天数：</span>
+                  <countTo :startVal="0" :endVal="userinfo.persist_day" :duration="1000"></countTo>
+                </div>
+                <div>
+                  <span class="chain">中断天数：</span>
+                  <countTo :startVal="0" :endVal="userinfo.interrupt_day" :duration="1000"></countTo>
                 </div>
               </div>
             </el-col>
-            <el-col :span="12">
-              <div class="grid-content">
-                <ul class="icons-right">
-                  <li class="chain">未达标天数</li>
-                  <li>
-                    <countTo :startVal="0" :endVal="userinfo.interrupt_day" :duration="1000"></countTo>
-                  </li>
-                </ul>
-              </div>
-            </el-col>
           </el-row>
         </div>
       </el-col>
-      <el-col :lg="6" :sm="12">
+      <el-col :lg="8" :sm="24">
         <div class="grid-content bg-white">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="6">
               <div class="grid-content">
                 <div class="icons icons2">
                   <i class="iconfont icon-baocun"></i>
                 </div>
               </div>
             </el-col>
-            <el-col :span="12">
-              <div class="grid-content">
-                <ul class="icons-right">
-                  <li class="chain">已做题数</li>
-                  <li>
-                    <countTo :startVal="0" :endVal="userinfo.persist_num" :duration="1000"></countTo>
-                  </li>
-                </ul>
+            <el-col :span="18">
+              <div class="grid-content icons-right">
+                <div>
+                  <span class="chain">已做算法题数： </span>
+                  <countTo :startVal="0" :endVal="userinfo.algorithm_done_num" :duration="1000"></countTo>
+                  <span> / {{ userinfo.algorithm_all_num }}</span>
+                </div>
+                <div>
+                  <span class="chain">其他类型题数： </span>
+                  <countTo :startVal="0" :endVal="userinfo.other_done_num" :duration="1000"></countTo>
+                  <span> / {{ userinfo.other_all_num }}</span>
+                </div>
               </div>
             </el-col>
           </el-row>
         </div>
       </el-col>
-      <el-col :lg="6" :sm="12">
+      <el-col :lg="8" :sm="24">
         <div class="grid-content bg-white">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="6">
               <div class="grid-content">
                 <div class="icons icons3">
                   <i class="iconfont icon-bianji"></i>
                 </div>
               </div>
             </el-col>
-            <el-col :span="12">
-              <div class="grid-content">
-                <ul class="icons-right">
-                  <li class="chain">做题次数</li>
-                  <li>
-                    <countTo :startVal="0" :endVal="userinfo.persist_times" :duration="1000"></countTo>
-                  </li>
-                </ul>
+            <el-col :span="18">
+              <div class="grid-content icons-right">
+                <div>
+                  <span class="chain">算法题重复次数：  </span>
+                  <countTo :startVal="0" :endVal="userinfo.algorithm_done_times" :duration="1000"></countTo>
+                </div>
+                <div>
+                  <span class="chain">其他题重复次数：  </span>
+                  <countTo :startVal="0" :endVal="userinfo.other_done_times" :duration="1000"></countTo>
+                </div>
               </div>
             </el-col>
           </el-row>
@@ -98,7 +83,7 @@
     <!-- 数据概况 end -->
     <!-- 我的账户&今日待办 start -->
     <el-row :gutter="40">
-      <el-col :lg="6" :sm="8" :xs="24">
+      <el-col :lg="8" :sm="24">
         <div class="main-center clearfix">
           <div class="pull-left center-left">
             <ul>
@@ -113,7 +98,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :lg="18" :sm="16" :xs="24">
+      <el-col :lg="16" :sm="24">
         <div class="todulist">
           <div class="item"><span>今日待办</span></div>
           <div class="item" v-for="(item,i) in userinfo.todulist" :key="i">
@@ -163,7 +148,7 @@
 // 数字滚动插件
 import countTo from "vue-count-to"
 import echarts from "echarts"
-import {getTodayOverview, getFinishInfo} from "@api"
+import {getFinishInfo, getTodayOverview} from "@api"
 
 export default {
   name: "home",
@@ -174,8 +159,12 @@ export default {
       userinfo: {
         persist_day: 0,
         interrupt_day: 0,
-        persist_num: 0,
-        persist_times: 0,
+        algorithm_done_num: 0,
+        algorithm_done_times: 0,
+        algorithm_all_num: 0,
+        other_done_num: 0,
+        other_done_times: 0,
+        other_all_num: 0,
         todulist: [],
       },
       finishInfoCurPage: 1,
@@ -193,7 +182,7 @@ export default {
     getFinishInfo().then(data => {
       this.finishInfoRawList = data.list_info ? data.list_info : []
       this.currentChangePage(this.finishInfoRawList, 1)
-      if(data.chart_info){
+      if (data.chart_info) {
         this.finishInfoChartData.xData = data.chart_info.xData
         this.finishInfoChartData.yData = new Map(Object.entries(data.chart_info.yData))
       }
@@ -201,8 +190,8 @@ export default {
       this.init();
     })
   },
-  destroyed(){
-    window.onresize=null
+  destroyed() {
+    window.onresize = null
   },
   methods: {
     init() {
@@ -251,7 +240,7 @@ export default {
           orient: "vertical",
           top: 20,
           left: 10,
-          textStyle:{
+          textStyle: {
             color: "#696969",
           },
           data: [],  // legend array
@@ -260,10 +249,10 @@ export default {
           trigger: "axis",
           padding: [4, 10],
           extraCssText: "text-align:left",
-          formatter: function(arg) {
+          formatter: function (arg) {
             let s1 = "", s2 = "", sum = 0
             for (let i = 0; i < arg.length; i++) {
-              if(i === 0){
+              if (i === 0) {
                 s1 = arg[i].name + " 完成 "
               }
               s2 += "<br/>" + arg[i].value + " 道 " + arg[i].seriesName + " 题"
@@ -281,13 +270,13 @@ export default {
         },
         series: []    // y axis data
       }
-      this.finishInfoChartData.yData.forEach(function (v, k){
+      this.finishInfoChartData.yData.forEach(function (v, k) {
         options.legend.data.push(k)
-        let color = "#bd" + (Math.floor(Math.random()*5)+11).toString(16) + "7" + (Math.floor(Math.random()*5)+11).toString(16) + "f"
+        let color = "#bd" + (Math.floor(Math.random() * 5) + 11).toString(16) + "7" + (Math.floor(Math.random() * 5) + 11).toString(16) + "f"
         options.series.push({
           name: k,
           type: "bar",
-          stack:"总量",
+          stack: "总量",
           data: v,
           itemStyle: {
             normal: {
@@ -320,8 +309,8 @@ export default {
 
     .icons {
       text-align: left;
-      width: 86px;
-      height: 86px;
+      width: 90px;
+      height: 90px;
       margin: 10px;
       padding: 13px;
       transition: 0.3s ease-in-out;
@@ -389,17 +378,18 @@ export default {
 
     .icons-right {
       font-size: 24px;
-      margin-top: 16px;
-      margin-right: 16px;
-
-      li {
-        margin: 10px 0;
-      }
+      height: 90px;
+      margin: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .chain {
       color: rgba(0, 0, 0, 0.45);
       font-size: 18px;
+      float: left;
+      padding-left: 20px;
     }
   }
 
