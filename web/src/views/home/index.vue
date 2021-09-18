@@ -171,7 +171,8 @@ export default {
       finishInfoPageSize: 10,
       finishInfoRawList: [],
       finishInfoPageList: [],
-      finishInfoChartData: {}
+      finishInfoChartData: {},
+      latestDay: 60
     };
   },
   mounted() {
@@ -179,7 +180,7 @@ export default {
     getTodayOverview().then(data => {
       this.userinfo = data
     })
-    getFinishInfo().then(data => {
+    getFinishInfo({latest: this.latestDay}).then(data => {
       this.finishInfoRawList = data.list_info ? data.list_info : []
       this.currentChangePage(this.finishInfoRawList, 1)
       if (data.chart_info) {
