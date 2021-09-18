@@ -388,6 +388,12 @@ func GetFinishInfo(c *gin.Context) {
 		return
 	}
 
+	// 查询最近多少天的完成情况，默认60天
+	dayNum, err := strconv.Atoi(c.Query("latest"))
+	if err != nil || dayNum <= 0 {
+		dayNum = 60
+	}
+
 	type item struct {
 		Date   string `json:"date"`
 		User   string `json:"user"`
@@ -420,9 +426,9 @@ func GetFinishInfo(c *gin.Context) {
 		return
 	}
 
-	xData := make([]string, 60)
+	xData := make([]string, dayNum)
 	startDate := time.Now()
-	for i := 59; i >= 0; i-- {
+	for i := dayNum - 1; i >= 0; i-- {
 		xData[i] = startDate.Format("01-02")
 		startDate = startDate.AddDate(0, 0, -1)
 
