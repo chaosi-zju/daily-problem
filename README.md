@@ -1,6 +1,6 @@
 # daily-problem
 
-日常做题工具
+站点直通车：[Daily Problem](http://www.chaosi-zju.com)
 
 #### 简介
 相信你平时学习各种知识应该也会有记笔记或者写博客的习惯吧？
