@@ -2,6 +2,25 @@
 
 日常做题工具
 
+#### 目录结构
+```
+|-- .github              // github action config
+|-- cmd
+|   |-- main.go          // main entry
+|-- conf                 // local config
+|-- internal             // main backend logic
+|   |-- app
+|   |   |-- cronjob    
+|   |   |-- handler
+|   |   |-- middleware
+|   |   |-- routes.go
+|   |-- pkg
+|   |   |-- ......       // self library
+|-- web                  // front page by Vue
+|-- wx                   // front page by weixin app
+|-- makefile             // how to build
+```
+
 #### 本地运行
 ```
 // 导入数据库
