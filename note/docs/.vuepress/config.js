@@ -7,8 +7,9 @@ module.exports = {
     base: '/',
     themeConfig: {
         nav: [
+            {text: '刷新', link: 'http://note.chaosi-zju.com/api/note/update'},
             {text: '每日做题', link: 'http://chaosi-zju.com'},
-            {text: 'Github', link: 'http://github.com/chaosi-zju/daily-problem'},
+            {text: 'Github', link: 'http://github.com/chaosi-zju/daily-problem'}
         ],
         docsRepo: 'chaosi-zju/daily-problem',
         docsDir: '/',
