@@ -80,5 +80,5 @@ func GenerateNote(ctx context.Context) {
 		}
 	}
 
-	log.Info("%+v", problemMap)
+	log.Info("write to %s success", path)
 }

@@ -1,5 +1,5 @@
-log:
-  path: /tmp/daily_problem.log
+path:
+  log: /tmp/daily_problem.log
   note: /home/chaosi/server/note/docs/
 gin:
   port: 5001
