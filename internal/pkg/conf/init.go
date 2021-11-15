@@ -19,7 +19,7 @@ var (
 func Init(ctx context.Context) (err error) {
 	flag.Parse()
 
-	viper.SetDefault("log.path", "/tmp/daily_problem.log")
+	viper.SetDefault("path.log", "/tmp/daily_problem.log")
 	viper.SetConfigFile(*conf)
 	if err := viper.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read config, path: %s, err: %+v", *conf, err)
@@ -39,7 +39,7 @@ func Init(ctx context.Context) (err error) {
 
 func initLogger() error {
 
-	path := viper.GetString("log.path")
+	path := viper.GetString("path.log")
 
 	writer, err := rotatelogs.New(
 		path+".%Y%m%d%H",

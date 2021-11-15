@@ -70,13 +70,19 @@ jobs:
             tar -zxvf daily-problem.tgz
             systemctl disable daily_problem.service
             systemctl stop daily_problem.service
+            systemctl disable note.service
+            systemctl stop note.service
             cp -rf output/server/* ~/chaosi/server/daily-problem/
             cp -rf output/dist/* /usr/local/nginx/html/daily-problem/
             cp -rf output/daily_problem.service /etc/systemd/system/
+            cp -rf output/note ~/chaosi/server/
+            cp -rf output/note.service /etc/systemd/system/
             export MYSQL_HOST=${{ secrets.MYSQL_HOST }} MYSQL_USER=${{ secrets.MYSQL_USER }} MYSQL_PASSWD=${{ secrets.MYSQL_PASSWD }}
             cd ~/chaosi/server/daily-problem && envsubst < config_prod_temp.yaml > config_prod.yaml && cd -
             systemctl enable daily_problem.service
             systemctl start daily_problem.service
+            systemctl enable note.service
+            systemctl start note.service
             if [ -d outout ]; then rm -r output; fi
             systemctl status daily_problem.service | grep -C 20 "Active: active (running)"
             if [ $? == 0 ]; then exit 0; else exit 1; fi

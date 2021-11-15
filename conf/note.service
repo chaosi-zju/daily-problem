@@ -1,0 +1,10 @@
+[Unit]
+Description=daily-problem daemon
+
+[Service]
+ExecStart=cd /home/chaosi/server/note && npm install && npm run dev -- --port 7001
+Restart=always
+RestartSec=4s500ms
+
+[Install]
+WantedBy=multi-user.target

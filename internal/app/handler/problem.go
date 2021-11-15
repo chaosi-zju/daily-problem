@@ -53,6 +53,11 @@ func GetCommonDailyProblem(c *gin.Context) {
 	util.ResponseSuccess(c, problems)
 }
 
+func UpdateNote(c *gin.Context) {
+	cronjob.GenerateNote(c)
+	util.ResponseSuccess(c, nil)
+}
+
 func PickMoreProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {

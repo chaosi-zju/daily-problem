@@ -19,4 +19,6 @@
 # web
 web/node_modules
 website/
+note/node_modules
+note/dist
 output/

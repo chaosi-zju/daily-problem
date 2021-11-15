@@ -1,5 +1,6 @@
 log:
   path: /tmp/daily_problem.log
+  note: /home/chaosi/server/note/docs/
 gin:
   port: 5001
   mode: release
@@ -10,6 +11,7 @@ mysql:
   database: daily_problem
 cron:
   pick_problem: '0 0 14 * * ?'
+  generate_note: '0 0 * * * ?'
 problem:
   default_daily_num: 3
 

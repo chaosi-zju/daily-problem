@@ -80,5 +80,7 @@ const (
 	) b 
 	GROUP BY date, problem_type ORDER BY date, problem_type`
 
+	SelectAllProblems = `select * from problems where creator_id = ?`
+
 	//`select problems.*, t.picked, t.pick_time, t.finished, t.times. from (select * from user_problems where user_id = ? and picked = true and finished = false) as t left join problems on t.problem_id = problems.id order by problem_type`
 )
