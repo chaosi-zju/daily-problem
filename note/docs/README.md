@@ -3,7 +3,7 @@ navbar: false
 layout: home
 pageClass: home-page-class
 logo: '/assets/img/pen.svg'
-title: chaosi · 笔记
+title: Note
 describe: 温故而知新
 books: [{
   name: 'algorithm',

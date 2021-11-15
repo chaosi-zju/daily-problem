@@ -49,7 +49,6 @@ func GenerateNote(ctx context.Context) {
 
 	for i, k1 := range key1 {
 		path1 := path + "nav." + strconv.Itoa(i+1) + "." + k1 + "/"
-		_, err = os.Create(path1 + "README.md")
 		for j, k2 := range key2[k1] {
 			path2 := path1 + strconv.Itoa(j+1) + "-" + k2 + "/"
 			err = os.MkdirAll(path2, os.ModePerm)
@@ -78,7 +77,11 @@ func GenerateNote(ctx context.Context) {
 				}
 			}
 		}
+		_, err = os.Create(path1 + "README.md")
+		if err != nil {
+			log.Errorf("%+v", err)
+		}
 	}
 
-	log.Info("write to %s success", path)
+	log.Infof("write to %s success", path)
 }
