@@ -1,6 +1,9 @@
 # daily-problem
 
-站点直通车：[Daily Problem](http://www.chaosi-zju.com)
+**站点直通车**
+
+* 每日做题 [Daily Problem](http://www.chaosi-zju.com)
+* 朝思笔记 [My Note](http://note.chaosi-zju.com)
 
 #### 简介
 相信你平时学习各种知识应该也会有记笔记或者写博客的习惯吧？
