@@ -76,9 +76,9 @@ func GenerateNote(ctx context.Context) {
 					content += "[OJ链接](" + p.Link + ")\n\n"
 				}
 				if p.Content != "" && p.Type == "interview" {
-					content += "### 一句话总结\n"
+					content += "#### 一句话总结\n"
 				}
-				content += p.Content + "\n### 解答\n" + p.Result
+				content += p.Content + "\n#### 解答\n" + p.Result
 				_, err = io.WriteString(f, content)
 				if err != nil {
 					log.Errorf("k1: %s, k2: %s, not exist", k1, k2)
