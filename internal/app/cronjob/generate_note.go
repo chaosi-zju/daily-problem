@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -70,7 +71,14 @@ func GenerateNote(ctx context.Context) {
 					log.Errorf("%+v", err)
 					continue
 				}
-				content := "### " + p.Name + "\n[OJ链接](" + p.Link + ")\n\n" + p.Content + "\n### 解答\n" + p.Result
+				content := "### " + p.Name + "\n"
+				if p.Link != "" && !strings.Contains(p.Link, "chaosi-zju.com") {
+					content += "[OJ链接](" + p.Link + ")\n\n"
+				}
+				if p.Content != "" && p.Type == "interview" {
+					content += "### 一句话总结\n"
+				}
+				content += p.Content + "\n### 解答\n" + p.Result
 				_, err = io.WriteString(f, content)
 				if err != nil {
 					log.Errorf("k1: %s, k2: %s, not exist", k1, k2)
