@@ -21,4 +21,6 @@ web/node_modules
 website/
 note/node_modules
 note/dist
+note/docs
+note/package-lock.json
 output/

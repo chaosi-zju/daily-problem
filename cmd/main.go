@@ -3,6 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+
 	"github.com/chaosi-zju/daily-problem/internal/app"
 	"github.com/chaosi-zju/daily-problem/internal/app/cronjob"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/conf"
@@ -10,11 +17,6 @@ import (
 	"github.com/chaosi-zju/daily-problem/internal/pkg/model"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/util"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func init() {

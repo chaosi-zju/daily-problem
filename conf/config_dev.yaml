@@ -1,6 +1,6 @@
 path:
   log: /tmp/daily_problem.log
-  note: /home/chaosi/server/note/docs/
+  note: ../note/docs/
 gin:
   port: 5001
   mode: debug

@@ -4,12 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"time"
 )
 
 var (
@@ -18,6 +20,12 @@ var (
 
 func Init(ctx context.Context) (err error) {
 	flag.Parse()
+
+	_, er := os.Stat(*conf)
+	if os.IsNotExist(er) {
+		logrus.Infof("the conf path: %s is invalid, use path in context instead", *conf)
+		*conf = ctx.Value("conf.path").(string)
+	}
 
 	viper.SetDefault("path.log", "/tmp/daily_problem.log")
 	viper.SetConfigFile(*conf)
