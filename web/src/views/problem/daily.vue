@@ -12,23 +12,24 @@
         <el-table-column prop="name" label="题目标题" min-width="56%"></el-table-column>
         <el-table-column label="操作" min-width="25%">
           <template slot-scope="scope">
-            <el-button type="info" @click="jumpToLink(scope.row.link)" class="el-icon-paperclip">原题</el-button>
-            <el-button type="info" @click="jumpToLocal(scope.row.ID)" class="el-icon-edit-outline">做题</el-button>
-            <el-button type="info" @click="jumpToResult(scope.row.ID)" class="el-icon-document">答案</el-button>
-            <el-button type="info" @click="finish(scope.$index)" class="el-icon-circle-check">完成</el-button>
+            <!--            <el-button type="info" @click="jumpToLink(scope.row.link)" class="el-icon-paperclip">原题</el-button>-->
+            <!--            <el-button type="info" @click="jumpToLocal(scope.row.ID)" class="el-icon-edit-outline">做题</el-button>-->
+            <el-button type="primary" @click="jumpToResult(scope.$index, scope.row.ID)" class="el-icon-document">  做题
+            </el-button>
+            <el-button type="info" @click="finish(scope.$index)" class="el-icon-circle-check">  完成 </el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->
       <div class="block">
         <el-pagination style="padding-top: 14px"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 20, 50]"
-            :page-size="10"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="rawList.length"
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="currentPage"
+                       :page-sizes="[5, 10, 20, 50]"
+                       :page-size="10"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="rawList.length"
         ></el-pagination>
       </div>
       <!-- 再来几道 -->
@@ -81,6 +82,7 @@ export default {
   mounted() {
     dailyProblem().then(data => {
       this.rawList = data ? data : []
+      console.log(data)
       this.currentChangePage(this.rawList, 1)
     })
   },
@@ -95,11 +97,13 @@ export default {
       this.$store.commit('SET_CUR_DO_PROBLEM', id)
       this.$router.push({path: "/problemDo"})
     },
-    jumpToResult: function (id) {
+    jumpToResult: function (idxOfPage, id) {
       let cur = this.$store.state.curProblem
       cur.id = id
+      cur.idx = (this.currentPage - 1) * this.pageSize + idxOfPage
       cur.isInPlan = true
       cur.isInToday = true
+      cur.rawList = this.rawList
       this.$store.commit('SET_CUR_PROBLEM', cur)
       this.$router.push({path: "/problemInfo"})
     },
@@ -168,10 +172,18 @@ export default {
 <style lang="scss" scoped>
 .el-button--info {
   width: auto;
-  height: 25px;
-  font-size: 10px;
-  padding: 3px 6px;
-  margin: 2px 5px;
+  height: 30px;
+  font-size: 12px;
+  padding: 3px 8px;
+  margin: 3px 7px;
+}
+
+.el-button--primary {
+  width: auto;
+  height: 30px;
+  font-size: 12px;
+  padding: 3px 8px;
+  margin: 3px 7px;
 }
 
 .type-big {

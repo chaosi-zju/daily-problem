@@ -1,6 +1,6 @@
 <template>
   <div class="mavonEditor">
-    <el-row type="flex" justify="end">
+    <el-row type="flex" justify="end" class="title-btn">
       <el-button icon="el-icon-edit" @click="edit" v-if="isCreator">编辑</el-button>
       <el-button icon="el-icon-circle-check" @click="finish" v-if="isInToday">完成</el-button>
       <el-button icon="el-icon-delete" @click="removePlan" v-if="isInPlan">移出学习计划</el-button>
@@ -18,12 +18,23 @@
         style="border: 0"
         v-model="content"
     />
+
+    <el-row type="flex" justify="end" class="bottom-btn">
+      <el-button icon="el-icon-arrow-left" @click="pre" v-if="JSON.stringify(preProblem)!=='{}'">
+        上一题：{{ preProblem.name }}
+      </el-button>
+      <el-button @click="next" v-if="JSON.stringify(nextProblem)!=='{}'">
+        下一题：{{ nextProblem.name }}
+        <i class="el-icon-arrow-right"/>
+      </el-button>
+    </el-row>
+
   </div>
 </template>
 
 
 <script>
-import {addToProblemPlan, getProblemByID, finishProblem, removeFromProblemPlan} from '@api'
+import {addToProblemPlan, finishProblem, getProblemByID, removeFromProblemPlan} from '@api'
 
 export default {
   name: "info-problem",
@@ -33,6 +44,8 @@ export default {
       isInToday: false,
       content: "",
       isCreator: false,
+      preProblem: {},
+      nextProblem: {}
     };
   },
   computed: {
@@ -43,6 +56,16 @@ export default {
   mounted() {
     this.problemId = this.$store.state.curProblem.id
     this.isInToday = this.$store.state.curProblem.isInToday
+    if (this.isInToday) {
+      let idx = this.$store.state.curProblem.idx
+      let len = this.$store.state.curProblem.rawList.length
+      if (idx - 1 >= 0) {
+        this.preProblem = this.$store.state.curProblem.rawList[idx - 1]
+      }
+      if (idx + 1 < len) {
+        this.nextProblem = this.$store.state.curProblem.rawList[idx + 1]
+      }
+    }
     getProblemByID({problem_id: this.problemId}).then(data => {
       this.content = "## " + data.name + "\n[OJ链接](" + data.link + ")\n\n" + data.content + "\n### 解答\n" + data.result
       this.isCreator = (this.$store.state.user.ID === data.creator_id)
@@ -84,13 +107,39 @@ export default {
         })
       });
     },
-    addPlan: function (){
+    addPlan: function () {
       addToProblemPlan({problem_id: this.problemId}).then(() => {
         let cur = this.$store.state.curProblem
         cur.isInPlan = true
         this.$store.commit('SET_CUR_PROBLEM', cur)
         this.$messages('success', 'success')
       })
+    },
+    pre: function () {
+      let cur = this.$store.state.curProblem
+      if (!cur.isInToday || !cur.isInPlan) {
+        cur.rawList.splice(cur.idx, 1)
+      }
+      cur.id = this.preProblem.ID
+      cur.idx = (cur.idx - 1) % cur.rawList.length
+      cur.isInPlan = true
+      cur.isInToday = true
+      this.$store.commit('SET_CUR_PROBLEM', cur)
+      location.reload()
+    },
+    next: function () {
+      let cur = this.$store.state.curProblem
+      if (!cur.isInToday || !cur.isInPlan) {
+        cur.rawList.splice(cur.idx, 1)
+        cur.idx = cur.idx % cur.rawList.length
+      } else {
+        cur.idx = (cur.idx + 1) % cur.rawList.length
+      }
+      cur.id = this.nextProblem.ID
+      cur.isInPlan = true
+      cur.isInToday = true
+      this.$store.commit('SET_CUR_PROBLEM', cur)
+      location.reload()
     }
   }
 };
@@ -104,10 +153,25 @@ export default {
   border-radius: 6px;
 }
 
-.mavonEditor >>> .el-button {
+.title-btn >>> .el-button {
   width: auto;
   height: 30px;
   font-size: 12px;
   padding: 6px 10px;
 }
+
+.bottom-btn >>> .el-button {
+  width: auto;
+  height: 40px;
+  font-size: 13px;
+  padding: 10px 10px;
+  margin-top: 20px;;
+  max-width: 500px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+}
+
+
 </style>
