@@ -4,9 +4,21 @@
       <showAside :toggle-click="toggleClick"/>
       <breadcrumb />
     </div>
-    
+
+    <div class="header-center" v-show="tomato_time_str!==''">
+      <span style="font-size: 13px; letter-spacing: 1px; color: #3a8ee6">番茄开启 请专注 ：</span>
+      <span>{{ tomato_time_str }}</span>
+    </div>
+
     <div class="header-right">
       <div class="header-user-con">
+        <!-- 全屏显示 -->
+        <div class="btn-bell" @click="startTomato">
+          <el-tooltip effect="dark" content="开启番茄钟 🍅" placement="bottom">
+            <i class="el-icon-video-play" v-if="!tomato_run"></i>
+            <i class="el-icon-video-pause" v-else></i>
+          </el-tooltip>
+        </div>
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
           <el-tooltip effect="dark" :content="fullscreen?$t('header.cancelFullScreen'):$t('header.fullScreen')" placement="bottom">
@@ -61,6 +73,9 @@ export default {
   },
   data() {
     return {
+      tomato_time_str: "",
+      tomato_run: false,
+      tomato_time_init: 300, // 60s
       fullscreen: this.$store.state.isFullScreen,
       message: 2,
       username: this.$store.state.user.name
@@ -123,14 +138,33 @@ export default {
     handleFullScreen() {
       let isFullScreen = this.$store.state.isFullScreen
       this.$store.commit('SET_FULLSCREEN', !isFullScreen)
+    },
+    startTomato() {
+      if (this.tomato_time_str === "") {
+        let ts = this.tomato_time_init
+        this.tomato_run = true
+        let timer = setInterval(() => {
+          if (this.tomato_run) {
+            ts--;
+            this.tomato_time_str = ('0' + Math.floor(ts / 60)).slice(-2) + ':' + ('0' + ts % 60).slice(-2)
+            if (ts <= 0) {
+              this.tomato_time_str = ""
+              this.tomato_run = false
+              clearInterval(timer);
+            }
+          }
+        }, 1000)
+      }else{
+        this.tomato_run = !this.tomato_run
+      }
     }
   }
-}; 
+};
 </script>
 
 <style lang="scss" scoped>
 .head-container {
-  height: 50px;
+  height: 52px;
   line-height: 50px;
   -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
     0 0 3px 0 rgba(0, 0, 0, 0.04);
@@ -139,6 +173,15 @@ export default {
 }
 .header-left {
   float: left;
+}
+.header-center {
+  float: left;
+  padding-left: 30%;
+  position: relative;
+  letter-spacing: 5px;
+  font-weight: bolder;
+  font-size: 21px;
+  color: red;
 }
 .header-right {
   float: right;
