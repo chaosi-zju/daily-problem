@@ -5,7 +5,7 @@ const (
 	GetDailyProblemSQL = `select * from problems where id in 
 		(select problem_id from user_problems 
 		where user_id = ? and picked = true and finished = false and deleted_at is null)
-		order by type desc`
+		order by type desc, name asc`
 
 	GetCommonDailyProblemSQL = `select * from problems where id in 
 		(select problem_id from user_problems where user_id = 1 and picked = true and finished = false and deleted_at is null
