@@ -24,12 +24,12 @@ Page({
     this.setData({userid: app.globalData.userid})
   },
   finishProblem() {
+    let that = this
     let p = app.globalData.problems[this.data.idx]
-    let url = '/api/user/problem/finish?problem_id=' + p.ID + '&userid=' + app.globalData.userid
+    let url = '/api/problem/common/finish?problem_id=' + p.ID + '&userid=' + app.globalData.userid
     util.request(wx, url, 'GET', {}, function (result) {
-      this.setData({
-        finished: true
-      })
+      that.setData({finished: true})
+      util.toast(wx, 'finish', 500)
     })
   },
   preProblem() {

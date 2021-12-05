@@ -23,7 +23,6 @@ jobs:
       - name: Build
         run: |
           make build_server
-          make build_client
           tar -zcvf release.tgz output
 
       - name: Create release

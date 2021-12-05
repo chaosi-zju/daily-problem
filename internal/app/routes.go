@@ -26,6 +26,7 @@ func SetupRoutes() *gin.Engine {
 
 	r.GET("/api/problem/common/daily", handler.GetCommonDailyProblem)
 	r.GET("/api/problem/common/userid", handler.GetUserIDByWxNick)
+	r.GET("/api/problem/common/finish", handler.FinishProblem)
 	r.GET("/api/note/update", handler.UpdateNote)
 
 	userRouter := r.Group("/api/user")
