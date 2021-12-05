@@ -197,8 +197,13 @@ func GetProblemByID(c *gin.Context) {
 func FinishProblem(c *gin.Context) {
 	userId, err := util.GetUserIdFromContext(c)
 	if err != nil {
-		util.ResponseError(c, 500, err.Error())
-		return
+		id, err := strconv.Atoi(c.Query("userid"))
+		if err == nil && id > 0 {
+			userId = uint(id)
+		} else {
+			util.ResponseError(c, 500, err.Error())
+			return
+		}
 	}
 
 	problemId, err := strconv.Atoi(c.Query("problem_id"))

@@ -1,9 +1,10 @@
 // pages/problem.js
 const app = getApp()
+const util = require('../../utils/util.js')
 
 Page({
   data: {
-    userid: app.globalData.userid,
+    userid: 0,
     idx: 0,
     markmode: 0, // choose markdown plugin: 0.wemark; 1.towxml 
     article: {},
@@ -19,13 +20,16 @@ Page({
     if (this.data.markmode != 0) {
       content = app.towxml(content, 'markdown', {})
     }
-    this.setData({
-      article: content
-    })
+    this.setData({article: content})
+    this.setData({userid: app.globalData.userid})
   },
   finishProblem() {
-    this.setData({
-      finished: !this.data.finished
+    let p = app.globalData.problems[this.data.idx]
+    let url = '/api/user/problem/finish?problem_id=' + p.ID + '&userid=' + app.globalData.userid
+    util.request(wx, url, 'GET', {}, function (result) {
+      this.setData({
+        finished: true
+      })
     })
   },
   preProblem() {
