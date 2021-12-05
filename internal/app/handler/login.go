@@ -61,6 +61,12 @@ func Register(c *gin.Context) {
 	}
 }
 
+func GetUserIDByWxNick(c *gin.Context) {
+	nick := c.Query("nick")
+	user := model.GetUserByWxNick(nick)
+	util.ResponseSuccess(c, map[string]interface{}{"userid": user.ID})
+}
+
 func generateToken(user model.User) (string, error) {
 	j := model.NewJWT()
 

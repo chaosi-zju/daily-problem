@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/chaosi-zju/daily-problem/internal/pkg/mysqld"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"time"
 )
@@ -16,6 +17,7 @@ type User struct {
 	Phone        string     `gorm:"column:phone" json:"phone"`
 	Password     string     `gorm:"column:password" json:"-"`
 	Role         string     `gorm:"column:role" json:"role"`
+	WxNick       string     `gorm:"column:wx_nick" json:"wx_nick"`
 	PersistDay   int        `gorm:"column:persist_day" json:"persist_day"`
 	InterruptDay int        `gorm:"column:interrupt_day" json:"interrupt_day"`
 	Config       UserConfig `gorm:"column:config;type:string" json:"config"`
@@ -108,6 +110,15 @@ func Register(param RegisterParam) (User, error) {
 	err := mysqld.Db.Create(&user).Error
 
 	return user, err
+}
+
+func GetUserByWxNick(nick string) User {
+	user := User{}
+	if err := mysqld.Db.Where("wx_nick = ?", nick).First(&user).Error; err != nil {
+		log.Infof("no user mapping to wx_nick = %s", nick)
+		return User{}
+	}
+	return user
 }
 
 func GetAllUsers() ([]User, error) {
