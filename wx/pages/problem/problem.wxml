@@ -7,3 +7,11 @@
     <towxml nodes="{{article}}" />
   </view>
 </view>
+
+<view wx:if="{{userid > 0}}" class="bottom">
+  <block>
+    <button class="pre-btn" bindtap="preProblem">上一题</button>
+    <button class="finish-btn" disabled="{{finished}}" bindtap="finishProblem">完成</button>
+    <button class="next-btn" bindtap="nextProblem">下一题 </button>
+  </block>
+</view>

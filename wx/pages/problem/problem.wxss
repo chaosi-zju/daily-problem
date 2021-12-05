@@ -4,3 +4,29 @@
   margin: 0rpx 18px 38px; 
   align-content: center;
 }
+
+.bottom{
+  margin: 20rpx;
+  height: 80rpx;
+  display: flex;
+  flex-direction: row;
+}
+
+.pre-text{
+  width: 33%;
+}
+
+.next-text{
+  width: 33%;
+}
+
+.finish-btn{
+  width: 33%;
+  background-color: rgb(241, 118, 93);
+  text-align: center;
+}
+
+.finish-btn[disabled] {
+  background: #414d5c;
+  border-color: #78899c;
+}

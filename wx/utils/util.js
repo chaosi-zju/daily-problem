@@ -1,4 +1,5 @@
-const host = 'https://sslapi.chaosi-zju.com'
+// const host = 'https://sslapi.chaosi-zju.com'
+const host = 'http://127.0.0.1:5001'
 
 const request = function (wx, path, method, data, func, noloading) {
   if (noloading == null || !noloading) {

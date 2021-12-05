@@ -9,7 +9,8 @@ Page({
   },
   onLoad() {
     let that = this
-    util.request(wx, '/api/problem/common/daily', 'GET', {}, function (result) {
+    let userid = app.globalData.userid
+    util.request(wx, '/api/problem/common/daily?userid=' + userid, 'GET', {}, function (result) {
       that.setData({
         title: ' 提示：访问 chaosi-zju.com 体验更佳',
         problems: result

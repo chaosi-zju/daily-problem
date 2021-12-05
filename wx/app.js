@@ -1,25 +1,27 @@
 // app.js
+const util = require('./utils/util.js')
 App({
   globalData: {
+    userid: 0,
     problems: []
   },
   towxml: require('/towxml/index'),
   onLaunch() {
-    // 登录
-    wx.login({
+    this.globalData.userid = wx.getStorageSync('userid') || 0
+    let that = this
+    wx.getUserInfo({
       success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        util.request(wx, '/api/problem/common/userid?nick=' + res.userInfo.nickName, 'GET', {}, function (result) {
+          that.globalData.userid = result.userid
+          wx.setStorageSync('userid', result.userid);
+        }, true)
       }
     })
     //显示转发分享
     wx.showShareMenu({
       menus: ['shareAppMessage', 'shareTimeline'],
-      success(res) {
-        util.toast(wx, '转发成功', 800)
-      },
-      fail(e) {
-        util.toast(wx, '转发失败', 800)
-      }
+      success(res) {},
+      fail(e) {}
     })
   }
 })
